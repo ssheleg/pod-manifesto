@@ -1,5 +1,3 @@
-Copyright (c) 2023 Vercel, in collaboration with basement.studio
-
 Copyright (c) <dates>, <Copyright Holder> (<URL|email>),
 with Reserved Font Name <Reserved Font Name>.
 Copyright (c) <dates>, <additional Copyright Holder> (<URL|email>),

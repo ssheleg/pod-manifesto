@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Draw the manifesto's five figures as printed plates, in the `field-notes` register.
 
-The rule this file exists to keep: in this pack **mono is annotation, not data**.
+The rule this file exists to keep: **mono is annotation here, not data**.
 A diagram whose every word is monospaced reads as ASCII art with rounded corners.
 So a node here is a name set in the text face sitting on a hairline, and the mono
 is kept for what a plate uses it for — lane labels, indices, relation names and
@@ -30,9 +30,15 @@ NOTE_GAP = 30       # a note above a station clears the name's ascender
 
 
 # ── measurement ──────────────────────────────────────────────────────────────
-# Geist is proportional, so widths are estimated per character class here and
-# then verified in the browser, where the real metrics live.
+# The document is set in JetBrains Mono, so these are not estimates any more:
+# every glyph advances 0.6em, and the CSS tracking is a known constant. The
+# proportional estimator this replaced was off by enough to overlap two labels.
 
+MONO_ADV = 0.6              # JetBrains Mono advance, in em — exact
+TRACK_DATA = 0.06           # --track-data, on notes and tags
+
+# Node names are set in Geist, which is proportional, so their width is estimated
+# per character class and then verified in the browser where the real metrics are.
 _NARROW = set("iltfjIr.,;:'!|()[]{}-/ ")
 _WIDE = set("mwMW@")
 
@@ -51,8 +57,9 @@ def sans_w(s, size=FS_NAME):
     return u * size
 
 
-def mono_w(s, size=FS_NOTE, track=0.06):
-    return len(s) * (size * 0.6 + size * track)
+def mono_w(s, size=FS_NOTE, track=TRACK_DATA):
+    """Notes and tags: mono at --track-data."""
+    return len(s) * size * (MONO_ADV + track)
 
 
 # ── the plate ────────────────────────────────────────────────────────────────
@@ -109,7 +116,7 @@ class Plate:
         """A provenance tag — the pack's signature label, reused as a state mark."""
         self.p.append(f'<text class="tag tag--{state}" x="{x:.1f}" y="{y:.1f}">'
                       f'[{escape(s)}]</text>')
-        return self._span(x, mono_w(f"[{s}]", FS_LANE, 0.08), "start", row)
+        return self._span(x, mono_w(f"[{s}]", FS_LANE), "start", row)
 
     # -- composition -------------------------------------------------------
     def station(self, x, y, label, key=False, row=0, dotcls=None):
@@ -287,7 +294,7 @@ def fig3():
                      (214, "Map the change to covered claims")]:
         c.stop(spine, y, label, row=int(y))
 
-    col_b, col_c = 392, 636
+    col_b, col_c = 392, 704
 
     # first fork: does the change touch the claim?
     for y, label, tail in [(262, "claim unaffected", "Proof remains valid"),
@@ -351,7 +358,7 @@ def fig4():
         if question:
             c.note(W, y + 4, question, anchor="end", row=1000 + i)
         else:
-            c.tag(W - mono_w("[ACCEPTED]", FS_LANE, 0.08), y + 4, "ACCEPTED", "ok", row=1000 + i)
+            c.tag(W - mono_w("[ACCEPTED]", FS_LANE), y + 4, "ACCEPTED", "ok", row=1000 + i)
     return c
 
 
@@ -401,7 +408,7 @@ def fig5():
         c.rule(0, W, y - 22, "rule rule--faint")
         c.flow(f"M{spine2:.1f} {y:.1f} H{spine2 + 14:.1f}")
         c.stop(spine2 + 22, y, label, row=10 + y, dotcls=f"dot--{state}", gap=16)
-        tag_x = W - mono_w(f"[{tag}]", FS_LANE, 0.08)
+        tag_x = W - mono_w(f"[{tag}]", FS_LANE)
         c.tag(tag_x, y + 4, tag, state, row=1010 + y)
         c.note(tag_x - 16, y + 4, reason, anchor="end", row=1010 + y)
 

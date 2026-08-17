@@ -57,7 +57,7 @@ def gh(path):
             with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
                 return r.status, json.loads(r.read().decode())
         except urllib.error.HTTPError as e:
-            if e.code in (403, 429) and attempt < 2:      # rate limited: wait it out
+            if (e.code in (403, 429) or e.code >= 500) and attempt < 2:   # throttled or a gateway blip
                 time.sleep(5 * (attempt + 1))
                 continue
             return e.code, None
@@ -115,7 +115,7 @@ def check_plain(url):
             with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
                 return 200 <= r.status < 300, str(r.status)
         except urllib.error.HTTPError as e:
-            if e.code == 429 and attempt < 2:
+            if (e.code == 429 or e.code >= 500) and attempt < 2:
                 time.sleep(5 * (attempt + 1))
                 continue
             return False, f"HTTP {e.code}"

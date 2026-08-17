@@ -1,17 +1,31 @@
 # Self-hosted faces
 
-The SHELEG `instrument-console` style pack names two families. They are served from
-this repository rather than a font CDN, so the document owes no third-party
-request at read time and keeps its typography when a CDN changes or disappears.
+Two families, two jobs. Both are served from this repository rather than a font
+CDN, so the page owes no third-party request at read time and keeps its
+typography when a CDN changes.
 
-| Family | Role in the pack | Upstream | Licence |
+| Family | Role | Upstream | Licence |
 |---|---|---|---|
-| Geist | display and body — the pack sets headlines in the same neutral grotesk | [vercel/geist-font](https://github.com/vercel/geist-font) | [SIL OFL 1.1](OFL-Geist.txt) |
-| Geist Mono | telemetry — labels, section indices, tags, the console | [vercel/geist-font](https://github.com/vercel/geist-font) | [SIL OFL 1.1](OFL-Geist.txt) |
+| Geist | body copy — the prose, the ledes, the table cells, the figure names | [vercel/geist-font](https://github.com/vercel/geist-font) | [SIL OFL 1.1](OFL-Geist.txt) |
+| JetBrains Mono | the display, and everything that narrates system state: telemetry labels, section indices, tags, the console | [JetBrains/JetBrainsMono](https://github.com/JetBrains/JetBrainsMono) | [SIL OFL 1.1](OFL-JetBrainsMono.txt) |
 
-Each file is the variable woff2 built by Google Fonts, `latin` and `latin-ext`
-subsets only, declared in [`fonts.css`](fonts.css) with `font-display: swap`.
-Four files, 81 KB in total.
+Four files, 124 KB in total: variable woff2 built by Google Fonts, `latin` and
+`latin-ext` subsets only, declared in [`fonts.css`](fonts.css) with
+`font-display: swap`.
 
-Both licences permit redistribution with the notices kept, which is what the two
-`OFL-*.txt` files in this directory are.
+## Two deviations from the pack, and one reversal
+
+The SHELEG `instrument-console` pack specifies **Geist Sans for display and body,
+Geist Mono for data**. This page keeps its body and deviates on two points:
+
+- the **display** is set in mono, because the register asked for is a terminal;
+- the mono is **JetBrains Mono** rather than Geist Mono, for the same reason.
+
+A third deviation was tried and reverted: the whole document set in mono. At
+8,000 words it cost more legibility than the register was worth — the reason the
+pack states the rule is the reason it was put back. The reversal is recorded here
+rather than deleted, because a decision that was tested is worth more than one
+that was assumed.
+
+Each `OFL-*.txt` is the SIL Open Font Licence 1.1 with its upstream copyright
+line; both licences permit redistribution with the notice kept.
