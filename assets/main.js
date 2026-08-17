@@ -1,6 +1,6 @@
 /* Proof of Done — podmanifesto.org
-   No dependencies. Everything here is progressive: the document reads fine
-   with JavaScript disabled. */
+   No dependencies, no scroll listener. Everything here is progressive: the
+   document reads completely with JavaScript disabled. */
 
 (function () {
   'use strict';
@@ -29,7 +29,9 @@
       meta.setAttribute('name', 'theme-color');
       document.head.appendChild(meta);
     }
-    meta.setAttribute('content', theme === 'dark' ? '#090b0a' : '#f4f4ef');
+    // Read the paper colour from the pack's token layer rather than repeating it.
+    meta.setAttribute('content',
+      getComputedStyle(root).getPropertyValue('--bg').trim() || '#f8f7f0');
     var btn = document.getElementById('theme-toggle');
     if (btn) btn.setAttribute('aria-label', 'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' theme');
   }
@@ -63,6 +65,8 @@
     btn.addEventListener('click', function () {
       var text = btn.getAttribute('data-copy') || '';
 
+      // The label changes, not only the colour — a colour-only confirmation is
+      // invisible to a third of the people this page is for.
       function done(ok) {
         btn.textContent = ok ? 'copied' : 'select + copy';
         btn.setAttribute('data-done', ok ? '1' : '0');
@@ -72,8 +76,8 @@
         }, 1800);
       }
 
-      // navigator.clipboard.writeText can stay pending when the document is not
-      // focused, so the async path is raced against a timeout that falls back.
+      // clipboard.writeText can stay pending when the document is not focused,
+      // so the async path is raced against a timeout that falls back.
       if (navigator.clipboard && navigator.clipboard.writeText) {
         var settled = false;
         var finish = function (ok) { if (!settled) { settled = true; done(ok); } };
@@ -88,27 +92,30 @@
     });
   });
 
-  /* ── reading progress ────────────────────────────────────────────────── */
+  /* ── reveal on entry ─────────────────────────────────────────────────── */
+  /* Why does this move: a section arriving with no transition reads as a cut.
+     It runs once per section, never on a repeated path, and reduced motion
+     resolves it to the final state without ever hiding content. */
 
-  var bar = document.getElementById('progress-bar');
-  if (bar) {
-    var ticking = false;
-    var update = function () {
-      var h = document.documentElement;
-      var max = h.scrollHeight - h.clientHeight;
-      var pct = max > 0 ? (h.scrollTop || document.body.scrollTop) / max : 0;
-      bar.style.width = Math.min(100, Math.max(0, pct * 100)).toFixed(2) + '%';
-      ticking = false;
-    };
-    var onScroll = function () {
-      if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-    update();
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+
+  if (!reveals.length) {
+    /* nothing to do */
+  } else if (reduced || !('IntersectionObserver' in window)) {
+    reveals.forEach(function (el) { el.classList.add('is-in'); });
+  } else {
+    var revealer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        revealer.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.02 });
+    reveals.forEach(function (el) { revealer.observe(el); });
   }
 
-  /* ── table of contents: mark the section being read ──────────────────── */
+  /* ── the index marks the section being read ──────────────────────────── */
 
   var links = Array.prototype.slice.call(document.querySelectorAll('.toc__list a'));
   if (links.length && 'IntersectionObserver' in window) {
@@ -123,13 +130,11 @@
 
     var visible = {};
 
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        visible[entry.target.id] = entry.isIntersecting;
-      });
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) { visible[entry.target.id] = entry.isIntersecting; });
 
-      // The furthest-scrolled visible section wins, so a long section that is still
-      // partly in the band does not keep the previous entry highlighted.
+      // The furthest-scrolled visible section wins, so a long section that is
+      // still partly in the band does not keep the previous entry highlighted.
       var activeId = null;
       for (var i = targets.length - 1; i >= 0; i--) {
         if (visible[targets[i].id]) { activeId = targets[i].id; break; }
@@ -138,22 +143,24 @@
 
       links.forEach(function (a) { a.classList.remove('is-active'); });
       if (byId[activeId]) byId[activeId].classList.add('is-active');
-    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+    }, { rootMargin: '-12% 0px -70% 0px', threshold: 0 });
 
-    targets.forEach(function (el) { observer.observe(el); });
+    targets.forEach(function (el) { spy.observe(el); });
   }
 
-  /* ── contents panel: open on wide screens, collapsed on narrow ───────── */
+  /* ── the contents panel: open on wide screens, collapsed on narrow ───── */
 
   var wrap = document.querySelector('.toc__wrap');
   if (wrap) {
-    var wide = window.matchMedia('(min-width: 1000px)');
-    var sync = function (mq) { if (!mq.matches) wrap.removeAttribute('open'); else wrap.setAttribute('open', ''); };
+    var wide = window.matchMedia('(min-width: 64rem)');
+    var sync = function (mq) {
+      if (mq.matches) wrap.setAttribute('open', '');
+      else wrap.removeAttribute('open');
+    };
     sync(wide);
     if (wide.addEventListener) wide.addEventListener('change', sync);
     else if (wide.addListener) wide.addListener(sync);
 
-    // On narrow screens, close the panel after jumping to a section.
     wrap.addEventListener('click', function (e) {
       var a = e.target.closest ? e.target.closest('a') : null;
       if (a && !wide.matches) wrap.removeAttribute('open');

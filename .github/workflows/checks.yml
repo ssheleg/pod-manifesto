@@ -1,7 +1,7 @@
 name: checks
 
-# The document argues that a repeated check becomes a mechanism rather than another
-# paragraph. These two are that mechanism for this repository.
+# The document argues that a repeated check becomes a mechanism rather than
+# another paragraph. These are that mechanism for this repository.
 
 on:
   push:
@@ -23,3 +23,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 tools/check-links.py
+
+  pack:
+    name: the page still looks like the pack
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/check-pack.py
+
+  figures:
+    name: figure geometry holds and the page is current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/build-figures.py --check
+      - run: python3 tools/inline-figures.py --check

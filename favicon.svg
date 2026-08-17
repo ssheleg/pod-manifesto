@@ -1,7 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Proof of Done">
   <title>Proof of Done</title>
-  <!-- Turnstile: the logical "proves" operator. -->
-  <g fill="none" stroke="#22c07a" stroke-width="3.4" stroke-linecap="square">
+  <!-- The turnstile: the logical "proves" operator. Rust is the pack's brand
+       (#9a3f28 on paper, #cf7a52 on a dark surface). -->
+  <style>
+    .m { stroke: #9a3f28; }
+    @media (prefers-color-scheme: dark) { .m { stroke: #cf7a52; } }
+  </style>
+  <g class="m" fill="none" stroke-width="3.4" stroke-linecap="square">
     <path d="M8 4.5 V27.5"/>
     <path d="M8 16 H25"/>
   </g>

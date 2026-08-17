@@ -59,7 +59,7 @@ def md_blocks(md: str) -> list:
 def page_text(doc: str) -> str:
     doc = re.sub(r"<script.*?</script>", " ", doc, flags=re.S | re.I)
     doc = re.sub(r"<style.*?</style>", " ", doc, flags=re.S | re.I)
-    doc = re.sub(r'<pre class="ascii">.*?</pre>', " ", doc, flags=re.S)
+    doc = re.sub(r"<svg\b.*?</svg>", " ", doc, flags=re.S | re.I)   # figure labels
     doc = re.sub(r"<!--.*?-->", " ", doc, flags=re.S)
     doc = re.sub(rf"</?(?:{BLOCK_TAGS})\b[^>]*>", " \n ", doc, flags=re.I)
     doc = re.sub(r"<[^>]+>", "", doc)                       # inline tags leave no gap
@@ -86,9 +86,20 @@ def main() -> int:
     print(f"missing from index.html     : {len(missing)}")
     for s in missing:
         print(f"\n  MISSING: {s}")
-    if verbose and not missing:
+
+    # The page states how many cases it carries. That number is computed here
+    # rather than trusted, because the document forbids restating a figure.
+    doc = PAGE.read_text(encoding="utf-8")
+    claimed = re.search(r"<b data-cases>(\d+)</b>", doc)
+    actual = len(re.findall(r'<li id="n\d+"', doc))
+    counted_ok = bool(claimed) and int(claimed.group(1)) == actual
+    print(f"cases claimed / listed      : "
+          f"{claimed.group(1) if claimed else '—'} / {actual}"
+          f" {'ok' if counted_ok else 'MISMATCH'}")
+
+    if verbose and not missing and counted_ok:
         print("\nindex.html carries every canonical sentence of manifesto.md.")
-    return 1 if missing else 0
+    return 0 if (not missing and counted_ok) else 1
 
 
 if __name__ == "__main__":

@@ -1,0 +1,301 @@
+/* SHELEG Design — Field Notes token layer (open-source developer tools,
+   sold on auditability rather than power).
+   Copy verbatim; consume only var(--…) in components.
+
+   The page is ONE sheet of warm paper with rules drawn on it. Sections are
+   separated by a hairline, never by flipping the background. The only dark
+   surface is the hero, and it dissolves INTO the paper rather than ending
+   against it.
+
+   Extracted from graphify.com on 2026-08-04 by reading its live computed
+   styles. Where this file diverges from the reference it says so in a comment
+   and gives the measured reason — four such corrections, all in §CONTRAST
+   and §DARK. */
+
+:root {
+  color-scheme: light; /* per theme, never "light dark" — the reference sets
+                          none at all, so UA controls follow the OS while the
+                          page follows the class. */
+
+  /* ---- The paper ------------------------------------------------------- */
+  --bg: #f8f7f0; /* warm off-white with a green cast */
+  --surface: #fdfcf6; /* card / popover — a lighter sheet */
+  --surface-2: #edeee2; /* the section wash; used at 40% and 20% opacity */
+  --surface-3: #e8ebdd; /* the deepest paper step */
+  --line: #e0e2d3; /* THE hairline — this token does the composition */
+  --line-strong: #dcdecd; /* inputs, one step down */
+
+  /* ---- Ink ------------------------------------------------------------- */
+  --ink: #16211b; /* near-black, green-cast — 15.4:1 on --bg */
+  --ink-2: #232a24; /* on --surface-2 */
+  --ink-soft: #626b60; /* 5.2:1 on --bg — passes AA, so it MAY carry body copy */
+  --on-ink: #f8f7f0; /* the label on an ink fill */
+
+  /* ---- Brand: rust ink on paper ---------------------------------------- */
+  --brand: #9a3f28; /* 6.3:1 on --bg — safe as text on the paper */
+  --brand-ink: #8f3f1f; /* 6.8:1 — the text-safe rust */
+  --brand-soft: #e8cbb8; /* the rust wash (selected chip) */
+  --on-brand: #f8f4ef; /* 6.2:1 on --brand */
+  /* The light brand is 2.3:1 on the hero's top stop and 1.4:1 in its middle.
+     Any brand-coloured text on a dark surface uses THIS instead — 4.8:1. */
+  --brand-on-dark: #cf7a52;
+
+  /* ---- Provenance: the three states of a claim -------------------------- */
+  /* The pack's reason to exist. A claim is shown with its epistemic status as
+     a readable label, never as a confidence number. Each state ships a fill,
+     a text-safe ink, and a wash. */
+  --verify: #0e9e76; /* 3.2:1 on --bg — a FILL and large-text colour ONLY */
+  --verify-ink: #0a7558; /* 5.3:1 — the label colour */
+  --verify-soft: #d6f1e7;
+  --witness: #b3402a; /* 5.3:1 */
+  --witness-ink: #9a3016; /* 7.0:1 */
+  --witness-soft: #f4ded4;
+  /* [EXTRACTED] → --verify-ink · [INFERRED] → --brand-ink ·
+     [AMBIGUOUS] → --witness-ink.  The third mapping was not rendered on the
+     reference at capture time; it is inferred from the token set, and this
+     comment is the pack practising its own rule. */
+  --danger: #c0442e; /* 4.8:1 — destructive, distinct from --witness */
+
+  /* ---- App surfaces (see the pack's Register: workbench stays the default
+     for neutral product UI; this layer is for a console that must read as the
+     same paper as the marketing site). The reference's sidebar family drifts
+     browner than its page family and rings violet; both are reconciled here to
+     the page's own neutrals and the brand. */
+  --sidebar: #fffdf9;
+  --sidebar-surface: #f1ece3;
+  --sidebar-line: #e8e1d5;
+  --sidebar-ink: #1b1714;
+  --on-sidebar: #faf7f2;
+
+  /* ---- Charts: rust → teal, and nothing from another system ------------- */
+  --chart-1: #9a3f28;
+  --chart-2: #0e9e76;
+  --chart-3: #f0603c;
+  --chart-4: #b0563a;
+  --chart-5: #6f8f5e; /* the reference ships #3b82f6 here — an unrelated blue
+                         in a palette that otherwise runs rust to teal. */
+
+  /* ---- The dawn: the hero's eight stops --------------------------------- */
+  /* The dark has no edge. It resolves into --bg at 100%. */
+  --dawn-1: #062a22;
+  --dawn-2: #0a3f31;
+  --dawn-3: #124f3c;
+  --dawn-4: #1e6149;
+  --dawn-5: #4f8a68; /* white body copy is 4.1:1 here — content must END
+                        before the gradient reaches this stop. */
+  --dawn-6: #a8c9ad;
+  --dawn-7: #e9ecdf;
+  --hero-dawn: linear-gradient(
+    var(--dawn-1) 0%,
+    var(--dawn-2) 35%,
+    var(--dawn-3) 60%,
+    var(--dawn-4) 74%,
+    var(--dawn-5) 85%,
+    var(--dawn-6) 93%,
+    var(--dawn-7) 98%,
+    var(--bg) 100%
+  );
+  --hero-vignette: radial-gradient(
+    72% 58% at 32% 42%,
+    rgba(4, 30, 23, 0.28),
+    transparent 74%
+  );
+  /* Film grain, inline so it costs no request. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
+  --grain-opacity: 0.06;
+  /* The ambient layer is NOTATION, not particles: mathematical and logical
+     glyphs at this opacity, a few of which flip to --verify (see --dur-sym). */
+  --sym-op: 0.14;
+
+  /* ---- One dark family, not three -------------------------------------- */
+  /* The reference paints three unrelated dark palettes: a warm-brown theme, a
+     forest band, and a navy terminal. This pack keeps the forest — it is the
+     hero's own gradient and the only one the page argues for. */
+  --deep: #072820; /* [CORRECTED 2026-08-08] this said "full-bleed dark band",
+                      which names the one thing the pack's Bans forbid. It is
+                      the dawn's darkest step, and it is legal only on a
+                      BOUNDED dark surface. Nothing consumes it directly today;
+                      --deep-2 and --deep-3 below are the terminal. */
+  --deep-2: #0b332a; /* the terminal's header bar */
+  --deep-3: #041d17; /* the terminal body — a darker step of the SAME family,
+                        where the reference switches to navy #0b101d */
+  --on-deep: #e9e2d6;
+  --line-on-deep: rgba(255, 255, 255, 0.1);
+  --line-on-deep-strong: rgba(255, 255, 255, 0.2);
+  --fill-on-deep: rgba(255, 255, 255, 0.06);
+
+  /* ---- Elevation is a RING, not a shadow -------------------------------- */
+  --ring-hairline: 0 0 0 1px var(--line);
+  --ring-brand: 0 0 0 1px rgba(154, 63, 40, 0.5);
+  --ring-inset: inset 0 0 0 1px rgba(255, 255, 255, 0.04); /* panels on dark */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-float: 0 32px 64px -28px rgba(26, 22, 12, 0.45); /* WARM, not grey —
+                        the one deep shadow in the system */
+  --focus-ring: var(--brand);
+
+  /* ---- Radii: one root, a proportional ramp ---------------------------- */
+  /* Change --radius and the whole system moves together. Never hardcode px. */
+  --radius: 0.75rem; /* 12px */
+  --radius-xs: calc(var(--radius) * 0.25); /* 3px  — icon squares */
+  --radius-sm: calc(var(--radius) * 0.6); /* 7.2px — chips, provenance tags */
+  --radius-md: calc(var(--radius) * 0.8); /* 9.6px — inner blocks */
+  --radius-lg: var(--radius); /* 12px  — cards, panels, buttons */
+  --radius-xl: calc(var(--radius) * 1.4); /* 16.8px — media wells */
+  --radius-2xl: calc(var(--radius) * 1.8); /* 21.6px — the largest panel */
+  --radius-pill: 999px; /* nav, primary CTA, badges */
+
+  /* ---- Spacing & measure ----------------------------------------------- */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+  --section-pad-y: var(--s8); /* 64px at md; 16px below it */
+  --content-max: 1152px; /* the default column */
+  --wide-max: 1400px; /* the graph viewer / full-width figures */
+  --shell-max: 1920px; /* hero and nav shell */
+  --prose-max: 672px;
+  --lede-max: 448px;
+  --crop-inset: 14px; /* the crop marks' distance from the edge */
+  --crop-len: 0.75rem; /* 12px arms */
+
+  /* ---- Hero & viewport -------------------------------------------------- */
+  /* svh, not vh: with vh the gradient reflows when mobile browser chrome
+     collapses. dvh goes behind @supports (height: 100dvh) at the use site. */
+  --hero-min-h: 100svh;
+  --bar-h: 38px; /* the announcement bar — a real layout participant: the nav
+                    sits at top: var(--bar-h) and transitions `top` over 300ms
+                    when it is dismissed. Set to 0px when closed. */
+  --hero-line-cap: 3; /* the headline's line ceiling — at 1.02 leading a fourth
+                         line closes into a block and the dawn stops reading */
+  /* The page's ONLY fluid size. Everything else steps at the breakpoints:
+     40rem / 48rem / 64rem / 80rem / 96rem, plus a max-width: 639px branch. */
+  --t-caption-fluid: clamp(0.8125rem, 0.2rem + 2vw, 2.125rem);
+
+  /* ---- Type ------------------------------------------------------------ */
+  /* Display: Bricolage Grotesque. Variable upstream (opsz 12..96, wdth 75..100,
+     wght 200..800) and it has NO ITALIC — see the pack's Bans. Substitutes with
+     the same voice and a real 600: Archivo, Space Grotesque, Darker Grotesque. */
+  --font-display: "Bricolage Grotesque", "Archivo", system-ui, sans-serif;
+  --font-sans: "Geist", system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
+
+  --weight-display: 600;
+  --weight-display-quiet: 400; /* the deliberately softer section heading */
+  --weight-body: 400;
+  --weight-body-strong: 600;
+
+  --t-hero: 67.2px;
+  --t-h1: 44px;
+  --t-h2: 40px;
+  --t-h3: 30px;
+  --t-h4: 20px;
+  --t-h5: 15px; /* the card title */
+  --t-lede: 18px;
+  --t-body: 16px;
+  --t-sm: 14px;
+  --t-eyebrow: 0.6875rem; /* 11px */
+  --t-tag: 10px;
+  --t-mono: 13px; /* the terminal */
+
+  --lh-hero: 1.02;
+  --lh-display: 1.15;
+  --lh-h4: 1.4;
+  --lh-body: 1.5;
+  --lh-lede: 1.556;
+  --lh-mono: 1.625;
+  --lh-eyebrow: 1; /* the eyebrow sits on its own baseline */
+
+  /* One authored decision, not five: every display size tracks at -0.025em. */
+  --track-display: -0.025em;
+  --track-eyebrow: 0.16em;
+  --track-eyebrow-wide: 0.18em;
+  --track-tag: 0.08em;
+  --track-tab: 0.05em;
+
+  /* ---- Motion: two eases, two jobs ------------------------------------- */
+  --ease-ui: cubic-bezier(0.4, 0, 0.2, 1); /* state changes */
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1); /* scroll entry */
+  --dur-ui: 0.15s; /* every control */
+  --dur-reveal: 0.5s; /* opacity + transform on entry */
+  --dur-sym: 6s; /* one hero glyph flickering to --verify */
+  --dur-marquee: 40s;
+  /* The ONLY hue that ever animates is --verify. The rust never moves: the
+     moment the brand animates it stops reading as an identity and starts
+     reading as a status. */
+
+  background-color: var(--bg);
+  color: var(--ink);
+
+  /* Core role vocabulary — every pack resolves --bg, --ink and --accent, so a
+     cross-pack document can name them truthfully. Alias, never a new colour. */
+  /* @role accent: --brand — this pack's ONE functional accent. It is not
+     aliased to --accent because that would make it a status peer, and the
+     palette gate measures it 5.5 from --danger (hard floor 10). */
+}
+
+/* The dark twin. Warm, one family, and clean on contrast throughout —
+   17.0:1 for body ink, 8.3:1 for verify, 5.9:1 for the brand. */
+[data-theme="dark"],
+.dark {
+  color-scheme: dark;
+
+  --bg: #14110e;
+  --surface: #1c1815;
+  --surface-2: #262019;
+  --surface-3: #262019;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.14);
+
+  --ink: #f7f3ec;
+  --ink-2: #f7f3ec;
+  --ink-soft: #a89e8f; /* 7.1:1 — comfortably AA */
+  --on-ink: #14110e;
+
+  --brand: #cf7a52; /* 5.9:1 */
+  --brand-ink: #cf7a52;
+  --brand-soft: #2e1c12;
+  --on-brand: #14110e;
+  --brand-on-dark: #cf7a52; /* already the dark value */
+
+  --verify: #2bc0a8; /* 8.3:1 — safe as text here, unlike the light theme */
+  --verify-ink: #2bc0a8;
+  --verify-soft: #14312a;
+  --witness: #e06a4f; /* 5.7:1 */
+  --witness-ink: #e06a4f;
+  --witness-soft: #341711;
+  --danger: #e5654c;
+
+  --sidebar: #1c1815;
+  --sidebar-surface: #262019;
+  --sidebar-line: rgba(255, 255, 255, 0.1);
+  --sidebar-ink: #f7f3ec;
+  --on-sidebar: #14110e;
+
+  --chart-1: #cf7a52;
+  --chart-2: #2bc0a8;
+  --chart-3: #f0603c;
+  --chart-4: #cf7a52;
+  --chart-5: #8fae7a;
+
+  --ring-brand: 0 0 0 1px rgba(207, 122, 82, 0.5);
+  --shadow-float: 0 32px 64px -28px rgba(0, 0, 0, 0.6);
+  --focus-ring: var(--brand);
+}
+
+/* The reference ships a reduced-motion branch for every animated class, which
+   is the right posture and this pack requires it. Durations collapse; the
+   reveal resolves to its final state instead of transitioning to it. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-ui: 0s;
+    --dur-reveal: 0s;
+    --dur-sym: 0s;
+    --dur-marquee: 0s;
+  }
+}
