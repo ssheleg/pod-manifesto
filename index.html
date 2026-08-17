@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Proof of Done — The Agentic Software Development Manifesto</title>
+<meta name="description" content="A foundation for building software when agents write the code. Done is not the last message of the run. Done is a state of the system that can be proven.">
+<meta name="author" content="Sergey Sheleg (Siarhei Sheleh)">
+<link rel="canonical" href="https://podmanifesto.org/">
+<meta name="theme-color" content="#f4f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#090b0a" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Proof of Done">
+<meta property="og:title" content="Proof of Done — The Agentic Software Development Manifesto">
+<meta property="og:description" content="When agents write the code, done is not the last message of the run. Done is a state of the system that can be proven.">
+<meta property="og:url" content="https://podmanifesto.org/">
+<meta property="og:image" content="https://podmanifesto.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Proof of Done — The Agentic Software Development Manifesto">
+<meta name="twitter:description" content="When agents write the code, done is not the last message of the run. Done is a state of the system that can be proven.">
+<meta name="twitter:image" content="https://podmanifesto.org/og.png">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="text/markdown" href="/manifesto.md" title="Proof of Done — full text in Markdown">
+<link rel="stylesheet" href="/assets/style.css">
+
+<script>
+  // Set the theme before first paint so the page never flashes the wrong one.
+  try {
+    var t = localStorage.getItem('pod-theme');
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Proof of Done: The Agentic Software Development Manifesto",
+  "alternativeHeadline": "A foundation for building software when agents write the code",
+  "description": "Proof of Done requires every completion claim between an intended outcome and an accepted result to point to its supporting record at an address another actor can resolve; if the address does not resolve, the claim is not proven.",
+  "url": "https://podmanifesto.org/",
+  "inLanguage": "en",
+  "datePublished": "2026-08-17",
+  "version": "1.0",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "image": "https://podmanifesto.org/og.png",
+  "author": {
+    "@type": "Person",
+    "name": "Sergey Sheleg",
+    "alternateName": "Siarhei Sheleh",
+    "url": "https://github.com/ssheleg"
+  },
+  "publisher": { "@type": "Person", "name": "Sergey Sheleg" },
+  "about": [
+    "agentic software development",
+    "AI coding agents",
+    "definition of done",
+    "software verification",
+    "evidence-based engineering",
+    "bounded autonomy"
+  ],
+  "isBasedOn": "https://github.com/ssheleg/sshlg-skills",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://podmanifesto.org/" }
+}
+</script>
+</head>
+<body>
+
+<div class="progress" id="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+
+<a class="skip" href="#preamble">Skip to the document</a>
+
+<header class="topbar">
+  <div class="topbar__in">
+    <a class="topbar__mark" href="#top" aria-label="Proof of Done, top of document">
+      <span class="glyph" aria-hidden="true">&#8866;</span>
+      <span class="topbar__name">PROOF&nbsp;OF&nbsp;DONE</span>
+      <span class="topbar__ver">v1.0</span>
+    </a>
+    <div class="topbar__actions">
+      <a class="tbtn" href="https://github.com/ssheleg/pod-manifesto">Source</a>
+      <a class="tbtn" href="#implementation">Install</a>
+      <button class="tbtn tbtn--icon" id="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch colour theme">
+        <span class="theme-ind" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell" id="top">
+
+<!-- ══════════════════════════════ MASTHEAD ══════════════════════════════ -->
+<header class="masthead">
+  <p class="kicker"><span class="blink" aria-hidden="true">&#9646;</span> Memorandum &#183; a standard for completion claims</p>
+
+  <h1 class="masthead__title">
+    <span class="masthead__glyph" aria-hidden="true">&#8866;</span>
+    Proof&nbsp;of&nbsp;Done
+  </h1>
+  <p class="masthead__sub">The Agentic Software Development Manifesto</p>
+  <p class="masthead__lede">A foundation for building software when agents write the code.</p>
+
+  <dl class="docmeta">
+    <div><dt>Document</dt><dd>POD&#8202;/&#8202;001 &#8212; Proof of Done</dd></div>
+    <div><dt>Version</dt><dd>1.0</dd></div>
+    <div><dt>Published</dt><dd><time datetime="2026-08-17">2026-08-17</time></dd></div>
+    <div><dt>Author</dt><dd>Sergey Sheleg <span class="muted">(Siarhei Sheleh)</span></dd></div>
+    <div><dt>Canonical</dt><dd><a href="https://podmanifesto.org/">podmanifesto.org</a></dd></div>
+    <div><dt>Source</dt><dd><a href="https://github.com/ssheleg/pod-manifesto">github.com/ssheleg/pod-manifesto</a></dd></div>
+    <div><dt>Readers</dt><dd>humans and agents</dd></div>
+    <div><dt>Licence</dt><dd><a href="https://creativecommons.org/licenses/by/4.0/">CC&nbsp;BY&nbsp;4.0</a></dd></div>
+  </dl>
+
+  <div class="masthead__cta">
+    <a class="btn btn--primary" href="#preamble">Read the manifesto</a>
+    <a class="btn" href="/manifesto.md">Plain text</a>
+    <a class="btn" href="https://github.com/ssheleg/sshlg-skills">Reference implementation</a>
+  </div>
+
+  <figure class="term" aria-label="Install the reference implementation">
+    <figcaption class="term__bar">
+      <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="term__title">install the implementation</span>
+      <button class="copy" type="button" data-copy="npx sshlg-skills install">copy</button>
+    </figcaption>
+    <pre class="term__body"><code><span class="p">$</span> npx sshlg-skills install</code></pre>
+  </figure>
+</header>
+
+<div class="layout">
+
+<!-- ══════════════════════════════ CONTENTS ══════════════════════════════ -->
+<nav class="toc" aria-label="Table of contents">
+  <details class="toc__wrap" open>
+    <summary class="toc__head">Contents</summary>
+    <ol class="toc__list">
+      <li><a href="#preamble"><span class="toc__n">00</span> Preamble</a></li>
+      <li><a href="#broke"><span class="toc__n">01</span> When &#8220;done&#8221; broke</a></li>
+      <li><a href="#meaning"><span class="toc__n">02</span> What Proof of Done means</a></li>
+      <li><a href="#graphs"><span class="toc__n">03</span> The three graphs</a></li>
+      <li><a href="#autonomy"><span class="toc__n">04</span> Bounded autonomy</a></li>
+      <li><a href="#record"><span class="toc__n">05</span> The Proof record</a></li>
+      <li><a href="#seams"><span class="toc__n">06</span> Acceptance walks the seams</a></li>
+      <li><a href="#learns"><span class="toc__n">07</span> The system learns</a></li>
+      <li><a href="#proportion"><span class="toc__n">08</span> From four lines to a full pipeline</a></li>
+      <li><a href="#declaration"><span class="toc__n">&#167;</span> The declaration</a></li>
+      <li><a href="#notes"><span class="toc__n">&#8251;</span> Evidence</a></li>
+      <li><a href="#machines"><span class="toc__n">&#8801;</span> For machines</a></li>
+    </ol>
+    <div class="toc__foot">
+      <a class="toc__link" href="https://github.com/ssheleg/pod-manifesto">GitHub</a>
+      <a class="toc__link" href="#implementation">Install</a>
+    </div>
+  </details>
+</nav>
+
+<!-- ══════════════════════════════ DOCUMENT ══════════════════════════════ -->
+<main class="doc">
+
+<section id="preamble" class="sec">
+  <h2 class="sec__h"><span class="sec__n">00</span> Preamble <a class="anchor" href="#preamble" aria-label="Link to this section">#</a></h2>
+
+  <p class="lead">The task inventory was empty. The process was still running.</p>
+
+  <p>I found this during a real agent run (not a simulation arranged to make the point): a monitor had been started to poll a remote check, the harness reported <code>No tasks found</code> one minute later, and the operating system showed the poller alive at <code>03:12</code> &#8212; three minutes and twelve seconds of elapsed time. Both observations were accurate. They were simply observations of different things. <a class="ev" href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L28-L48">E1</a></p>
+
+  <p>If you have used agents for sustained work, you probably know the shape. The agent completed the instruction. The tool returned success. The inventory was green. Yet the system was not in the state those signals appeared to describe, and no amount of confidence in the final message could close the gap (the subject of the check was wrong).</p>
+
+  <p>Coding agents have made producing software dramatically cheaper. They can create a feature, its tests, its documentation, and a convincing account of the work in one run, but they didn&#8217;t make it equally cheap to know whether the feature is correct, whether the tests can detect its failure, whether the documentation still describes the code, or whether the original request survived the trip through all four. Imagine the cost model plainly: if a change takes 10 minutes to produce and 2 hours to reconstruct, generation speed has moved the expense rather than removed it. Those durations are illustrative. Every team should measure its own.</p>
+
+  <p class="callout">The bottleneck moved from production to assurance.</p>
+
+  <p>This is why I no longer treat an agent&#8217;s last message as the unit of progress. The useful unit is an <strong>evidence-carrying change</strong>: a change that carries the intent it implements, the evidence that verifies it, the limits of that evidence, and the decision that accepts it. I call the standard for that change <strong>Proof of Done</strong>.</p>
+</section>
+
+<section id="broke" class="sec">
+  <h2 class="sec__h"><span class="sec__n">01</span> When &#8220;done&#8221; broke <a class="anchor" href="#broke" aria-label="Link to this section">#</a></h2>
+
+  <p>Traditional software development already has tests, code review, CI, runbooks, acceptance criteria, and a Definition of Done. None of those became obsolete when agents arrived (I use all of them). The problem is that the old system assumed a production rate and a shape of work that no longer hold.</p>
+
+  <p>An agent can produce changes faster than a reviewer can form a reliable mental model of them, lose part of the task across compaction or handoff and then continue fluently from an incomplete state, or write a test that agrees with its implementation because both contain the same misunderstanding. It can run a narrow suite and report the part as the whole. Several agents can act in parallel (each locally correct) while colliding on a shared file, contract, identifier, or external system.</p>
+
+  <p>The dangerous property isn&#8217;t that an agent may be wrong. Developers have always been wrong. It is that an incomplete result can now arrive at high speed with code, tests, documentation, and explanation all supporting the same mistake.</p>
+
+  <p>I don&#8217;t assume that an agent lies. I assume that it can be wrong, persuasive, interrupted, incomplete, and authorised to act. If you design only for malicious behaviour, you miss the ordinary failure: a system doing exactly what it understood, at a speed that makes the misunderstanding expensive.</p>
+
+  <p>That gives agentic development a specific threat model:</p>
+
+  <div class="tablewrap">
+  <table>
+    <caption class="tbl-cap">Table 1 &#8212; The agentic threat model</caption>
+    <thead><tr><th scope="col">Property</th><th scope="col">Failure it creates</th><th scope="col">System response</th></tr></thead>
+    <tbody>
+      <tr><td>High production rate</td><td>More change than a person can inspect deeply</td><td>explicit scope and acceptance coverage</td></tr>
+      <tr><td>Plausible reporting</td><td>confidence mistaken for observation</td><td>artifacts over self-report</td></tr>
+      <tr><td>Context discontinuity</td><td>goals, decisions, and verified state drift</td><td>durable state outside the conversation</td></tr>
+      <tr><td>Nondeterministic execution</td><td>the route changes between runs</td><td>a stable result contract and recorded graph</td></tr>
+      <tr><td>Parallel agency</td><td>locally correct work collides at shared state</td><td>ownership and an explicit concurrency protocol</td></tr>
+      <tr><td>Operational authority</td><td>code generation becomes action on real systems</td><td>typed gates and bounded credentials</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The response cannot be &#8220;review harder.&#8221; Human attention is the resource agents were meant to stop consuming one keystroke at a time. If a feature takes 15 minutes to generate and an hour of archaeology every time it reaches review, the operating model has failed even when the code is correct. I want a system in which the routine path is autonomous, consequential boundaries are explicit, and you can challenge every completion claim without reconstructing the whole conversation (or trusting the agent that produced it).</p>
+</section>
+
+<section id="meaning" class="sec">
+  <h2 class="sec__h"><span class="sec__n">02</span> What Proof of Done means <a class="anchor" href="#meaning" aria-label="Link to this section">#</a></h2>
+
+  <p>Definition of Done and Proof of Done answer different questions.</p>
+
+  <blockquote class="q"><p>Definition of Done states what must be true. Proof of Done shows that it is true.</p></blockquote>
+
+  <p>More precisely:</p>
+
+  <blockquote class="q q--key"><p>Proof of Done requires every completion claim between an intended outcome and an accepted result to point to its supporting record at an address another actor can resolve; if the address does not resolve, the claim is not proven.</p></blockquote>
+
+  <p>Reachable matters. &#8220;The tests pass&#8221; is a claim. The command, its exit code, the selected test names, the commit they ran against, and the stored result are evidence. If you cannot resolve the test name, you don&#8217;t have that evidence. If you cannot open the CI run, the badge proves only that a badge was rendered. A report that says nothing about what was skipped cannot distinguish a clean result from a check that never looked (two opposite states with the same output).</p>
+
+  <p>Proof of Done is not a mathematical proof of correctness. Most software teams can&#8217;t produce one, and pretending otherwise would make the term useless. It is a bounded engineering claim supported by evidence that another person or mechanism can reach, which is why every proof is <strong>scoped, versioned, and perishable</strong>. It belongs to a particular change, environment, set of checks, policy version, and observation time (the validity domain of the claim). A green result on commit A does not prove commit B, a staging smoke test does not silently become production evidence, and a document that was true one month before a migration doesn&#8217;t remain true by inertia.</p>
+
+  <h3 id="protocol" class="sub">The smallest protocol <a class="anchor" href="#protocol" aria-label="Link to this subsection">#</a></h3>
+
+  <p>The smallest useful version of this manifesto fits in four fields:</p>
+
+  <figure class="term term--doc">
+    <figcaption class="term__bar">
+      <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="term__title">the four-field done report</span>
+      <button class="copy" type="button" data-copy="DONE
+  What became true.
+
+PROOF
+  What was executed or observed, and where the result lives.
+
+SCOPE
+  The commit, environment, requirements, and surfaces covered.
+
+NOT VERIFIED
+  What was not checked, could not be checked, or remains uncertain.">copy</button>
+    </figcaption>
+<pre class="term__body"><code><span class="k">DONE</span>
+  What became true.
+
+<span class="k">PROOF</span>
+  What was executed or observed, and where the result lives.
+
+<span class="k">SCOPE</span>
+  The commit, environment, requirements, and surfaces covered.
+
+<span class="k">NOT VERIFIED</span>
+  What was not checked, could not be checked, or remains uncertain.</code></pre>
+  </figure>
+
+  <p>An agent shouldn&#8217;t return <code>done</code> without those fields. <code>NOT VERIFIED: none within the stated scope</code> is a valid answer. Silence is not. If you adopt nothing else in this document, these four fields already separate completion from a plausible completion story.</p>
+
+  <p>The difference is visible in a small example. The identifiers are illustrative:</p>
+
+  <div class="split">
+    <figure class="card card--bad">
+      <figcaption>Agent report</figcaption>
+<pre><code>Done. Implemented UTF-8 export
+support. Tests pass.</code></pre>
+      <p class="card__note">Asks for trust.</p>
+    </figure>
+    <figure class="card card--good">
+      <figcaption>Proof of Done</figcaption>
+<pre><code><span class="k">DONE:</span> UTF-8 report export implemented
+      at 5f21ac3.
+<span class="k">PROOF:</span> test_export_preserves_utf8
+      passed in CI run 1842.
+<span class="k">SCOPE:</span> Linux / Node 24 / REQ-014.
+<span class="k">NOT VERIFIED:</span> Excel import on Windows.</code></pre>
+      <p class="card__note">Gives you places to disagree.</p>
+    </figure>
+  </div>
+
+  <p>The first report asks for trust. The second gives you places to disagree.</p>
+
+  <p>The word <code>done</code> also hides several states that should not be collapsed:</p>
+
+  <div class="tablewrap">
+  <table>
+    <caption class="tbl-cap">Table 2 &#8212; The states hidden inside &#8220;done&#8221;</caption>
+    <thead><tr><th scope="col">State</th><th scope="col">What it says</th></tr></thead>
+    <tbody>
+      <tr><td><code>generated</code></td><td>an artifact exists</td></tr>
+      <tr><td><code>executed</code></td><td>code or a check ran</td></tr>
+      <tr><td><code>passed</code></td><td>a successful result was observed</td></tr>
+      <tr><td><code>verified</code></td><td>an appropriate check ran and has demonstrated that it can discriminate failure from success</td></tr>
+      <tr><td><code>validated</code></td><td>the result addresses the intended user or system outcome</td></tr>
+      <tr><td><code>accepted</code></td><td>required coverage is closed and every remaining limit is explicit</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The common failure is a jump from <code>generated</code> to <code>done</code>. Once you name the intermediate states, you can see where the claim outran the evidence and stop there without pretending the whole change failed.</p>
+
+  <h3 id="values" class="sub">The four values <a class="anchor" href="#values" aria-label="Link to this subsection">#</a></h3>
+
+  <p>We value:</p>
+
+  <div class="values">
+    <div class="value"><p class="value__t">Evidence over confidence.</p><p>A calm, detailed report isn&#8217;t stronger than the artifact it describes.</p></div>
+    <div class="value"><p class="value__t">Intent over output.</p><p>A large change cannot compensate for a requirement that disappeared before implementation.</p></div>
+    <div class="value"><p class="value__t">Explicit structure over emergent motion.</p><p>Activity is not a plan, and chronology is not dependency.</p></div>
+    <div class="value"><p class="value__t">Durable truth over conversational state.</p><p>The context window helps an agent think, but it isn&#8217;t the system&#8217;s memory.</p></div>
+  </div>
+
+  <p>The items on the right still matter. Confidence helps people act, output is why the work exists, discovery changes plans, and conversation is where much of the reasoning happens. The items on the left are what make their results trustworthy (and what let you disagree with the result precisely).</p>
+
+  <p>This does not mean every change needs the same pipeline, every uncertainty can be automated away, every agent needs a person watching it, or every internal thought belongs in a permanent log. Proof should be proportionate, privacy-preserving, and produced by the work itself. The standard governs the completion claim, not one mandatory toolchain.</p>
+</section>
+
+<section id="graphs" class="sec">
+  <h2 class="sec__h"><span class="sec__n">03</span> The three graphs <a class="anchor" href="#graphs" aria-label="Link to this section">#</a></h2>
+
+  <p>Agentic development is usually drawn as one pipeline: prompt in, code out. When you draw it that way, you omit the two graphs that decide whether the output is useful. A complete system aligns three graphs (not three documents that happen to use the same feature name).</p>
+
+  <h3 id="intent-graph" class="sub">The intent graph <a class="anchor" href="#intent-graph" aria-label="Link to this subsection">#</a></h3>
+
+  <p>The intent graph says why the change should exist and what must become true. It starts before requirements, with a user or system problem, a hypothesis about what will improve it, and a signal that could show whether the hypothesis survived contact with reality. Requirements, decisions, constraints, scenarios, contracts, and failure behaviour follow. I treat a requirement with no observable as unfinished because you cannot connect it to the evidence graph later without inventing the test after seeing the implementation.</p>
+
+  <h3 id="execution-graph" class="sub">The execution graph <a class="anchor" href="#execution-graph" aria-label="Link to this subsection">#</a></h3>
+
+  <p>The execution graph says how the change will be produced. Its nodes are tasks, owners, transformations, integrations, and gates (the pieces you can schedule, isolate, retry, and inspect). Its edges are real dependencies.</p>
+
+  <h3 id="evidence-graph" class="sub">The evidence graph <a class="anchor" href="#evidence-graph" aria-label="Link to this subsection">#</a></h3>
+
+  <p>The evidence graph says how the result will be known. Its nodes are assertions, test runs, reviews, measurements, deployment observations, reachable surfaces, outcome observations, and acceptance decisions. If you build this graph only after the code exists, you have already let the output decide what counts as success.</p>
+
+  <figure class="fig">
+    <div class="fig__scroll">
+<pre class="ascii">┌─ INTENT ──────────────────────────────────────────────────────────────────────────────┐
+│  Problem ──► Hypothesis ──► Requirement ──► Decision ──► Contract + failure behaviour │
+└──────────────────────────────────┬───────────────────────────┬────────────────────────┘
+                       assigned to │                constrains │
+                                   ▼                           ▼
+┌─ EXECUTION ───────────────────────────────────────────────────────────────────────────┐
+│  Task ──► Change ──► Integrated result ──► Reachable surface                          │
+└──────────────┬─────────────────────────────────────┬──────────────────────────────────┘
+      observes │                            observes │
+               ▼                                     ▼
+┌─ EVIDENCE ────────────────────────────────────────────────────────────────────────────┐
+│  Implementation check ──► Observed result ──► Delivery acceptance                     │
+│  Outcome observation ─────────────────────────────► Product learning                  │
+└───────────────────────────────────────────────────────────────────────────────────────┘
+
+      Delivery acceptance ── closes ──►  Requirement  ┐
+                                                      ├─ back into INTENT
+      Product learning    ── updates ─►  Hypothesis   ┘</pre>
+    </div>
+    <figcaption>FIG. 1 &#8212; Three graphs, and the edges that close the loop back into intent.</figcaption>
+  </figure>
+
+  <p>Done is not a status attached to the task node. It is a coverage relation across the three graphs: for every required outcome, there must be a continuous path through the work that implemented it, the check that observed it, and the acceptance that closed it. If the path breaks, you may still have a promising, useful, or partially complete change. You do not have proven completion.</p>
+
+  <p>Product truth needs one more distinction. A change can be implementation-verified and product-unvalidated. Delivery acceptance proves that the team built the agreed change and exposed it correctly. It does not prove that the hypothesis was right, that people will use the result, or that the expected outcome will move. Some outcome evidence cannot exist until after release, so <code>unobserved</code> is a legitimate product state. Pretending delivery proof is outcome proof is not.</p>
+
+  <blockquote class="q"><p>Proof of Done does not require a product hypothesis to be true before it can be tested. It requires the hypothesis, its success signal, and its current evidence state to remain explicit.</p></blockquote>
+
+  <p>This model catches a class of failures that document-by-document review misses. A specification may be internally consistent, a plan may cover every heading in that specification, the code may satisfy the plan, and the tests may satisfy the code, while the delivered surface still fails the original requirement because the loss happened between layers. In my runs, walking the seams has been more informative than spending another pass polishing any single artifact.</p>
+
+  <h3 id="node" class="sub">A node has one job <a class="anchor" href="#node" aria-label="Link to this subsection">#</a></h3>
+
+  <p>A useful node has one input, one job, one output, one owner, and its own completion test. &#8220;Research the problem, design the solution, implement it, and verify it&#8221; is not a node. It is four nodes wearing one name, which means you cannot tell which part deserves a retry when the combined result fails. The node is the unit that can be retried, reviewed, cached, replaced, or assigned to an isolated agent (a separate context window is often the real benefit). Smaller does not always mean better, but mixed responsibilities make failure impossible to locate.</p>
+
+  <h3 id="edge" class="sub">An edge carries an artifact <a class="anchor" href="#edge" aria-label="Link to this subsection">#</a></h3>
+
+  <p>An execution graph is not a list with arrows. An edge exists only when the downstream node consumes something the upstream node produced, and that thing should be named (a file, schema, signature, decision, value, fixture, identifier, or verified result).</p>
+
+  <blockquote class="q q--key"><p>An edge that carries no named artifact is chronology drawn as architecture.</p></blockquote>
+
+  <p>This gives you a simple fake-edge test. Draw the tasks and the proposed arrows, then write what crosses each arrow. If you can&#8217;t name the payload, delete the edge. Work with no remaining incoming edge can begin immediately. On a wide plan, removing false waiting can save an afternoon without adding a single agent (a local cost to measure, not a universal benchmark).</p>
+
+  <p>The test reveals both safe and false parallelism. Two tasks with different names are not independent when both mutate the same target. Shared mutable state requires an explicit concurrency protocol. Without one, it has one owner at a time (a file, decision register, schema, namespace, or remote resource can all be the target). Git records what happened after a write. It doesn&#8217;t say who is about to write now.</p>
+
+  <h3 id="checker" class="sub">Parallel work needs a checker <a class="anchor" href="#checker" aria-label="Link to this subsection">#</a></h3>
+
+  <p>Fan-out is cheap. Trusting every branch because it returned isn&#8217;t. A wide parallel run can create more review surface than one person can inspect before the context that produced it has already moved on.</p>
+
+  <figure class="fig">
+    <div class="fig__scroll">
+<pre class="ascii">                 ┌──► Independent branch A ──┐
+                 │                           │
+                 │                           │              ┌──► validated outputs ──► CONVERGENCE
+Locked input ────┼──► Independent branch B ──┼──► CHECKER ──┤
+                 │                           │              └──► missing or contradictory
+                 │                           │                          │
+                 └──► Independent branch C ──┘                          ▼
+                                                               STOP, route the finding</pre>
+    </div>
+    <figcaption>FIG. 2 &#8212; A checker stands between fan-out and convergence. It does not repair; it validates or stops.</figcaption>
+  </figure>
+
+  <p>The checker confirms that every expected output arrived, matches its contract, carries its evidence, and does not contradict a sibling (including a sibling that used different words for the same shared assumption). Convergence shouldn&#8217;t quietly repair malformed inputs. It either consumes validated results or stops.</p>
+
+  <p>The checker needs proof too. A mechanism that always returns green is only another agent-shaped source of confidence. Before I trust a new check, I want evidence that it can discriminate failure from success (a planted defect, mutation test, known failing fixture, or recorded historical failure can provide it). You don&#8217;t need to repeat the negative control on every run, but you do need to know that green has an opposite state. In the reference implementation this is a suite rather than a habit: every guard is fed a planted defect and required to reject it, and a check that no longer rejects its own plant is a red step rather than a green one. <a class="ev" href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/test/negatives.py">negatives</a></p>
+
+  <h3 id="stable-graph" class="sub">Stable graph, bounded discovery <a class="anchor" href="#stable-graph" aria-label="Link to this subsection">#</a></h3>
+
+  <p>The planned dependency graph should be acyclic, retries should be bounded, and learning should remain cyclic. Discovery is allowed to reveal missing work, a new dependency, or a bad module boundary. It may propose a new graph, but it may not silently become one. I record the revision and its reason, then make the graph stable again before execution continues (otherwise the run can always explain completion by appealing to a plan that existed only at the end). A self-modifying graph may be flexible, but if you cannot reconstruct its shape, you cannot falsify its completion claim.</p>
+</section>
+
+<section id="autonomy" class="sec">
+  <h2 class="sec__h"><span class="sec__n">04</span> Bounded autonomy <a class="anchor" href="#autonomy" aria-label="Link to this section">#</a></h2>
+
+  <p>The answer to agent risk is not constant supervision. If you must approve every file read, test command, or local edit, the agent is an expensive keyboard macro. Even a hypothetical 30-second local operation can then acquire an hour-long human round trip. Autonomy should be granted before execution and interrupted only at named boundaries. I see three parties in that arrangement (not the usual two).</p>
+
+  <div class="parties">
+    <div class="party"><p class="party__t">The human owns meaning</p><p>goals, trade-offs, unresolved product decisions, acceptance policy, and authority over consequential actions.</p></div>
+    <div class="party"><p class="party__t">The agent owns execution</p><p>investigation, decomposition, implementation, testing, evidence collection, documentation updates, and the honest reporting of limits.</p></div>
+    <div class="party"><p class="party__t">The mechanism owns enforcement</p><p>schemas, permissions, gates, isolation, leases, logs, state, and the checks that must run even when nobody remembers to ask.</p></div>
+  </div>
+
+  <p>Anything a mechanism can decide reliably shouldn&#8217;t depend on an agent remembering a paragraph. Prompts remain useful, but they are the weakest control surface in the system. A test is stronger than an instruction, a precondition is stronger than a warning, and a credential that cannot reach production is stronger than a sentence saying not to use it there (because the last control still works after context loss).</p>
+
+  <h3 id="gates" class="sub">Three gate types <a class="anchor" href="#gates" aria-label="Link to this subsection">#</a></h3>
+
+  <p>An <strong>automatic gate</strong> decides a fact a machine can establish: a schema resolves, a suite ran, an expected artifact exists, a reference points somewhere real, or all required ids appear in the coverage table. A <strong>judgment gate</strong> evaluates something that has no complete deterministic check (architectural coherence, visual quality, whether a user flow makes sense, or whether a trade-off is acceptable). Another agent can perform this review, preferably with an isolated context, but its verdict remains judgment and should be labelled as such. A <strong>manual gate</strong> protects ambiguity, external publication, irreversible action, money movement, production access, destructive operations, and changes of scope. The agent prepares the decision and its evidence. The authorised person decides.</p>
+
+  <h3 id="provenance" class="sub">When the actor is an agent <a class="anchor" href="#provenance" aria-label="Link to this subsection">#</a></h3>
+
+  <p>When an agent produces the change, the proof should identify the execution that produced it: model and runtime, policy and instruction versions, tools and permissions, context boundaries, retries, abstentions, and the trace that connects actions to results. A correct final artifact can follow an unsafe trajectory, while a clean-looking trajectory can still produce the wrong artifact. Proof of Done needs enough provenance to investigate both without preserving every private token forever.</p>
+
+  <p>A second agent is not automatically an independent reviewer. If implementer and reviewer share the same model, context, sources, specification error, and judge, their agreement can be one correlated mistake reported twice. Independence comes from a different evidence path: a deterministic runner, a contract maintained at another boundary, an isolated context, a differently calibrated judge, an external system, or a production observation.</p>
+
+  <p>Where the check itself is probabilistic, its proof includes the rubric, calibration evidence, trace ids, and abstentions. A judge that has never been observed disagreeing is the agentic version of a green check nobody watched turn red.</p>
+
+  <p>Not every acceptance requires a human click. You can define a policy that closes low-risk changes automatically, while a human owns the policy and its boundaries rather than every invocation of it. The point isn&#8217;t to place a person everywhere. It is to place authority where the cost of a wrong action lasts longer than the run. Imagine 2 weeks of cleanup after a careless migration: that is not autonomy, no matter how quickly the migration was generated.</p>
+
+  <h3 id="loop" class="sub">One item to its gate <a class="anchor" href="#loop" aria-label="Link to this subsection">#</a></h3>
+
+  <p>Continuous execution should advance one recorded item to its next gate, then re-read the goal and queue before selecting another. The queue lives in an artifact, not in the agent&#8217;s recollection of the plan. This prevents a common form of drift: the agent continues efficiently after the reason for the next task has changed. I don&#8217;t call a loop without a durable queue autonomy. It is a timer attached to memory. The loop stops for a manual gate, an unresolved dependency, genuine ambiguity, or completion, but it doesn&#8217;t stop to ask whether it should continue when that choice was already granted at intake.</p>
+
+  <h3 id="churn" class="sub">Churn is a decision at the wrong layer <a class="anchor" href="#churn" aria-label="Link to this subsection">#</a></h3>
+
+  <p>A repeating loop should record what changed, why it changed, what new information arrived, and which pass produced it. Memory isn&#8217;t enough after compaction, and &#8220;one more pass&#8221; isn&#8217;t an exit criterion, especially when consecutive rounds touch the same file for the same reason.</p>
+
+  <p>Stop when a change returns from shape A to shape B and back to A, the same file is edited twice for the same finding, a closed finding is resurrected, or two stages keep handing the artifact back. If you see one of those patterns, a requirement, contract, review rule, or module boundary is probably being re-decided inside the code.</p>
+
+  <blockquote class="q q--key"><p>Never resolve a higher-layer conflict inside a lower-layer loop.</p></blockquote>
+
+  <p><a class="ev" href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/loop-guard.md#L51-L72">loop&nbsp;guard</a> &#8212; the detection rules, and the bookkeeping that makes them mechanical rather than a matter of noticing.</p>
+
+  <p>If the plan contradicts the specification, return to the specification or plan. If two modules claim the same entity, repair the decomposition. I have never seen patching code until it satisfies two incompatible meanings resolve the disagreement. It only hides where the conflict belongs (and charges the next run for finding it again).</p>
+</section>
+
+<section id="record" class="sec">
+  <h2 class="sec__h"><span class="sec__n">05</span> The Proof record <a class="anchor" href="#record" aria-label="Link to this section">#</a></h2>
+
+  <p>For a larger change, the same contract becomes a portable record. The format below is illustrative rather than mandatory (I care about the fields, not the serialisation). You should be able to render the same record as Markdown for a person and as structured data for a gate.</p>
+
+  <figure class="term term--doc">
+    <figcaption class="term__bar">
+      <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="term__title">proof-of-done.yaml</span>
+    </figcaption>
+<pre class="term__body"><code><span class="k">proof_of_done:</span>
+  <span class="k">intent:</span>
+    <span class="k">problem:</span> <span class="s">"Reports with non-ASCII titles cannot be exchanged reliably"</span>
+    <span class="k">hypothesis:</span> <span class="s">"A UTF-8 export removes the failure at the exchange boundary"</span>
+    <span class="k">success_signal:</span> <span class="s">"A real downstream importer preserves the title"</span>
+    <span class="k">requirements:</span> [REQ-014]
+    <span class="k">decisions:</span> [DEC-0031]
+  <span class="k">producer:</span>
+    <span class="k">actor:</span> <span class="s">"coding-agent"</span>
+    <span class="k">model:</span> <span class="s">"model-id"</span>
+    <span class="k">runtime:</span> <span class="s">"agent-runtime@version"</span>
+    <span class="k">policy:</span> <span class="s">"delivery-policy@7"</span>
+    <span class="k">instructions:</span> <span class="s">"instructions@commit"</span>
+    <span class="k">trace:</span> <span class="s">"trace://run/1842"</span>
+  <span class="k">change:</span>
+    <span class="k">commit:</span> <span class="s">"5f21ac3"</span>
+    <span class="k">artifacts:</span>
+      - <span class="s">"src/export/report.ts"</span>
+  <span class="k">evidence:</span>
+    - <span class="k">claim:</span> <span class="s">"Non-ASCII report titles survive export"</span>
+      <span class="k">check:</span> <span class="s">"test_export_preserves_utf8"</span>
+      <span class="k">result:</span> <span class="s">"passed"</span>
+      <span class="k">artifact:</span> <span class="s">"ci://run/1842"</span>
+      <span class="k">environment:</span> <span class="s">"node-24-linux"</span>
+      <span class="k">demonstrated_failure:</span> <span class="s">"mutation://run/1839"</span>
+      <span class="k">observed_at:</span> <span class="s">"timestamp"</span>
+  <span class="k">product_evidence:</span>
+    <span class="k">status:</span> <span class="s">"unobserved"</span>
+    <span class="k">observation:</span> <span class="s">"pending downstream import"</span>
+  <span class="k">validity:</span>
+    <span class="k">applies_to:</span> <span class="s">"commit:5f21ac3"</span>
+    <span class="k">invalidated_by:</span>
+      - <span class="s">"code-change"</span>
+      - <span class="s">"dependency-change"</span>
+      - <span class="s">"environment-change"</span>
+      - <span class="s">"policy-change"</span>
+  <span class="k">not_verified:</span>
+    - <span class="s">"Excel import behaviour on Windows"</span>
+  <span class="k">exceptions:</span> []
+  <span class="k">acceptance:</span>
+    <span class="k">delivery_status:</span> <span class="s">"verified"</span>
+    <span class="k">product_status:</span> <span class="s">"unobserved"</span>
+    <span class="k">policy:</span> <span class="s">"delivery-policy@7"</span>
+    <span class="k">accepted_by:</span> <span class="s">"release-gate"</span></code></pre>
+  </figure>
+
+  <p>The record doesn&#8217;t need to become paperwork completed after the work. It should be assembled from artifacts the work already produces: requirement ids from intent, commits from version control, checks from the runner, environment and policy versions from the execution trace, and acceptance from the resulting coverage. Evidence should be produced as a side effect of the work. Every field completed manually after the run is automation debt.</p>
+
+  <p>Use the cost as a design test: if maintaining proof takes 20 minutes after a hypothetical 5-minute edit, the implementation is wrong. The system should compute what it can and ask for judgment only where computation ends.</p>
+
+  <h3 id="evidence-kinds" class="sub">What counts as evidence <a class="anchor" href="#evidence-kinds" aria-label="Link to this subsection">#</a></h3>
+
+  <p>Evidence has an address and a scope. It may be a command with output, an executed test by name, a commit, a trace id, a deployment identifier, a screenshot tied to a scenario, a production observation, or a decision record. The medium is less important than three properties: you can resolve it, it belongs to the change being claimed, and it proves no more than it observed (the last property is the one green dashboards routinely lose).</p>
+
+  <p>The producer of a claim shouldn&#8217;t be its only judge. Independence can come from a deterministic runner, a contract test maintained at another boundary, an isolated reviewer, an external system, or production telemetry. I don&#8217;t need a human reviewer for every line, but I do want the strongest evidence farther from the component that produced the claim as the cost of being wrong rises (a billing webhook and a colour token shouldn&#8217;t carry the same burden).</p>
+
+  <p>An honest negative is evidence too. &#8220;Not done: the production check requires a credential this run does not have&#8221; is a complete report. &#8220;Done, with one small caveat&#8221; for the same state is not. A closed status vocabulary helps because you can route each state without negotiating its meaning again:</p>
+
+  <div class="tablewrap">
+  <table>
+    <caption class="tbl-cap">Table 3 &#8212; The closed status vocabulary</caption>
+    <thead><tr><th scope="col">Status</th><th scope="col">Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>verified</code></td><td>required evidence exists within the declared scope</td></tr>
+      <tr><td><code>partial</code></td><td>only a named portion is complete</td></tr>
+      <tr><td><code>deferred</code></td><td>the remainder has an accepted owner and destination</td></tr>
+      <tr><td><code>dropped</code></td><td>the requirement was explicitly removed by an authorised decision</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p><code>unknown</code> may appear during work. It cannot close acceptance (otherwise uncertainty becomes the easiest route through the gate).</p>
+
+  <h3 id="expiry" class="sub">Proof expires <a class="anchor" href="#expiry" aria-label="Link to this subsection">#</a></h3>
+
+  <p>Evidence remains attached to the state it observed. A code change, dependency update, environment change, policy revision, or expired outcome window can invalidate part of the proof without making the historical record false. The record should therefore say both what it applies to and what would invalidate it.</p>
+
+  <p>Invalidation is not deletion. The old proof remains useful for reconstruction, while the current change returns to the earliest uncovered node in the evidence graph. Re-running every check after every edit wastes time. Re-running none of them turns history into fiction. The dependency between change and evidence decides which checks are owed.</p>
+
+  <figure class="fig">
+    <div class="fig__scroll">
+<pre class="ascii">  Accepted proof
+        │
+        ▼
+  Code, dependency, environment, or policy change
+        │
+        ▼
+  Map the change to covered claims
+        │
+        ├── claim unaffected ──────────────────────────► proof remains valid for that claim
+        │
+        └── claim affected ──►  CHECK OWED  ──┬── passes ────────────────► new proof version
+                                              │
+                                              └── fails or cannot run ──► UNPROVEN state</pre>
+    </div>
+    <figcaption>FIG. 3 &#8212; Invalidation is a routing decision, not a deletion.</figcaption>
+  </figure>
+
+  <h3 id="docs" class="sub">Documentation is part of the proof <a class="anchor" href="#docs" aria-label="Link to this subsection">#</a></h3>
+
+  <p>A claim without a reachable proof is not documentation. It is decoration. Every fact should have one authoritative home, while other documents link to it or compute from it rather than hoping every future agent edits all copies. Numbers should be computed rather than carried from an earlier report. References should resolve from where the document is read. What wasn&#8217;t checked should sit beside what was, an estimate shouldn&#8217;t be printed as a measurement, and documentation and code should ship in the same release unit (even when they live in different repositories).</p>
+
+  <p>This isn&#8217;t style guidance. Documentation is durable context for the next agent. If it lies, the next run begins with a fabricated premise. A hypothetical 2 days of clean work against the wrong system is enough to erase any time saved during generation. I have found stale documentation more dangerous than missing documentation because you know to investigate the second one.</p>
+
+  <h3 id="context" class="sub">Context is cache <a class="anchor" href="#context" aria-label="Link to this subsection">#</a></h3>
+
+  <p>The conversation helps the agent reason. Durable state belongs outside it. Goals, requirements, decisions, module maps, current ownership, verified work, open questions, and acceptance records should survive compaction, process failure, and a change of agent. A path costs a few tokens and can name an artifact of any size. A summary costs more and can still omit the one constraint the next run needed (summarisers preserve stories better than exact state).</p>
+
+  <p>At a context boundary, transfer typed state rather than a new narrative: the active goal, the current item, restrictions, files touched, checks already run, unresolved decisions, and the next gate. If you know a compaction boundary is close, finish the in-flight item and make the ledgers true rather than opening another branch.</p>
+
+  <blockquote class="q"><p>The transcript can be compressed. The contract cannot.</p></blockquote>
+</section>
+
+<section id="seams" class="sec">
+  <h2 class="sec__h"><span class="sec__n">06</span> Acceptance walks the seams <a class="anchor" href="#seams" aria-label="Link to this section">#</a></h2>
+
+  <p>Every earlier gate asks whether its own artifact is good. Delivery acceptance asks whether anything disappeared between them (a different question with a different search strategy). Product learning then asks whether the accepted surface changed the outcome named in the hypothesis.</p>
+
+  <p>The delivery walk starts at the requirement and crosses every layer:</p>
+
+  <figure class="fig">
+    <div class="fig__scroll">
+<pre class="ascii">  Requirement with an observable
+        │   did it rest on a decision somebody actually made?
+        ▼
+  Recorded decision
+        │   did the decision reach the specification?
+        ▼
+  Design or specification
+        │   did the specification define a contract and its failure behaviour?
+        ▼
+  Contract and failure behaviour
+        │   did a task build that contract?
+        ▼
+  Task with a satisfiable definition of done
+        │   did the change satisfy the task as written?
+        ▼
+  Change in the tree
+        │   did an executed check observe the changed behaviour?
+        ▼
+  Executed check
+        │   can you or a downstream system reach it?
+        ▼
+  Reachable user or system surface
+        │   does the result satisfy the ORIGINAL requirement?
+        ▼
+  Acceptance</pre>
+    </div>
+    <figcaption>FIG. 4 &#8212; The seam walk. Every rung names the artifact that should exist next, so absence becomes findable.</figcaption>
+  </figure>
+
+  <p>At each seam, ask one narrow question. Did the requirement rest on a decision somebody actually made? Did the decision reach the specification? Did the specification define a contract and its failure behaviour? Did a task build that contract? Did the change satisfy the task as written? Did an executed check observe the changed behaviour? Can you or a downstream system reach it? Does the result satisfy the original requirement rather than the local interpretation that emerged halfway through the run?</p>
+
+  <p>Horizontal review compares artifacts that already exist and finds contradiction. The seam walk can find absence because each rung tells us what artifact should exist next (you can finally look for the missing side of a comparison).</p>
+
+  <p>This distinction mattered in my own pipeline. Repeated horizontal audit passes continued to find defects, but an increasing share came from the previous pass&#8217;s own edits. By pass 6, 10 of 13 findings were self-inflicted. A vertical pass over one capability found missing layers the document-to-document comparisons could not represent. I didn&#8217;t need another careful reading. I needed a different axis. <a class="ev" href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/audit.md#L44-L64">E2</a></p>
+
+  <h3 id="convergence" class="sub">Release acceptance happens at convergence <a class="anchor" href="#convergence" aria-label="Link to this subsection">#</a></h3>
+
+  <p>A component is not accepted merely because its own repository is green. The backend, client, infrastructure, documentation, and configuration may each be correct against different versions of the contract. Release acceptance belongs at the point where their exact versions converge and the cross-component path is observed.</p>
+
+  <p>This is the same rule as parallel branches in a smaller graph. Local proof travels with each component. The release proof verifies the composition. A submodule, package, or service is finished for the release only when the system that consumes it identifies the accepted version and proves the seam. The mechanical form is small and easy to forget: a parent records a submodule as a pointer to one commit, so the work can be committed, pushed and green while a clone of the parent still gets the commit before it &#8212; neither repository looks wrong alone. <a class="ev" href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/acceptance.md#L155-L190">convergence</a></p>
+
+  <h3 id="residue" class="sub">Completion includes residue <a class="anchor" href="#residue" aria-label="Link to this subsection">#</a></h3>
+
+  <p>A run produces more than a diff. It can leave background processes, monitors, scheduled wake-ups, worktrees, containers, leases, scratch files, test data, draft pull requests, uploaded artifacts, and changed feature flags. I once measured 18 containers still running across four unrelated projects, the oldest alive for 3 days. Proof of Done records what remains (it does not grant authority to delete all of it). <a class="ev" href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L173-L206">E4</a></p>
+
+  <p>The run may end what it started. It may remove older state from the same project only when that state is provably spent. It reports foreign or ambiguously owned state and leaves it alone. If you don&#8217;t know who owns a resource, a clean number is not worth deleting someone else&#8217;s work.</p>
+
+  <p>Teardown is verified by re-reading state, not by trusting the cancellation response. An API can accept a request to stop something that was already gone, so you need the second observation (the reply proves the call was accepted, not that the world changed).</p>
+
+  <h3 id="skeleton" class="sub">A walking skeleton comes first <a class="anchor" href="#skeleton" aria-label="Link to this subsection">#</a></h3>
+
+  <p>Agents are unusually good at generating volume, which makes breadth-first implementation tempting and dangerous. Build the thinnest real path first: real input, real contract, minimal implementation, real storage or integration, reachable output, and one end-to-end observation. Then expand by independently testable modules. If the first real case still cannot move through the system, a shelf of finished components is inventory rather than progress (a walking skeleton is the first evidence that a system exists).</p>
+</section>
+
+<section id="learns" class="sec">
+  <h2 class="sec__h"><span class="sec__n">07</span> The system learns <a class="anchor" href="#learns" aria-label="Link to this section">#</a></h2>
+
+  <p>The planned work graph should converge. The engineering system around it should learn forever (the first is delivery, the second is adaptation).</p>
+
+  <p>A retrospective is owed when the run diverges: a gate reopened, a stage was re-entered, a fix broke an unrelated surface, an assumption turned out to be false, or a person had to intervene where the operating contract said they wouldn&#8217;t. I don&#8217;t write one merely because a run ended. A ritual retrospective consumes time and teaches the system that silence means success.</p>
+
+  <p>The lesson should name the symptom, where it surfaced, which earlier layer let it through, the root cause, the correction, the check that would have caught it sooner, and the commit that carries the fix. &#8220;The agent was careless&#8221; isn&#8217;t a root cause. If you cannot turn the explanation into a changed mechanism or decision, the next run has nothing to execute differently.</p>
+
+  <figure class="fig">
+    <div class="fig__scroll">
+<pre class="ascii">   ┌────────────────────────────────────────────────────────────────────────────────────┐
+   │                                                                                    │
+   ▼                                                                                    │
+  RUN ──► Observed ──► Owning layer ──► Mechanical check,  ──► Next run ──► Did the     │
+          divergence   and root cause   bounded rule, or                    mechanism   │
+                                        expiring note                        fire?      │
+                                                                               │        │
+                                                yes ──► keep and measure ──────┤        │
+                                                                               │        │
+                       surface gone / rule cold ──► retire, preserve history ──┴────────┘</pre>
+    </div>
+    <figcaption>FIG. 5 &#8212; The learning loop. A rule that stops earning its tokens is retired, not archived in place.</figcaption>
+  </figure>
+
+  <p>There are three grades of learning.</p>
+
+  <p>The strongest is mechanical: a test, lint rule, gate, hook, schema, or policy. The check becomes the memory, so no agent has to read the lesson again. The second is a standing instruction for decisions a mechanism cannot make (it needs an owner and a retirement condition when it is born). The third is an expiring note for something still being understood. It gets promoted to a mechanism or instruction, or it disappears. A permanent pile of lessons becomes a context tax. Eventually agents skim the whole thing, including the few rules that mattered.</p>
+
+  <blockquote class="q q--key"><p>A failure class that repeats becomes a mechanism, not another paragraph.</p></blockquote>
+
+  <p>The reverse matters as much. When a rule becomes a check, the prose rule should retire. When the surface it protects disappears, the rule should retire. I keep the history reachable but the active instruction floor short enough to read (a rule that costs tokens forever needs to keep earning them).</p>
+</section>
+
+<section id="proportion" class="sec">
+  <h2 class="sec__h"><span class="sec__n">08</span> From four lines to a full pipeline <a class="anchor" href="#proportion" aria-label="Link to this section">#</a></h2>
+
+  <p>This manifesto doesn&#8217;t require every typo to cross a full delivery process. The amount of machinery should be proportional to the cost of being wrong (and the reversibility of the action).</p>
+
+  <p>A local, mechanical, reversible edit may need a narrow check, a diff inspection, and the four-line Done Report. A normal feature or fix needs explicit intent, a work graph, implementation, review, the appropriate suite, documentation, and acceptance coverage. A change that moves money, reaches production data, changes access, deletes state, or sends an external message needs isolation, independent evidence, bounded credentials, manual authority at the consequential boundary, rollback, and a post-action observation. You should be able to explain why the second path costs more than the first without appealing to ceremony.</p>
+
+  <blockquote class="q"><p>The ceremony changes. The requirement for honest evidence doesn&#8217;t.</p></blockquote>
+
+  <h3 id="depth" class="sub">Proof depth follows risk <a class="anchor" href="#depth" aria-label="Link to this subsection">#</a></h3>
+
+  <p>How much proof is enough? A hypothetical one-hour manual checklist is too much for a reversible edit and may be too little for a production deletion, so the required proof grows along four inspectable axes rather than a universal score:</p>
+
+  <div class="tablewrap">
+  <table>
+    <caption class="tbl-cap">Table 4 &#8212; The four axes of proof depth</caption>
+    <thead><tr><th scope="col">Axis</th><th scope="col">Question</th></tr></thead>
+    <tbody>
+      <tr><td>Impact</td><td>What can be harmed if the claim is wrong?</td></tr>
+      <tr><td>Irreversibility</td><td>How difficult is the action to undo?</td></tr>
+      <tr><td>Uncertainty</td><td>How much of the behaviour cannot be checked deterministically?</td></tr>
+      <tr><td>Coordination</td><td>How many agents, repositories, services, and owners meet at the change?</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>These axes are not a fake numerical score. They are a reason the team can inspect. A local reversible edit and a production migration do not need equal ceremony, while both still owe an honest statement of what was checked.</p>
+
+  <h3 id="policy" class="sub">Policy, exceptions, and ownership <a class="anchor" href="#policy" aria-label="Link to this subsection">#</a></h3>
+
+  <p>Proof of Done is the interface between autonomous production and organisational trust. A team therefore needs one owner for the acceptance policy: which evidence types are allowed, which gates are manual, what independence means at each risk level, how long evidence remains valid, and who may change those rules. Every acceptance records the policy version that governed it.</p>
+
+  <p>Exceptions will exist. Hiding them in chat is optional governance. A real exception carries an owner, reason, scope, expiry, compensating control, and the authority that accepted it. It does not rewrite <code>partial</code> as <code>verified</code>, and it cannot silently become the default for the next run.</p>
+
+  <p>The cost compounds quickly: a hypothetical waiver that saves 10 minutes now and is rediscovered on every later run is deferred process design, not saved time.</p>
+
+  <p>The useful measurements follow from the model: requirements with no evidence path, <code>unlooked</code> and <code>abstained</code> checks, reopened gates, false-green incidents, invalidated proofs, repeated failure classes, manual proof fields that still need automation, and the time between implementation complete and accepted. Lines of generated code do not appear on that list.</p>
+
+  <p>Teams can adopt the model in layers:</p>
+
+  <ol class="ladder">
+    <li><span class="ladder__n">1</span><span>Replace bare <code>done</code> with <code>DONE</code>, <code>PROOF</code>, <code>SCOPE</code>, and <code>NOT VERIFIED</code>.</span></li>
+    <li><span class="ladder__n">2</span><span>Give every requirement an observable check, and every product hypothesis a success signal.</span></li>
+    <li><span class="ladder__n">3</span><span>Draw dependencies as artifact-carrying edges and add ownership for shared mutation.</span></li>
+    <li><span class="ladder__n">4</span><span>Record the provenance of agent-produced changes and the independence of their review.</span></li>
+    <li><span class="ladder__n">5</span><span>Build acceptance coverage across intent, execution, evidence, and the release convergence point.</span></li>
+    <li><span class="ladder__n">6</span><span>Turn repeated failures into mechanisms and retire the prose they replace.</span></li>
+  </ol>
+
+  <h3 id="implementation" class="sub">The reference implementation <a class="anchor" href="#implementation" aria-label="Link to this subsection">#</a></h3>
+
+  <p>I didn&#8217;t arrive at this model by designing an ideal process on a blank page. I arrived at it while building and repeatedly breaking a working agent delivery system (the failures above are records from that work). Rules that existed only in prose were skipped. Green checks turned out not to observe their subject. Reviews began finding defects introduced by the previous review. Context summaries preserved the story and lost the state. Each failure added a mechanism, or removed a rule that had been pretending to be one.</p>
+
+  <p>The reference implementation is packaged in my <a href="https://github.com/ssheleg/sshlg-skills">sshlg-skills</a> project &#8212; with what it has not yet built <a href="https://github.com/ssheleg/task-pipeline/blob/main/docs/evidence/backlog.md">filed openly</a> rather than described as shipped, because that is the rule this document argues for. It installs as Claude Code plugins and as portable Agent Skills for other coding agents through one command. <a class="ev" href="https://github.com/ssheleg/sshlg-skills/blob/b01050170cf8c2a7ee56f645e2d01e87cf3b0d17/README.md#L7-L16">E3</a></p>
+
+  <figure class="term term--wide">
+    <figcaption class="term__bar">
+      <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="term__title">install</span>
+      <button class="copy" type="button" data-copy="npx sshlg-skills install">copy</button>
+    </figcaption>
+    <pre class="term__body"><code><span class="p">$</span> npx sshlg-skills install</code></pre>
+  </figure>
+
+  <p>The implementation is evidence that this process can run. It isn&#8217;t the authority for the manifesto. You should still be able to use the four-line protocol, the three graphs, and the seam walk if every tool, runtime, and package name in that repository changes.</p>
+</section>
+
+<!-- ══════════════════════════════ DECLARATION ══════════════════════════════ -->
+<section id="declaration" class="sec sec--decl">
+  <h2 class="sec__h"><span class="sec__n">&#167;</span> The declaration <a class="anchor" href="#declaration" aria-label="Link to this section">#</a></h2>
+
+  <div class="decl">
+    <p>We believe the unit of progress is not generated code but an evidence-carrying change, and that intent must survive decomposition, implementation, verification, and acceptance without becoming a different request at every boundary.</p>
+
+    <p>We believe implementation proof and product proof are different. A change may be ready to release while its product hypothesis remains unobserved, and the system should preserve that uncertainty rather than promote it to success.</p>
+
+    <p>We believe an agent&#8217;s report is a useful interface and an insufficient source of truth. Agent-produced work carries provenance, and agreement between two agents counts as independent evidence only when their evidence paths are genuinely independent.</p>
+
+    <p>We believe autonomy should expand where evidence and limits are mechanical, then stop where meaning, authority, or irreversible consequence begins (the boundary should be visible before the run reaches it).</p>
+
+    <p>We believe the work graph should expose dependencies, the evidence graph should expose uncertainty, and acceptance should reconnect both to the original intent. Unchecked, abstained, partial, deferred, and unknown are engineering states, not embarrassing words to hide behind <code>done</code>.</p>
+
+    <p>We believe documentation is part of the executable memory of a software system. A fact with two homes will diverge, a number copied from an earlier report will decay, and a reference that does not resolve is a claim with its receipt removed. Evidence is versioned and perishable, and invalidation preserves history without pretending the old proof still covers the current state.</p>
+
+    <p>We believe every repeated failure should make the next run structurally better. The best lesson is the one no future agent has to remember because a mechanism now carries it (and the best retired rule leaves its history behind).</p>
+  </div>
+
+  <p>Agents can produce code, tests, documentation, and convincing explanations at extraordinary speed. None of those artifacts proves the others.</p>
+
+  <p>The future of software development will not be secured by making agents generate more. It will be secured by making intent explicit, work inspectable, autonomy bounded, checks falsifiable, state durable, and completion provable.</p>
+
+  <p>The agent may write the code.</p>
+
+  <p>The system must carry the proof.</p>
+
+  <blockquote class="q q--final">
+    <p>When agents write the code, done is not the last message of the run. Done is a state of the system that can be proven.</p>
+  </blockquote>
+
+  <p class="sign">
+    <span class="sign__rule" aria-hidden="true"></span>
+    <span class="sign__name">Sergey Sheleg</span>
+    <span class="sign__alt">Siarhei Sheleh</span>
+    <span class="sign__meta">POD/001 &#183; v1.0 &#183; 2026-08-17</span>
+  </p>
+</section>
+
+<!-- ══════════════════════════════ NOTES ══════════════════════════════ -->
+<section id="notes" class="sec sec--notes">
+  <h2 class="sec__h"><span class="sec__n">&#8251;</span> Evidence <a class="anchor" href="#notes" aria-label="Link to this section">#</a></h2>
+  <p class="notes__intro">Every case in this document resolves to a line in a public repository. That is the standard the document asks for, so it applies to the document itself.</p>
+  <ol class="notes">
+    <li><span class="notes__id">E1</span> The empty inventory and the live poller &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L28-L48">task-pipeline &#8250; references/residue.md#L28-L48</a></li>
+    <li><span class="notes__id">E2</span> Audit pass 6: 10 of 13 findings self-inflicted &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/audit.md#L44-L64">task-pipeline &#8250; references/audit.md#L44-L64</a></li>
+    <li><span class="notes__id">E3</span> One-command install, Claude Code plugins and portable Agent Skills &#8212; <a href="https://github.com/ssheleg/sshlg-skills/blob/b01050170cf8c2a7ee56f645e2d01e87cf3b0d17/README.md#L7-L16">sshlg-skills &#8250; README.md#L7-L16</a></li>
+    <li><span class="notes__id">E4</span> 18 containers alive across four projects, oldest 3 days &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L173-L206">task-pipeline &#8250; references/residue.md#L173-L206</a></li>
+    <li><span class="notes__id">N1</span> The negative-control suite: every guard is fed a planted defect and required to reject it &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/test/negatives.py">task-pipeline &#8250; test/negatives.py</a></li>
+    <li><span class="notes__id">N2</span> Loop-guard detection rules and their bookkeeping &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/loop-guard.md#L51-L72">task-pipeline &#8250; references/loop-guard.md#L51-L72</a></li>
+    <li><span class="notes__id">N3</span> Convergence: the submodule pointer that makes both repositories look right alone &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/acceptance.md#L155-L190">task-pipeline &#8250; references/acceptance.md#L155-L190</a></li>
+    <li><span class="notes__id">N4</span> What the implementation has not built yet, filed openly &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/main/docs/evidence/backlog.md">task-pipeline &#8250; docs/evidence/backlog.md</a></li>
+  </ol>
+</section>
+
+<!-- ══════════════════════════════ FOR MACHINES ══════════════════════════════ -->
+<section id="machines" class="sec sec--machines">
+  <h2 class="sec__h"><span class="sec__n">&#8801;</span> For machines <a class="anchor" href="#machines" aria-label="Link to this section">#</a></h2>
+
+  <p>This document is addressed to two readers. The second one does not need the layout.</p>
+
+  <div class="mgrid">
+    <a class="mcard" href="/manifesto.md">
+      <span class="mcard__k">/manifesto.md</span>
+      <span class="mcard__v">The canonical text in Markdown, diagrams included, nothing behind JavaScript.</span>
+    </a>
+    <a class="mcard" href="/llms.txt">
+      <span class="mcard__k">/llms.txt</span>
+      <span class="mcard__v">An index of this document for language models and crawling agents.</span>
+    </a>
+    <a class="mcard" href="https://github.com/ssheleg/pod-manifesto">
+      <span class="mcard__k">git clone</span>
+      <span class="mcard__v">The source of this page and its canonical text, under version control.</span>
+    </a>
+    <a class="mcard" href="https://github.com/ssheleg/sshlg-skills">
+      <span class="mcard__k">sshlg-skills</span>
+      <span class="mcard__v">The reference implementation: gated stages, evidence rules, acceptance coverage.</span>
+    </a>
+  </div>
+
+  <h3 id="cite" class="sub">Cite as <a class="anchor" href="#cite" aria-label="Link to this subsection">#</a></h3>
+
+  <figure class="term term--doc">
+    <figcaption class="term__bar">
+      <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="term__title">citation</span>
+      <button class="copy" type="button" data-copy="Sheleg, Sergey (Siarhei Sheleh). Proof of Done: The Agentic Software Development Manifesto. Version 1.0, 2026. https://podmanifesto.org/">copy</button>
+    </figcaption>
+<pre class="term__body"><code>Sheleg, Sergey (Siarhei Sheleh).
+<span class="s">Proof of Done: The Agentic Software Development Manifesto.</span>
+Version 1.0, 2026. https://podmanifesto.org/</code></pre>
+  </figure>
+
+  <p class="muted small">Text licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Quote it, translate it, adopt it, argue with it &#8212; keep the attribution and the link.</p>
+</section>
+
+</main>
+</div><!-- /layout -->
+
+<!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
+<footer class="foot">
+  <div class="foot__grid">
+    <div class="foot__col">
+      <p class="foot__mark"><span class="glyph" aria-hidden="true">&#8866;</span> PROOF OF DONE</p>
+      <p class="muted small">The Agentic Software Development Manifesto.<br>Version 1.0 &#183; 2026-08-17 &#183; POD/001</p>
+    </div>
+    <div class="foot__col">
+      <p class="foot__h">Implementation</p>
+      <pre class="foot__cmd"><code><span class="p">$</span> npx sshlg-skills install</code></pre>
+      <p><a href="https://github.com/ssheleg/sshlg-skills">github.com/ssheleg/sshlg-skills</a></p>
+    </div>
+    <div class="foot__col">
+      <p class="foot__h">Document</p>
+      <p><a href="https://github.com/ssheleg/pod-manifesto">Source repository</a></p>
+      <p><a href="/manifesto.md">Markdown</a> &#183; <a href="/llms.txt">llms.txt</a></p>
+      <p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p>
+    </div>
+    <div class="foot__col">
+      <p class="foot__h">Author</p>
+      <p>Sergey Sheleg<br><span class="muted">Siarhei Sheleh</span></p>
+      <p><a href="https://github.com/ssheleg">github.com/ssheleg</a></p>
+    </div>
+  </div>
+  <p class="foot__end">The agent may write the code. The system must carry the proof.</p>
+</footer>
+
+</div><!-- /shell -->
+
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

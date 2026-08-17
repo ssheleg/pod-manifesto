@@ -1,0 +1,7 @@
+# Proof of Done — podmanifesto.org
+# This document is written for two readers. The second one is welcome here.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://podmanifesto.org/sitemap.xml

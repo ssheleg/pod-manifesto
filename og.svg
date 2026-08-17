@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+      <path d="M26 0 H0 V26" fill="none" stroke="#dbe2dd" stroke-opacity="0.045" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="#090b0a"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- top rule + kicker -->
+  <rect x="80" y="78" width="1040" height="1" fill="#2b3532"/>
+  <text x="80" y="64" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="19" letter-spacing="4" fill="#7a857e">MEMORANDUM &#183; POD/001 &#183; v1.0</text>
+
+  <!-- turnstile mark -->
+  <g stroke="#4ee08f" stroke-width="9" stroke-linecap="square" fill="none">
+    <path d="M96 196 V300"/>
+    <path d="M96 248 H172"/>
+  </g>
+
+  <!-- title -->
+  <text x="206" y="272" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="92" font-weight="bold" letter-spacing="-2" fill="#dbe2dd">PROOF OF DONE</text>
+
+  <!-- subtitle -->
+  <text x="96" y="344" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="30" letter-spacing="1" fill="#b3bdb7">The Agentic Software Development Manifesto</text>
+
+  <!-- claim -->
+  <rect x="80" y="392" width="4" height="126" fill="#4ee08f"/>
+  <text x="112" y="426" font-family="Helvetica, DejaVu Sans, sans-serif" font-size="29" fill="#dbe2dd">When agents write the code, done is not the last</text>
+  <text x="112" y="466" font-family="Helvetica, DejaVu Sans, sans-serif" font-size="29" fill="#dbe2dd">message of the run. Done is a state of the system</text>
+  <text x="112" y="506" font-family="Helvetica, DejaVu Sans, sans-serif" font-size="29" fill="#dbe2dd">that can be proven.</text>
+
+  <!-- bottom rule + meta -->
+  <rect x="80" y="552" width="1040" height="1" fill="#2b3532"/>
+  <text x="80" y="590" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="21" letter-spacing="2" fill="#4ee08f">podmanifesto.org</text>
+  <text x="1120" y="590" text-anchor="end" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="21" letter-spacing="1" fill="#7a857e">Sergey Sheleg</text>
+</svg>

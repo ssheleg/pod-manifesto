@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Proof of Done">
+  <title>Proof of Done</title>
+  <!-- Turnstile: the logical "proves" operator. -->
+  <g fill="none" stroke="#22c07a" stroke-width="3.4" stroke-linecap="square">
+    <path d="M8 4.5 V27.5"/>
+    <path d="M8 16 H25"/>
+  </g>
+</svg>

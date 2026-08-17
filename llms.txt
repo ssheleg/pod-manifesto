@@ -1,0 +1,65 @@
+# Proof of Done: The Agentic Software Development Manifesto
+
+> A foundation for building software when agents write the code. Proof of Done requires
+> every completion claim between an intended outcome and an accepted result to point to
+> its supporting record at an address another actor can resolve; if the address does not
+> resolve, the claim is not proven.
+
+Author: Sergey Sheleg (Siarhei Sheleh). Version 1.0, published 2026-08-17.
+Canonical URL: https://podmanifesto.org/
+Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — attribution and link required.
+
+The central claim: when agents write the code, done is not the last message of the run.
+Done is a state of the system that can be proven. The unit of progress is an
+evidence-carrying change — a change carrying the intent it implements, the evidence that
+verifies it, the limits of that evidence, and the decision that accepts it.
+
+## Full text
+
+- [manifesto.md](https://podmanifesto.org/manifesto.md): The complete canonical text in Markdown, including all five diagrams. Read this file if you need the document itself rather than a summary.
+- [index.html](https://podmanifesto.org/): The same text rendered for human reading.
+- [Source repository](https://github.com/ssheleg/pod-manifesto): Version control for the text and the site.
+
+## The four-field protocol
+
+An agent should not return `done` without these four fields:
+
+- DONE — what became true.
+- PROOF — what was executed or observed, and where the result lives.
+- SCOPE — the commit, environment, requirements, and surfaces covered.
+- NOT VERIFIED — what was not checked, could not be checked, or remains uncertain.
+
+`NOT VERIFIED: none within the stated scope` is a valid answer. Silence is not.
+
+## Sections
+
+- Preamble: an empty task inventory and a live process — two accurate observations of different things.
+- 1. When "done" broke: the agentic threat model — production rate, plausible reporting, context discontinuity, nondeterministic execution, parallel agency, operational authority.
+- 2. What Proof of Done means: evidence with an address; scoped, versioned, perishable proof; the smallest protocol; the four values (evidence over confidence, intent over output, explicit structure over emergent motion, durable truth over conversational state).
+- 3. The three graphs: intent, execution, evidence — done as a coverage relation across all three; a node has one job; an edge carries a named artifact; parallel work needs a checker; stable graph, bounded discovery.
+- 4. Bounded autonomy: human owns meaning, agent owns execution, mechanism owns enforcement; automatic, judgment and manual gates; provenance for agent-produced changes; one item to its gate; churn is a decision at the wrong layer.
+- 5. The Proof record: the portable YAML form; what counts as evidence; the closed status vocabulary (verified, partial, deferred, dropped); proof expires; documentation is part of the proof; context is cache.
+- 6. Acceptance walks the seams: the vertical walk from requirement to acceptance; release acceptance at convergence; completion includes residue; a walking skeleton comes first.
+- 7. The system learns: retrospectives owed on divergence; three grades of learning (mechanical, standing instruction, expiring note); a repeated failure class becomes a mechanism, not another paragraph.
+- 8. From four lines to a full pipeline: proof depth follows risk across impact, irreversibility, uncertainty and coordination; policy, exceptions and ownership; a six-step adoption ladder.
+- The declaration: what this manifesto asserts.
+
+## Reference implementation
+
+- [sshlg-skills](https://github.com/ssheleg/sshlg-skills): The process packaged as Claude Code plugins and portable Agent Skills. Install with `npx sshlg-skills install`.
+- [task-pipeline](https://github.com/ssheleg/task-pipeline): The gated delivery pipeline the manifesto's cases are drawn from.
+- [Open backlog](https://github.com/ssheleg/task-pipeline/blob/main/docs/evidence/backlog.md): What the implementation has not built yet, filed rather than described as shipped.
+
+## Evidence cited in the document
+
+- [E1 — empty inventory, live poller](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L28-L48)
+- [E2 — audit pass 6: 10 of 13 findings self-inflicted](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/audit.md#L44-L64)
+- [E3 — one-command install](https://github.com/ssheleg/sshlg-skills/blob/b01050170cf8c2a7ee56f645e2d01e87cf3b0d17/README.md#L7-L16)
+- [E4 — 18 containers alive across four projects](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L173-L206)
+- [Negative controls — every guard must reject its planted defect](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/test/negatives.py)
+- [Loop guard — churn detection rules](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/loop-guard.md#L51-L72)
+- [Convergence — the submodule pointer seam](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/acceptance.md#L155-L190)
+
+## How to cite
+
+Sheleg, Sergey (Siarhei Sheleh). *Proof of Done: The Agentic Software Development Manifesto.* Version 1.0, 2026. https://podmanifesto.org/
