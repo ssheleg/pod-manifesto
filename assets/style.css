@@ -35,8 +35,12 @@
   --panel:      #fbfbf7;
   --ink:        #16191a;
   --ink-2:      #3b4245;
-  --muted:      #6a736f;
-  --faint:      #949c97;
+  /* The two quiet inks carry real text — record labels, figure notes, section
+     indices, table captions — so both clear 4.5:1 on the paper and keep a step
+     between them: measured 6.51 and 4.62 (were 4.43 and 2.55). Hue and
+     saturation are unchanged; only lightness moved. */
+  --muted:      #525956;
+  --faint:      #68706b;
   --rule:       #dcdcd2;
   --rule-2:     #c3c5b8;
   --accent:     #0d6b45;
@@ -49,15 +53,17 @@
   --bad:        #9a3412;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+/* Light is this document's default register — a memorandum is printed. Dark is
+   a choice the reader makes with the toggle, and it is remembered. The system
+   preference no longer decides, because the page has an opinion. */
+:root[data-theme="dark"] {
     --bg:         #090b0a;
     --bg-2:       #0e1211;
     --panel:      #0f1413;
     --ink:        #dbe2dd;
     --ink-2:      #b3bdb7;
-    --muted:      #7a857e;
-    --faint:      #5d6862;
+    --muted:      #99a29c;   /* 7.52 on --bg */
+    --faint:      #717f77;   /* 4.70 on --bg, was 3.40 */
     --rule:       #1c2321;
     --rule-2:     #2b3532;
     --accent:     #4ee08f;
@@ -69,27 +75,7 @@
     --sel:        rgba(78, 224, 143, .22);
     --bad:        #f0906a;
   }
-}
 
-:root[data-theme="dark"] {
-  --bg:         #090b0a;
-  --bg-2:       #0e1211;
-  --panel:      #0f1413;
-  --ink:        #dbe2dd;
-  --ink-2:      #b3bdb7;
-  --muted:      #7a857e;
-  --faint:      #5d6862;
-  --rule:       #1c2321;
-  --rule-2:     #2b3532;
-  --accent:     #4ee08f;
-  --accent-2:   #7df0b0;
-  --accent-bg:  rgba(78, 224, 143, .085);
-  --accent-line:rgba(78, 224, 143, .28);
-  --grid:       rgba(219, 226, 221, .035);
-  --shadow:     0 0 0 1px rgba(219,226,221,.02), 0 18px 40px -28px #000;
-  --sel:        rgba(78, 224, 143, .22);
-  --bad:        #f0906a;
-}
 
 /* ── base ────────────────────────────────────────────────────────────────── */
 
@@ -205,12 +191,18 @@ p code, li code, td code, dd code {
 
 .tbtn {
   font-family: var(--mono); font-size: .72rem; letter-spacing: .07em; text-transform: uppercase;
+  white-space: nowrap;
   color: var(--muted); text-decoration: none;
   padding: .38rem .6rem; border: 1px solid transparent; border-radius: var(--radius);
   background: none; cursor: pointer; line-height: 1;
 }
 .tbtn:hover { color: var(--accent); border-color: var(--rule-2); background: var(--accent-bg); }
 .tbtn--icon { display: inline-grid; place-items: center; width: 2rem; height: 1.85rem; padding: 0; }
+/* Below a phone width the bar keeps only what the page body does not already
+   offer: the jump to the install block and the theme switch. "Plain text" and
+   "Source" are two taps away in the masthead, and wrapped onto two lines they
+   made the bar look broken. */
+@media (max-width: 640px) { .tbtn--wide { display: none; } }
 .theme-ind {
   width: 11px; height: 11px; border-radius: 50%;
   border: 1.5px solid currentColor;
@@ -250,46 +242,51 @@ p code, li code, td code, dd code {
 .masthead__glyph { color: var(--accent); font-weight: 400; }
 .masthead__sub {
   font-family: var(--mono);
-  font-size: clamp(.95rem, 2.6vw, 1.35rem);
-  letter-spacing: .04em;
+  font-size: clamp(.9rem, 2.2vw, 1.15rem);
+  letter-spacing: .08em;
   color: var(--ink-2);
-  margin: 0 0 1.5rem;
+  margin: .35rem 0 0;
   text-transform: uppercase;
 }
 .masthead__lede {
-  font-size: clamp(1.1rem, 2.4vw, 1.35rem);
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
   color: var(--ink-2);
   max-width: 46ch;
-  margin: 0 auto 2.6rem;
-  line-height: 1.5;
+  margin: 1.6rem auto 0;
+  line-height: 1.55;
 }
 
+/* The record: reference data, so it is the quietest thing in the masthead and
+   the last. It sits left-aligned inside a centred block on purpose — a record
+   is read down a column, not across a centre line. */
 .docmeta {
-  width: 100%; text-align: left;
-  margin: 0 0 2.4rem; padding: 1.25rem 0;
-  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  width: 100%; max-width: 62rem; text-align: left;
+  margin: 2.6rem auto 0; padding: 1rem 0 0;
+  border-top: 1px solid var(--rule);
   display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
-  gap: .5rem clamp(1rem, 4vw, 3rem);
-  font-family: var(--mono); font-size: .78rem;
+  gap: .45rem clamp(1rem, 3vw, 2.5rem);
+  font-family: var(--mono); font-size: .66rem; line-height: 1.7;
+  letter-spacing: .04em;
 }
-.docmeta > div { display: flex; gap: .75rem; align-items: baseline; }
+.docmeta > div { display: flex; gap: .6rem; align-items: baseline; }
 .docmeta dt {
-  color: var(--faint); text-transform: uppercase; letter-spacing: .1em;
-  min-width: 5.9rem; flex: none;
+  color: var(--faint); text-transform: uppercase; letter-spacing: .12em;
+  min-width: 4.9rem; flex: none;
 }
 .docmeta dd { margin: 0; color: var(--ink-2); }
+.docmeta a { color: var(--accent-2); }
 .docmeta dd .muted { white-space: nowrap; }
 
-.masthead__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin-bottom: 2.4rem; }
+.masthead__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin: 2.2rem 0 0; }
 .btn {
   font-family: var(--mono); font-size: .78rem; letter-spacing: .06em;
   text-decoration: none; color: var(--ink);
-  padding: .68rem 1.05rem; border: 1px solid var(--rule-2); border-radius: var(--radius);
+  padding: .78rem 1.35rem; border: 1px solid var(--rule-2); border-radius: var(--radius);
   background: var(--panel); transition: border-color .15s, color .15s, background .15s;
 }
 .btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
-.btn--primary { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
-.btn--primary:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.btn--primary { border-color: var(--accent); color: var(--bg); background: var(--accent); }
+.btn--primary:hover { background: var(--accent-2); border-color: var(--accent-2); color: var(--bg); }
 
 /* ── terminal blocks ─────────────────────────────────────────────────────── */
 
@@ -306,7 +303,7 @@ p code, li code, td code, dd code {
   padding: .5rem .75rem; border-bottom: 1px solid var(--rule);
   background: var(--bg-2);
   font-family: var(--mono); font-size: .7rem; letter-spacing: .08em;
-  color: var(--faint); text-transform: uppercase;
+  color: var(--muted); text-transform: uppercase;
 }
 .term__dots { display: inline-flex; gap: .3rem; flex: none; }
 .term__dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--rule-2); }
@@ -381,11 +378,12 @@ p code, li code, td code, dd code {
   margin-top: .9rem; padding-top: .7rem; border-top: 1px solid var(--rule);
   display: flex; gap: .9rem;
 }
-.toc__link {
+.toc__foot a, .toc__link {
   font-family: var(--mono); font-size: .7rem; letter-spacing: .06em;
   color: var(--faint); text-decoration: none; text-transform: uppercase;
+  display: block; padding: .2rem 0;
 }
-.toc__link:hover { color: var(--accent); }
+.toc__foot a:hover, .toc__link:hover { color: var(--accent); }
 
 /* ── document ────────────────────────────────────────────────────────────── */
 
@@ -513,7 +511,7 @@ p code, li code, td code, dd code {
 }
 .card figcaption {
   font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
-  padding: .5rem .8rem; border-bottom: 1px solid var(--rule); color: var(--faint); background: var(--bg-2);
+  padding: .5rem .8rem; border-bottom: 1px solid var(--rule); color: var(--muted); background: var(--bg-2);
 }
 .card pre {
   margin: 0; padding: .9rem .8rem; font-size: .74rem; line-height: 1.6;
@@ -536,7 +534,7 @@ table { border-collapse: collapse; width: 100%; font-size: .875rem; min-width: 4
 .tbl-cap {
   caption-side: top; text-align: left;
   font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--faint); padding: .6rem .9rem; border-bottom: 1px solid var(--rule); background: var(--bg-2);
+  color: var(--muted); padding: .6rem .9rem; border-bottom: 1px solid var(--rule); background: var(--bg-2);
 }
 th, td { text-align: left; padding: .68rem .9rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
 th {
@@ -554,16 +552,6 @@ td:first-child { color: var(--ink); }
   background: var(--panel); box-shadow: var(--shadow);
   padding: 1.15rem 1.2rem;
 }
-@media (min-width: 700px) { 
-/* evidence refs */
-.ev {
-  font-family: var(--mono); font-size: .72em; letter-spacing: .04em;
-  color: var(--accent); text-decoration: none;
-  border: 1px solid var(--accent-line); border-radius: var(--radius);
-  padding: .05em .3em; white-space: nowrap;
-  vertical-align: .12em;
-}
-.ev:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 
 /* declaration */
 .sec--decl .decl {
@@ -668,7 +656,6 @@ td:first-child { color: var(--ink); }
   .sec { break-before: auto; }
   .sec__h { break-after: avoid; }
   a { text-decoration: none; }
-  .ev::after { content: ""; }
   .layout { display: block; }
   .doc { max-width: none; }
 }
@@ -684,6 +671,12 @@ td:first-child { color: var(--ink); }
 /* ── figures: hairline plates, drawn rather than typed ─────────────────────── */
 
 .figsvg { display: block; width: 100%; min-width: 640px; height: auto; }
+.fig figcaption {
+  font-family: var(--mono); font-size: .72rem; line-height: 1.5;
+  letter-spacing: .04em; text-transform: uppercase;
+  color: var(--faint); margin-top: .7rem; padding-left: .1rem;
+}
+.fig figcaption b { color: var(--accent-2); font-weight: 400; }
 .figsvg .rule { stroke: var(--rule-2); stroke-width: 1; fill: none; }
 .figsvg .rule--faint { stroke: var(--rule); }
 .figsvg .flow { stroke: var(--muted); stroke-width: 1; fill: none; opacity: .7; }
@@ -723,9 +716,9 @@ td:first-child { color: var(--ink); }
 /* ── the proof line: a claim with its source attached ──────────────────────── */
 
 .proofline {
-  font-family: var(--mono); font-size: .72rem;
+  font-family: var(--mono); font-size: .68rem;
   letter-spacing: .1em; text-transform: uppercase;
-  color: var(--muted); margin: 0 0 1.6rem;
+  color: var(--muted); margin: 1.5rem 0 0;
 }
 .proofline b { color: var(--accent-2); font-weight: 400; }
 .proofline a { color: var(--ink-2); text-decoration-color: var(--accent-line); }

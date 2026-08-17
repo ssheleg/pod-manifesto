@@ -69,6 +69,7 @@ class Plate:
         self.w, self.h, self.title = width, height, title
         self.p = []
         self.spans = []       # (x0, x1, row) — for the overlap assertion
+        self.marks = []       # (x0, x1, y0, y1, what) — every drawn mark, for the canvas assertion
 
     # -- marks -------------------------------------------------------------
     def rule(self, x1, x2, y, cls="rule"):
@@ -79,6 +80,7 @@ class Plate:
 
     def dot(self, x, y, cls="dot", r=DOT):
         self.p.append(f'<circle class="{cls}" cx="{x:.1f}" cy="{y:.1f}" r="{r}"/>')
+        self.marks.append((x - r, x + r, y - r, y + r, f"{cls} at {x:.0f},{y:.0f}"))
 
     def wash(self, x, y, w, h):
         self.p.append(f'<rect class="wash" x="{x:.1f}" y="{y:.1f}" '
@@ -142,6 +144,14 @@ class Plate:
         )
 
     def verify(self):
+        # A dot whose radius crosses the canvas edge is clipped by the viewBox and
+        # renders as a half-circle. Found in FIG 2 on 2026-08-17: a station at x=0
+        # put its dot at cx=1.6, so 1.8px of a 3.4px radius fell outside.
+        for x0, x1, y0, y1, what in self.marks:
+            assert -0.5 <= x0 and x1 <= self.w + 0.5, \
+                f"{self.title}: {what} is clipped horizontally ({x0:.1f}..{x1:.1f} of {self.w})"
+            assert -0.5 <= y0 and y1 <= self.h + 0.5, \
+                f"{self.title}: {what} is clipped vertically ({y0:.1f}..{y1:.1f} of {self.h})"
         rows = {}
         for x0, x1, row in self.spans:
             assert -1 <= x0 and x1 <= self.w + 1, \
@@ -239,10 +249,10 @@ def fig2():
     mid = lanes[1]
 
     c.lane(0, 34, "FAN-OUT")
-    c.station(0, mid, "Locked input", row=1)
+    c.station(DOT - 1.6, mid, "Locked input", row=1)   # the dot sits at x+1.6; keep it on the canvas
 
     split = 132
-    c.flow(f"M{sans_w('Locked input') + 10:.1f} {mid:.1f} H{split - 4:.1f}", head=False)
+    c.flow(f"M{DOT - 1.6 + sans_w('Locked input') + 10:.1f} {mid:.1f} H{split - 4:.1f}", head=False)
     c.vrule(split, lanes[0], lanes[2])
     for i, y in enumerate(lanes):
         c.flow(f"M{split:.1f} {y:.1f} H{split + 22:.1f}")

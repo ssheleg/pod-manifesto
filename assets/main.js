@@ -11,10 +11,9 @@
 
   var STORE = 'pod-theme';
 
-  function systemTheme() {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark' : 'light';
-  }
+  // Light is this document's default register; dark is a choice the reader
+  // makes and it is remembered. The system preference does not decide.
+  function systemTheme() { return 'light'; }
 
   function currentTheme() {
     return root.getAttribute('data-theme') || systemTheme();

@@ -77,6 +77,25 @@ def main() -> int:
     check("nothing animates without a no-preference guard",
           "prefers-reduced-motion: no-preference" in css)
 
+    # ── the stylesheet parses ───────────────────────────────────────────────
+    # A script that stripped a rule once left its @media wrapper open, and every
+    # rule after it was swallowed. CSS error recovery hides this until it does not.
+    stack = []
+    for i, ch in enumerate(css_code):
+        if ch == "{":
+            stack.append(i)
+        elif ch == "}":
+            if stack:
+                stack.pop()
+            else:
+                stack.append(-i)
+    unclosed = [i for i in stack if i >= 0]
+    where = ""
+    if unclosed:
+        ln = css_code.count("\n", 0, unclosed[0]) + 1
+        where = f"line ~{ln}: {css_code.splitlines()[ln - 1][:60]}"
+    check("every block is closed", not stack, where or "a stray closing brace")
+
     # ── the pack's own bans that bite this page ─────────────────────────────
     check("no italic", not re.search(r"font-style:\s*italic", css_code))
 
