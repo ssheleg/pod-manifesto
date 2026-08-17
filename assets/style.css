@@ -551,7 +551,7 @@ p code, li code, td code, dd code, .decl code {
   padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); color: var(--ink-soft);
 }
 .card pre {
-  margin: 0; padding: var(--s4); font-size: var(--t-sm);
+  margin: 0; padding: var(--s4); font-size: var(--t-mono);
   line-height: var(--lh-mono); overflow-x: auto; flex: 1; color: var(--ink);
 }
 .card pre code { white-space: pre; }
@@ -561,8 +561,14 @@ p code, li code, td code, dd code, .decl code {
   font-family: var(--font-mono); font-size: var(--t-tag);
   letter-spacing: var(--track-tag); text-transform: uppercase;
 }
+/* The verdict is carried by an edge as well as by the note, so the pair reads
+   as two states of the same claim rather than as two neutral boxes. */
+.card--bad { border-left: 2px solid var(--witness); }
+.card--good { border-left: 2px solid var(--verify); }
 .card--bad figcaption, .card--bad .card__note { color: var(--witness-ink); }
 .card--good figcaption, .card--good .card__note { color: var(--verify-ink); }
+.card figcaption[data-state] { display: flex; justify-content: space-between; gap: var(--s3); }
+.card figcaption[data-state]::after { content: "[" attr(data-state) "]"; opacity: .7; }
 
 /* a paper terminal — the document's code blocks */
 .term--paper { background: var(--surface); box-shadow: var(--ring-hairline); max-width: none; }
@@ -580,13 +586,20 @@ p code, li code, td code, dd code, .decl code {
   overflow-x: auto; margin: var(--s5) 0 var(--s6);
   box-shadow: var(--ring-hairline); border-radius: var(--radius-lg); background: var(--surface);
 }
-table { border-collapse: collapse; width: 100%; font-size: var(--t-sm); min-width: 460px; }
+table {
+  border-collapse: collapse; width: 100%; font-size: var(--t-sm); min-width: 460px;
+  font-variant-numeric: tabular-nums;
+}
 .tbl-cap {
   caption-side: top; text-align: left;
   font-family: var(--font-mono); font-size: var(--t-tag);
   letter-spacing: var(--track-tag); text-transform: uppercase; color: var(--ink-soft);
   padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line);
 }
+.tbl-cap b { color: var(--brand-ink); font-weight: var(--weight-body); }
+/* the first cell names the row; it carries the weight, the rest explains it */
+tbody td:first-child { color: var(--ink); }
+tbody td:not(:first-child) { color: var(--ink-soft); }
 th, td { text-align: left; padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); vertical-align: top; }
 th {
   font-family: var(--font-mono); font-size: var(--t-tag);
@@ -606,36 +619,52 @@ tbody tr:hover td { background: color-mix(in srgb, var(--surface-2) 40%, transpa
   border-radius: var(--radius-xl);
   padding: var(--s5);
 }
-.figsvg { display: block; width: 100%; min-width: 620px; height: auto; }
-.figsvg .band { fill: none; stroke: var(--line); }
-.figsvg .band-label {
-  fill: var(--ink-soft); font-family: var(--font-mono); font-size: 11px;
-  letter-spacing: var(--track-eyebrow); text-transform: uppercase;
+.figsvg { display: block; width: 100%; min-width: 640px; height: auto; }
+
+/* Rules and connectors. A plate is drawn with hairlines, not with a box around
+   every word — the box is what made the old figures read as ASCII art. */
+.figsvg .rule { stroke: var(--line-strong); stroke-width: 1; fill: none; }
+.figsvg .rule--faint { stroke: var(--line); }
+.figsvg .flow { stroke: var(--ink-soft); stroke-width: 1; fill: none; opacity: .55; }
+.figsvg .flow--dash { stroke-dasharray: 3 3; opacity: .45; }
+.figsvg .head { fill: var(--ink-soft); opacity: .55; }
+.figsvg .gate { stroke: var(--brand); stroke-width: 2; fill: none; }
+.figsvg .wash { fill: color-mix(in srgb, var(--surface-2) 45%, transparent); }
+
+/* Stations: a dot on the rule, its state carried by fill. */
+.figsvg .dot { fill: var(--bg); stroke: var(--ink-soft); stroke-width: 1.4; }
+.figsvg .dot--key { fill: var(--brand); stroke: none; }
+.figsvg .dot--ok { fill: var(--verify); stroke: none; }
+.figsvg .dot--bad { fill: var(--witness); stroke: none; }
+
+/* Type: the text face names things; mono is annotation, which is the pack's rule. */
+.figsvg .name {
+  fill: var(--ink); font-family: var(--font-sans); font-size: 14px;
+  font-weight: var(--weight-body); letter-spacing: -0.006em;
 }
-.figsvg .node { fill: color-mix(in srgb, var(--surface-2) 45%, transparent); stroke: var(--line-strong); }
-.figsvg .node--em { fill: none; stroke: var(--brand); }
-.figsvg .node--ok { fill: color-mix(in srgb, var(--verify-soft) 70%, transparent); stroke: var(--verify-ink); }
-.figsvg .node--bad { fill: color-mix(in srgb, var(--witness-soft) 70%, transparent); stroke: var(--witness-ink); }
-.figsvg .label {
-  fill: var(--ink); font-family: var(--font-mono); font-size: 12px;
-  text-anchor: middle; dominant-baseline: middle;
-}
-.figsvg .label--em { fill: var(--brand-ink); }
-.figsvg .label--sub { fill: var(--ink-soft); font-size: 10px; }
-.figsvg .edge { stroke: var(--ink-soft); stroke-width: 1; fill: none; opacity: .75; }
-.figsvg .edge--dash { stroke-dasharray: 3 3; }
-.figsvg .head { fill: var(--ink-soft); opacity: .75; }
-.figsvg .edge-label {
-  fill: var(--ink-soft); font-family: var(--font-mono); font-size: 11px;
+.figsvg .name--key { fill: var(--brand-ink); font-weight: var(--weight-body-strong); }
+.figsvg .note {
+  fill: var(--ink-soft); font-family: var(--font-mono); font-size: 10.5px;
   letter-spacing: var(--track-tag);
 }
-.figsvg .edge-label--foot { font-size: 10px; opacity: .8; }
+.figsvg .note--foot { opacity: .8; }
+.figsvg .lane {
+  fill: var(--ink-soft); font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: var(--track-eyebrow); text-transform: uppercase; opacity: .75;
+}
+.figsvg .idx {
+  fill: var(--brand-ink); font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: var(--track-tag);
+}
+.figsvg .tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: var(--track-tag); }
+.figsvg .tag--ok { fill: var(--verify-ink); }
+.figsvg .tag--bad { fill: var(--witness-ink); }
 .fig figcaption {
   font-family: var(--font-mono); font-size: var(--t-tag);
   letter-spacing: var(--track-tag); color: var(--ink-soft);
   margin-top: var(--s3); text-transform: uppercase;
 }
-.fig figcaption b { color: var(--ink); font-weight: var(--weight-body); }
+.fig figcaption b { color: var(--brand-ink); font-weight: var(--weight-body); }
 
 /* ── the provenance tag — a claim carries how it is known ───────────────── */
 

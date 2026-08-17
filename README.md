@@ -80,6 +80,12 @@ tools sold on auditability, whose hero is a dark field that resolves into the pa
 rather than ending against it. The pack's token layer is vendored unmodified; the
 stylesheet consumes only `var(--…)`.
 
+The five diagrams are **plates**, not flowcharts: a station is a name set in the text
+face on a hairline, mono is kept for what a plate uses it for (lane labels, indices,
+relation names, state tags), and state is carried by a dot and a bracketed tag rather
+than by a box. `tools/build-figures.py` generates them and asserts the geometry; the
+real font metrics were then verified in a browser, which is where they live.
+
 The site is static, dependency-free, and readable with JavaScript disabled. The text is
 addressed to two readers: a person, and the agent that will quote it.
 
