@@ -16,6 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 tools/check-parity.py --verbose
+      # an unclosed tag rendered fine in Chrome for several commits; error
+      # recovery is not specified to agree between engines, so it is a check now
+      - run: python3 tools/check-html.py
 
   links:
     name: every published reference resolves
