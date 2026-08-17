@@ -48,7 +48,7 @@ An agent should not return `done` without these four fields:
 
 - [sshlg-skills](https://github.com/ssheleg/sshlg-skills): The process packaged as Claude Code plugins and portable Agent Skills. Install with `npx sshlg-skills install`.
 - [task-pipeline](https://github.com/ssheleg/task-pipeline): The gated delivery pipeline the manifesto's cases are drawn from.
-- [Open backlog](https://github.com/ssheleg/task-pipeline/blob/main/docs/evidence/backlog.md): What the implementation has not built yet, filed rather than described as shipped.
+- [Open backlog rows B-076 and B-077](https://github.com/ssheleg/task-pipeline/blob/404fd09afd919d57834a095d05ddaa4f0d693d9c/docs/evidence/backlog.md#L21-L22) and [B-080 and B-081](https://github.com/ssheleg/task-pipeline/blob/404fd09afd919d57834a095d05ddaa4f0d693d9c/docs/evidence/backlog.md#L15-L16): Four requirements the manifesto names that the implementation had not built at commit [0fb706c](https://github.com/ssheleg/task-pipeline/commit/0fb706ca28c3ec127875ee891235f32cdb8346ba) — judgment gates, resolvable requirement-to-execution edges, per-node completion checks, and proof invalidation — filed rather than described as shipped.
 
 ## Evidence cited in the document
 

@@ -1,0 +1,25 @@
+name: checks
+
+# The document argues that a repeated check becomes a mechanism rather than another
+# paragraph. These two are that mechanism for this repository.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  parity:
+    name: index.html carries the canonical text
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/check-parity.py --verbose
+
+  links:
+    name: every published reference resolves
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/check-links.py

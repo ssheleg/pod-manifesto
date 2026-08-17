@@ -52,7 +52,19 @@ NOT VERIFIED
 | `index.html` | The published document at [podmanifesto.org](https://podmanifesto.org). |
 | `assets/` | Stylesheet and the small progressive-enhancement script. No frameworks, no CDN. |
 | `llms.txt` | The document indexed for language models and crawling agents. |
+| `tools/` | The two checks below. |
 | `CNAME` | The custom domain served by GitHub Pages. |
+
+### The checks
+
+"The site matches the text" and "the references resolve" are commands with exit codes
+here, not sentences in a commit message. Both run on every push
+([`.github/workflows/checks.yml`](.github/workflows/checks.yml)):
+
+```bash
+python3 tools/check-parity.py --verbose   # every canonical sentence of manifesto.md is on the page
+python3 tools/check-links.py              # every published reference resolves
+```
 
 The site is static, dependency-free, and readable with JavaScript disabled. The text is
 addressed to two readers: a person, and the agent that will quote it.
