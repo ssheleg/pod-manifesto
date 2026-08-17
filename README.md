@@ -67,7 +67,7 @@ run on every push ([`.github/workflows/checks.yml`](.github/workflows/checks.yml
 ```bash
 python3 tools/check-parity.py --verbose   # every canonical sentence of manifesto.md is on the page,
                                           # and the case count it states is computed, not restated
-python3 tools/check-links.py              # every published reference resolves
+python3 tools/check-links.py              # every reference resolves, and every cited line range exists
 python3 tools/check-pack.py               # no colour or radius literal; reduced motion has a path
 python3 tools/build-theme.py --check      # the light twin is current and every contrast floor holds
 python3 tools/build-figures.py --check    # every figure's geometry is asserted, not eyeballed

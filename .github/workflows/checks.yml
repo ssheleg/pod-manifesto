@@ -22,7 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # github.com answers anonymous blob requests with a 404 once it throttles,
+      # so references are verified through the API — with the runner's token so
+      # the check measures the reference and not the rate limit.
       - run: python3 tools/check-links.py
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
   pack:
     name: the page still looks like the pack
