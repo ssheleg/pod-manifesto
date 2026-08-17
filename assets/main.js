@@ -92,6 +92,22 @@
     });
   });
 
+  /* ── boot: the masthead assembles once, the frame draws itself ───────── */
+  /* Why does this move: a founding document should read as issued, not pasted.
+     It runs once per load and never on a repeated path. */
+
+  var reducedBoot = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var boot = document.querySelector('.boot');
+  var hud = document.querySelector('.hud');
+  if (boot) {
+    if (reducedBoot) boot.classList.add('is-up');
+    else window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () { boot.classList.add('is-up'); });
+    });
+  }
+  if (hud && !reducedBoot) window.setTimeout(function () { hud.classList.add('is-up'); }, 120);
+  else if (hud) hud.classList.add('is-up');
+
   /* ── reveal on entry ─────────────────────────────────────────────────── */
   /* Why does this move: a section arriving with no transition reads as a cut.
      It runs once per section, never on a repeated path, and reduced motion
@@ -142,7 +158,20 @@
       if (!activeId) return;
 
       links.forEach(function (a) { a.classList.remove('is-active'); });
-      if (byId[activeId]) byId[activeId].classList.add('is-active');
+      if (byId[activeId]) {
+        byId[activeId].classList.add('is-active');
+        var now = document.getElementById('now');
+        if (now) {
+          var n = byId[activeId].querySelector('.toc__n');
+          var label = byId[activeId].textContent.replace(/\s+/g, ' ').trim();
+          if (n) label = label.slice(n.textContent.trim().length).trim();
+          now.innerHTML = '';
+          now.appendChild(document.createTextNode((n ? n.textContent.trim() + ' / ' : '')));
+          var b = document.createElement('b');
+          b.textContent = label;
+          now.appendChild(b);
+        }
+      }
     }, { rootMargin: '-12% 0px -70% 0px', threshold: 0 });
 
     targets.forEach(function (el) { spy.observe(el); });

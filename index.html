@@ -7,8 +7,8 @@
 <meta name="description" content="A foundation for building software when agents write the code. Done is not the last message of the run. Done is a state of the system that can be proven.">
 <meta name="author" content="Sergey Sheleg (Siarhei Sheleh)">
 <link rel="canonical" href="https://podmanifesto.org/">
-<meta name="theme-color" content="#f8f7f0" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#14110e" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#05070a" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
 
 <meta property="og:type" content="article">
@@ -26,10 +26,11 @@
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="text/markdown" href="/manifesto.md" title="Proof of Done — full text in Markdown">
-<link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
-<link rel="stylesheet" href="/assets/tokens/field-notes.css">
+<link rel="stylesheet" href="/assets/tokens/instrument-console.css">
+<link rel="stylesheet" href="/assets/tokens/console-light.css">
 <link rel="stylesheet" href="/assets/style.css">
 
 <script>
@@ -75,75 +76,56 @@
 </head>
 <body>
 
-<div class="grain" aria-hidden="true"></div>
-<div class="progress" aria-hidden="true"><span></span></div>
+<div class="hud" aria-hidden="true">
+  <i></i><i></i><i></i><i></i>
+  <div class="rail"><span></span></div>
+</div>
+
 <a class="skip" href="#preamble">Skip to the document</a>
 
-<!-- ═══════════════════════ THE DAWN ═══════════════════════════════════════ -->
-<header class="dawn" id="top">
-  <div class="crop" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-
-  <div class="notation" aria-hidden="true">
-    <span class="l" style="top:8%;left:6%">&#8866;</span>
-    <span class="m" style="top:22%;left:41%">&#8872;</span>
-    <span style="top:14%;left:73%">&#8704;</span>
-    <span class="m" style="top:36%;left:12%">&#8594;</span>
-    <span style="top:31%;left:60%">&#8743;</span>
-    <span class="l" style="top:52%;left:84%">&#8869;</span>
-    <span style="top:47%;left:29%">&#8707;</span>
-    <span class="m" style="top:63%;left:52%">&#8801;</span>
-    <span style="top:58%;left:8%">&#172;</span>
-    <span class="m" style="top:74%;left:22%">&#8756;</span>
-    <span style="top:69%;left:69%">&#8744;</span>
-    <span class="l" style="top:80%;left:38%">&#8868;</span>
-    <span style="top:86%;left:78%">&#9633;</span>
-    <span style="top:26%;left:91%">&#8757;</span>
-    <span class="m" style="top:90%;left:60%">&#8866;</span>
-    <span style="top:44%;left:46%">&#9671;</span>
-  </div>
-
-  <div class="dawn__shell">
-    <nav class="nav" aria-label="Document">
-      <a class="nav__mark" href="#top">
-        <span aria-hidden="true">&#8866;</span>
-        <b>Proof&nbsp;of&nbsp;Done</b>
-        <span class="nav__ver">v1.0</span>
-      </a>
-      <div class="nav__links">
-        <a class="ghost is-optional" href="/manifesto.md">Plain text</a>
-        <a class="ghost is-optional" href="https://github.com/ssheleg/pod-manifesto">Source</a>
-        <a class="ghost" href="#colophon">Install</a>
-        <button class="ghost" id="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch colour theme">
-          <span class="theme-ind" aria-hidden="true"></span>
-        </button>
-      </div>
-    </nav>
-
-    <div class="masthead">
-      <p class="eyebrow eyebrow--wide">Memorandum &#183; POD/001</p>
-
-      <h1 class="display">Proof of Done</h1>
-      <p class="masthead__sub">The Agentic Software Development Manifesto</p>
-      <p class="masthead__lede">A foundation for building software when agents write the code.</p>
-
-      <figure class="term" aria-label="Install the reference implementation">
-        <figcaption class="term__bar">
-          <span>&#8250;_</span>
-          <span class="term__title">install the implementation</span>
-          <button class="copy" type="button" data-copy="npx sshlg-skills install">copy</button>
-        </figcaption>
-        <pre class="term__body"><code><span class="p">$</span> npx sshlg-skills install</code></pre>
-      </figure>
-
-      <p class="proofline"><span aria-hidden="true">&#8250;</span> <b data-cases>9</b> cases in this document, each resolving to <a href="#notes">a line in a public repository</a></p>
-
-      <div class="masthead__act">
-        <a class="btn btn--primary" href="#preamble">Read the manifesto</a>
-        <a class="btn btn--ghost" href="https://github.com/ssheleg/sshlg-skills">Reference implementation</a>
-      </div>
+<header class="railbar">
+  <div class="railbar__in">
+    <a class="railbar__mark" href="#top">
+      <span class="sig" aria-hidden="true">&#8866;</span>
+      <span>POD/001</span>
+    </a>
+    <span class="railbar__now" id="now">Section <b>&#8212;</b></span>
+    <div class="railbar__act">
+      <a class="tbtn is-optional" href="/manifesto.md">Plain text</a>
+      <a class="tbtn is-optional" href="https://github.com/ssheleg/pod-manifesto">Source</a>
+      <a class="tbtn" href="#colophon">Install</a>
+      <button class="tbtn tbtn--icon" id="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch colour theme">
+        <span class="theme-ind" aria-hidden="true"></span>
+      </button>
     </div>
   </div>
 </header>
+
+<div class="shell" id="top">
+  <section class="masthead boot">
+    <p class="eyebrow eyebrow--wide">Memorandum <span class="cursor" aria-hidden="true">&#9646;</span></p>
+
+    <h1 class="display">Proof of Done</h1>
+    <p class="masthead__sub">The Agentic Software Development Manifesto</p>
+    <p class="masthead__lede">A foundation for building software when agents write the code.</p>
+
+    <figure class="term" aria-label="Install the reference implementation">
+      <figcaption class="term__bar">
+        <span>&#8250;_</span>
+        <span class="term__title">install the implementation</span>
+        <button class="copy" type="button" data-copy="npx sshlg-skills install">copy</button>
+      </figcaption>
+      <pre class="term__body"><code><span class="p">$</span> npx sshlg-skills install</code></pre>
+    </figure>
+
+    <p class="proofline"><b data-cases>9</b> cases in this document, each resolving to <a href="#notes">a line in a public repository</a></p>
+
+    <div class="masthead__act">
+      <a class="btn btn--primary" href="#preamble">Read the manifesto</a>
+      <a class="btn" href="https://github.com/ssheleg/sshlg-skills">Reference implementation</a>
+    </div>
+  </section>
+</div>
 
 <div class="sheet">
 <div class="shell">
@@ -803,7 +785,7 @@ support. Tests pass.</code></pre>
         <div><dt>Text licence</dt><dd><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &#8212; quote it, translate it, adopt it, argue with it; keep the attribution and the link</dd></div>
         <div><dt>Site licence</dt><dd><a href="https://github.com/ssheleg/pod-manifesto/blob/main/LICENSE">MIT</a></dd></div>
         <div><dt>Verified by</dt><dd><code>check-parity.py</code> &#8212; every canonical sentence of <code>manifesto.md</code> is on this page; <code>check-links.py</code> &#8212; every reference resolves. Both run on each push.</dd></div>
-        <div><dt>Typeset in</dt><dd>Bricolage Grotesque, Geist and Geist Mono, self-hosted under the SIL Open Font Licence</dd></div>
+        <div><dt>Typeset in</dt><dd>Geist and Geist Mono, self-hosted under the SIL Open Font Licence</dd></div>
       </dl>
 
       <div>

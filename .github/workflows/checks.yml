@@ -30,6 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 tools/check-pack.py
+      - run: python3 tools/build-theme.py --check
 
   figures:
     name: figure geometry holds and the page is current

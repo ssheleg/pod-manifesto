@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Hold the page to the SHELEG `field-notes` pack and to the motion doctrine.
+"""Hold the page to the SHELEG `instrument-console` pack and to the motion doctrine.
 
 Both are things a stylesheet drifts away from quietly: one hex literal, one
 `transition: all`, one animation with no reduced-motion path. Each is checked
@@ -16,9 +16,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CSS = ROOT / "assets" / "style.css"
-TOKENS = ROOT / "assets" / "tokens" / "field-notes.css"
+TOKENS = ROOT / "assets" / "tokens" / "instrument-console.css"
+LIGHT = ROOT / "assets" / "tokens" / "console-light.css"
 PACK = Path.home() / (".claude/plugins/cache/sheleg-design-skill/sheleg-design/"
-                      "1.19.0/skills/sheleg-design/styles/tokens/field-notes.css")
+                      "1.19.0/skills/sheleg-design/styles/tokens/instrument-console.css")
 
 failures = []
 
@@ -42,7 +43,10 @@ def main() -> int:
         check("token layer is the pack's file, byte for byte",
               TOKENS.read_bytes() == PACK.read_bytes())
     else:
-        check("token layer present", TOKENS.exists(), "assets/tokens/field-notes.css missing")
+        check("token layer present", TOKENS.exists(), "assets/tokens/instrument-console.css missing")
+
+    check("the light twin is generated, not hand-written",
+          LIGHT.exists() and "AUTHORED, NOT EXTRACTED" in LIGHT.read_text(encoding="utf-8"))
 
     # radii and durations come from the ramp, never from a number
     bad_radius = []
@@ -68,16 +72,18 @@ def main() -> int:
           hidden_total > 0 and hidden_total == hidden_guarded,
           f"{hidden_guarded}/{hidden_total} guarded")
 
-    check("the progress bar collapses under reduce",
-          re.search(r"@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.progress\s*\{[^}]*display:\s*none",
+    check("the progress rail collapses under reduce",
+          re.search(r"@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.rail\s*\{[^}]*display:\s*none",
                     css) is not None)
 
-    check("the token layer zeroes its durations under reduce",
-          "prefers-reduced-motion: reduce" in TOKENS.read_text(encoding="utf-8"))
+    # instrument-console ships motion tokens with no reduced-motion branch of its
+    # own, so the zeroing has to be found in one layer or the other.
+    zeroed = re.search(r"@media \(prefers-reduced-motion: reduce\)\s*\{\s*:root\s*\{[^}]*--dur-fast:\s*0s",
+                       TOKENS.read_text(encoding="utf-8") + css)
+    check("every duration token is zeroed under reduce", zeroed is not None)
 
     # ── the pack's own bans that bite this page ─────────────────────────────
-    check("no italic (the display face has none)",
-          not re.search(r"font-style:\s*italic", css_code))
+    check("no italic", not re.search(r"font-style:\s*italic", css_code))
 
     print(f"\n{len(failures)} violation(s)")
     return 1 if failures else 0
