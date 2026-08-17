@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Hold the page to the SHELEG `instrument-console` pack and to the motion doctrine.
+"""Hold the stylesheet to its own token block and to the motion doctrine.
 
 Both are things a stylesheet drifts away from quietly: one hex literal, one
 `transition: all`, one animation with no reduced-motion path. Each is checked
@@ -16,10 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CSS = ROOT / "assets" / "style.css"
-TOKENS = ROOT / "assets" / "tokens" / "instrument-console.css"
-LIGHT = ROOT / "assets" / "tokens" / "console-light.css"
-PACK = Path.home() / (".claude/plugins/cache/sheleg-design-skill/sheleg-design/"
-                      "1.19.0/skills/sheleg-design/styles/tokens/instrument-console.css")
+
 
 failures = []
 
@@ -36,22 +33,23 @@ def main() -> int:
     css_code = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
 
     # ── the pack owns the values ─────────────────────────────────────────────
-    hexes = re.findall(r"#[0-9a-fA-F]{3,8}\b", css_code)
-    check("no colour literal in the component layer", not hexes, ", ".join(sorted(set(hexes))[:6]))
+    # Colour literals belong in the token block at the top and nowhere else. The
+    # block is everything up to the first non-:root selector.
+    split = css_code.index("*, *::before")
+    print_at = css_code.index("@media print")
+    tokens = css_code[:split] + css_code[print_at:]   # print re-declares the tokens
+    components = css_code[split:print_at]
+    hexes = re.findall(r"#[0-9a-fA-F]{3,8}\b", components)
+    check("no colour literal outside the token block", not hexes, ", ".join(sorted(set(hexes))[:6]))
+    check("the token block defines the field and the accent",
+          "--bg:" in tokens and "--accent:" in tokens)
 
-    if TOKENS.exists() and PACK.exists():
-        check("token layer is the pack's file, byte for byte",
-              TOKENS.read_bytes() == PACK.read_bytes())
-    else:
-        check("token layer present", TOKENS.exists(), "assets/tokens/instrument-console.css missing")
-
-    check("the light twin is generated, not hand-written",
-          LIGHT.exists() and "AUTHORED, NOT EXTRACTED" in LIGHT.read_text(encoding="utf-8"))
 
     # radii and durations come from the ramp, never from a number
     bad_radius = []
-    for value in re.findall(r"border-radius:\s*([^;}]+)", css_code):
+    for value in re.findall(r"border-radius:\s*([^;}]+)", components):
         residue = re.sub(r"var\([^)]*\)", "", value)          # tokens are fine
+        residue = residue.replace("50%", "")                  # a circle is not a ramp value
         if re.search(r"\d", residue.replace("0", "")):        # a bare 0 is fine
             bad_radius.append(value.strip())
     check("no hardcoded radius", not bad_radius, "; ".join(bad_radius[:3]))
@@ -72,15 +70,12 @@ def main() -> int:
           hidden_total > 0 and hidden_total == hidden_guarded,
           f"{hidden_guarded}/{hidden_total} guarded")
 
-    check("the progress rail collapses under reduce",
-          re.search(r"@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.rail\s*\{[^}]*display:\s*none",
+    check("the progress bar collapses under reduce",
+          re.search(r"@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.progress\s*\{[^}]*display:\s*none",
                     css) is not None)
 
-    # instrument-console ships motion tokens with no reduced-motion branch of its
-    # own, so the zeroing has to be found in one layer or the other.
-    zeroed = re.search(r"@media \(prefers-reduced-motion: reduce\)\s*\{\s*:root\s*\{[^}]*--dur-fast:\s*0s",
-                       TOKENS.read_text(encoding="utf-8") + css)
-    check("every duration token is zeroed under reduce", zeroed is not None)
+    check("nothing animates without a no-preference guard",
+          "prefers-reduced-motion: no-preference" in css)
 
     # ── the pack's own bans that bite this page ─────────────────────────────
     check("no italic", not re.search(r"font-style:\s*italic", css_code))

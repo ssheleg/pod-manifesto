@@ -31,7 +31,7 @@
     }
     // Read the paper colour from the pack's token layer rather than repeating it.
     meta.setAttribute('content',
-      getComputedStyle(root).getPropertyValue('--bg').trim() || '#f8f7f0');
+      getComputedStyle(root).getPropertyValue('--bg').trim() || '#f4f4ef');
     var btn = document.getElementById('theme-toggle');
     if (btn) btn.setAttribute('aria-label', 'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' theme');
   }
@@ -98,15 +98,12 @@
 
   var reducedBoot = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var boot = document.querySelector('.boot');
-  var hud = document.querySelector('.hud');
   if (boot) {
     if (reducedBoot) boot.classList.add('is-up');
     else window.requestAnimationFrame(function () {
       window.requestAnimationFrame(function () { boot.classList.add('is-up'); });
     });
   }
-  if (hud && !reducedBoot) window.setTimeout(function () { hud.classList.add('is-up'); }, 120);
-  else if (hud) hud.classList.add('is-up');
 
   /* ── reveal on entry ─────────────────────────────────────────────────── */
   /* Why does this move: a section arriving with no transition reads as a cut.
@@ -158,20 +155,7 @@
       if (!activeId) return;
 
       links.forEach(function (a) { a.classList.remove('is-active'); });
-      if (byId[activeId]) {
-        byId[activeId].classList.add('is-active');
-        var now = document.getElementById('now');
-        if (now) {
-          var n = byId[activeId].querySelector('.toc__n');
-          var label = byId[activeId].textContent.replace(/\s+/g, ' ').trim();
-          if (n) label = label.slice(n.textContent.trim().length).trim();
-          now.innerHTML = '';
-          now.appendChild(document.createTextNode((n ? n.textContent.trim() + ' / ' : '')));
-          var b = document.createElement('b');
-          b.textContent = label;
-          now.appendChild(b);
-        }
-      }
+      if (byId[activeId]) byId[activeId].classList.add('is-active');
     }, { rootMargin: '-12% 0px -70% 0px', threshold: 0 });
 
     targets.forEach(function (el) { spy.observe(el); });

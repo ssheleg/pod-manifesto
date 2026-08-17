@@ -19,6 +19,9 @@ jobs:
       # an unclosed tag rendered fine in Chrome for several commits; error
       # recovery is not specified to agree between engines, so it is a check now
       - run: python3 tools/check-html.py
+      # a deploy shipped while browsers kept the previous stylesheet; asset URLs
+      # carry a content hash now, and a stale stamp fails here rather than live
+      - run: python3 tools/stamp-assets.py --check
 
   links:
     name: every published reference resolves
@@ -38,7 +41,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 tools/check-pack.py
-      - run: python3 tools/build-theme.py --check
 
   figures:
     name: figure geometry holds and the page is current

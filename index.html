@@ -7,8 +7,8 @@
 <meta name="description" content="A foundation for building software when agents write the code. Done is not the last message of the run. Done is a state of the system that can be proven.">
 <meta name="author" content="Sergey Sheleg (Siarhei Sheleh)">
 <link rel="canonical" href="https://podmanifesto.org/">
-<meta name="theme-color" content="#eef2f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#05070a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#090b0a" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
 
 <meta property="og:type" content="article">
@@ -24,14 +24,12 @@
 <meta name="twitter:description" content="When agents write the code, done is not the last message of the run. Done is a state of the system that can be proven.">
 <meta name="twitter:image" content="https://podmanifesto.org/og.png">
 
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.svg?v=d79f4d92bc" type="image/svg+xml">
 <link rel="alternate" type="text/markdown" href="/manifesto.md" title="Proof of Done — full text in Markdown">
-<link rel="preload" href="/assets/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts/fonts.css">
-<link rel="stylesheet" href="/assets/tokens/instrument-console.css">
-<link rel="stylesheet" href="/assets/tokens/console-light.css">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="preload" href="/assets/fonts/geist-latin.woff2?v=9b6f5ff45b" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/jetbrains-mono-latin.woff2?v=1e06740a02" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts/fonts.css?v=1ffbd10636">
+<link rel="stylesheet" href="/assets/style.css?v=fc634bb8be">
 
 <script>
   document.documentElement.classList.remove('no-js');
@@ -76,23 +74,20 @@
 </head>
 <body>
 
-<div class="hud" aria-hidden="true">
-  <i></i><i></i><i></i><i></i>
-  <div class="rail"><span></span></div>
-</div>
+<div class="progress" aria-hidden="true"><span></span></div>
 
 <a class="skip" href="#preamble">Skip to the document</a>
 
-<header class="railbar">
-  <div class="railbar__in">
-    <a class="railbar__mark" href="#top">
-      <span class="sig" aria-hidden="true">&#8866;</span>
-      <span>POD/001</span>
+<header class="topbar">
+  <div class="topbar__in">
+    <a class="topbar__mark" href="#top" aria-label="Proof of Done, top of document">
+      <span class="glyph" aria-hidden="true">&#8866;</span>
+      <span class="topbar__name">PROOF&nbsp;OF&nbsp;DONE</span>
+      <span class="topbar__ver">v1.0</span>
     </a>
-    <span class="railbar__now" id="now">Section <b>&#8212;</b></span>
-    <div class="railbar__act">
-      <a class="tbtn is-optional" href="/manifesto.md">Plain text</a>
-      <a class="tbtn is-optional" href="https://github.com/ssheleg/pod-manifesto">Source</a>
+    <div class="topbar__actions">
+      <a class="tbtn" href="/manifesto.md">Plain text</a>
+      <a class="tbtn" href="https://github.com/ssheleg/pod-manifesto">Source</a>
       <a class="tbtn" href="#colophon">Install</a>
       <button class="tbtn tbtn--icon" id="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch colour theme">
         <span class="theme-ind" aria-hidden="true"></span>
@@ -102,34 +97,38 @@
 </header>
 
 <div class="shell" id="top">
-  <section class="masthead boot">
-    <p class="eyebrow eyebrow--wide">Memorandum <span class="cursor" aria-hidden="true">&#9646;</span></p>
+  <header class="masthead boot">
+    <p class="kicker"><span class="blink" aria-hidden="true">&#9646;</span> Memorandum &#183; a standard for completion claims</p>
 
-    <h1 class="display">Proof of Done</h1>
+    <h1 class="masthead__title">
+      <span class="masthead__glyph" aria-hidden="true">&#8866;</span>
+      Proof&nbsp;of&nbsp;Done
+    </h1>
     <p class="masthead__sub">The Agentic Software Development Manifesto</p>
     <p class="masthead__lede">A foundation for building software when agents write the code.</p>
 
+    <dl class="docmeta">
+      <div><dt>Document</dt><dd>POD&#8202;/&#8202;001 &#8212; Proof of Done</dd></div>
+      <div><dt>Version</dt><dd>1.0</dd></div>
+      <div><dt>Published</dt><dd><time datetime="2026-08-17">2026-08-17</time></dd></div>
+      <div><dt>Author</dt><dd>Sergey Sheleg <span class="muted">(Siarhei Sheleh)</span></dd></div>
+      <div><dt>Canonical</dt><dd><a href="https://podmanifesto.org/">podmanifesto.org</a></dd></div>
+      <div><dt>Source</dt><dd><a href="https://github.com/ssheleg/pod-manifesto">github.com/ssheleg/pod-manifesto</a></dd></div>
+      <div><dt>Readers</dt><dd>humans and agents</dd></div>
+      <div><dt>Licence</dt><dd><a href="https://creativecommons.org/licenses/by/4.0/">CC&nbsp;BY&nbsp;4.0</a></dd></div>
+    </dl>
+
     <p class="proofline"><b data-cases>9</b> cases in this document, each resolving to <a href="#notes">a line in a public repository</a></p>
 
-    <div class="masthead__act">
+    <div class="masthead__cta">
       <a class="btn btn--primary" href="#preamble">Read the manifesto</a>
+      <a class="btn" href="/manifesto.md">Plain text</a>
       <a class="btn" href="https://github.com/ssheleg/sshlg-skills">Reference implementation</a>
     </div>
-  </section>
+  </header>
 </div>
 
 <div class="shell">
-
-<!-- the compact strip: only what a reader needs before starting -->
-<div class="metastrip">
-  <dl>
-    <div><dt>Version</dt><dd>1.0</dd></div>
-    <div><dt>Published</dt><dd><time datetime="2026-08-17">2026-08-17</time></dd></div>
-    <div><dt>Readers</dt><dd>humans and agents</dd></div>
-    <div><dt>Licence</dt><dd><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></dd></div>
-    <div><dt>Author</dt><dd>Sergey Sheleg</dd></div>
-  </dl>
-</div>
 
 <div class="layout">
 
@@ -806,6 +805,6 @@ support. Tests pass.</code></pre>
   </div>
 </footer>
 
-<script src="/assets/main.js" defer></script>
+<script src="/assets/main.js?v=53525102f3" defer></script>
 </body>
 </html>
