@@ -127,41 +127,24 @@ p code, li code, td code, dd code, .decl code {
 @keyframes pod-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @media (prefers-reduced-motion: reduce) { .progress { display: none; } }
 
-/* A gap in the pack, closed here rather than in its file.
-   `field-notes` overrides --bg in its dark twin but not --dawn-6/--dawn-7, which
-   are pale greens (#a8c9ad, #e9ecdf). On dark paper the dawn therefore brightens
-   to near-white one stop before it resolves, and the seam the pack exists to
-   avoid comes back as a glowing band. The dawn is re-cut from the same forest
-   family — dawn-4 back down through dawn-3 and dawn-2 into --bg — so it still
-   rises and still resolves without an edge, and no colour is invented. */
-:root[data-theme="dark"], .dark {
-  --hero-dawn: linear-gradient(
-    var(--dawn-1) 0%,
-    var(--dawn-2) 32%,
-    var(--dawn-3) 56%,
-    var(--dawn-4) 72%,
-    var(--dawn-3) 84%,
-    var(--dawn-2) 93%,
-    var(--bg) 100%
-  );
-}
-
-/* ═══════════════════════ THE DAWN — the one dark surface ════════════════ */
+/* ═══════════════════════ THE TITLE PAGE ═════════════════════════════════ */
+/* The pack's signature element is a dark hero that resolves into the paper.
+   It is removed here by the author's decision, not for convenience: the page is
+   one sheet, top to bottom. What the opening is remembered by instead is the
+   title page itself — crop marks, a notation field, the display at its ceiling,
+   and the install line inside the first viewport. */
 
 .dawn {
   position: relative;
   min-height: var(--hero-min-h);
-  background: var(--hero-dawn);
-  color: var(--on-deep);
+  background: var(--bg);
+  color: var(--ink);
   display: flex; flex-direction: column;
   isolation: isolate;
   overflow: hidden;
+  border-bottom: 1px solid var(--line);
 }
 @supports (height: 100dvh) { .dawn { min-height: 100dvh; } }
-.dawn::after {
-  content: ""; position: absolute; inset: 0; z-index: 1;
-  background: var(--hero-vignette); pointer-events: none;
-}
 
 .dawn__shell {
   position: relative; z-index: 4;
@@ -178,8 +161,8 @@ p code, li code, td code, dd code, .decl code {
   position: absolute; inset: 0; z-index: 2;
   pointer-events: none; overflow: hidden;
   font-family: var(--font-mono);
-  color: var(--on-deep);
-  opacity: var(--sym-op);
+  color: var(--ink);
+  opacity: calc(var(--sym-op) * 0.55);
   user-select: none;
 }
 .notation span { position: absolute; display: block; }
@@ -189,8 +172,8 @@ p code, li code, td code, dd code, .decl code {
   position: relative; z-index: 5;
   display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
   border-radius: var(--radius-pill);
-  background: var(--fill-on-deep);
-  border: 1px solid var(--line-on-deep);
+  background: var(--surface);
+  border: 1px solid var(--line);
   padding: var(--s2) var(--s2) var(--s2) var(--s5);
   min-height: 62px;
 }
@@ -198,7 +181,7 @@ p code, li code, td code, dd code, .decl code {
   display: inline-flex; align-items: baseline; gap: var(--s2);
   font-family: var(--font-mono); font-size: var(--t-sm);
   letter-spacing: var(--track-tab); text-transform: uppercase;
-  text-decoration: none; color: var(--on-deep);
+  text-decoration: none; color: var(--ink);
 }
 .nav__mark b { font-weight: var(--weight-body); }
 .nav__ver { opacity: .55; }
@@ -206,16 +189,15 @@ p code, li code, td code, dd code, .decl code {
 .nav a.ghost, .nav button.ghost {
   font-family: var(--font-mono); font-size: var(--t-sm);
   letter-spacing: var(--track-tab); text-transform: uppercase;
-  color: var(--on-deep); text-decoration: none;
-  background: var(--fill-on-deep);
-  border: 1px solid var(--line-on-deep-strong);
+  color: var(--ink-soft); text-decoration: none;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-lg);
   padding: var(--s2) var(--s3); line-height: 1;
   cursor: pointer;
   transition: color var(--dur-ui) var(--ease-ui), background-color var(--dur-ui) var(--ease-ui);
 }
-.nav a.ghost:hover, .nav button.ghost:hover { background: var(--line-on-deep-strong); color: var(--on-deep); }
-.nav :focus-visible { outline-color: var(--brand-on-dark); }
+.nav a.ghost:hover, .nav button.ghost:hover { background: var(--surface-2); color: var(--ink); }
 @media (max-width: 39.99rem) { .nav__links .is-optional { display: none; } }
 
 .theme-ind {
@@ -231,7 +213,7 @@ p code, li code, td code, dd code, .decl code {
   padding: var(--s8) 0 var(--s7);
   max-width: var(--content-max);
 }
-.masthead .eyebrow { color: var(--on-deep); opacity: .8; margin-bottom: var(--s5); }
+.masthead .eyebrow { margin-bottom: var(--s5); }
 
 .display {
   font-family: var(--font-display);
@@ -241,7 +223,7 @@ p code, li code, td code, dd code, .decl code {
   line-height: var(--lh-hero);
   letter-spacing: var(--track-display);
   margin: 0;
-  color: var(--on-deep);
+  color: var(--ink);
 }
 @media (min-width: 48rem) { .display { font-size: 56px; } }
 @media (min-width: 64rem) { .display { font-size: var(--t-hero); } }
@@ -252,7 +234,7 @@ p code, li code, td code, dd code, .decl code {
   font-size: var(--t-h4);
   line-height: var(--lh-h4);
   letter-spacing: var(--track-display);
-  color: var(--brand-on-dark);
+  color: var(--brand);
   margin: var(--s4) 0 0;
 }
 @media (min-width: 64rem) { .masthead__sub { font-size: var(--t-h3); } }
@@ -260,7 +242,7 @@ p code, li code, td code, dd code, .decl code {
 .masthead__lede {
   font-size: var(--t-lede);
   line-height: var(--lh-lede);
-  color: var(--on-deep);
+  color: var(--ink-soft);
   max-width: var(--lede-max);
   margin: var(--s5) 0 0;
 }
@@ -270,13 +252,13 @@ p code, li code, td code, dd code, .decl code {
   margin: var(--s5) 0 0;
   font-family: var(--font-mono); font-size: var(--t-tag);
   letter-spacing: var(--track-tag); text-transform: uppercase;
-  color: var(--on-deep); opacity: .8;
+  color: var(--ink-soft);
 }
-/* --verify is a fill, not a text colour: 3.2:1 on paper and worse on the dawn.
-   Anything coloured on this surface takes --brand-on-dark, which measures 4.8:1. */
-.proofline b { color: var(--brand-on-dark); font-weight: var(--weight-body); }
-.proofline a { color: var(--on-deep); text-decoration-color: var(--line-on-deep-strong); }
-.proofline a:hover { color: var(--brand-on-dark); }
+/* --verify is a fill, not a text colour — 3.2:1 on paper. Anything coloured
+   here takes the rust, which measures 6.3:1. */
+.proofline b { color: var(--brand-ink); font-weight: var(--weight-body); }
+.proofline a { color: var(--ink); text-decoration-color: var(--line-strong); }
+.proofline a:hover { color: var(--brand-ink); }
 
 .masthead__act { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: var(--s6); }
 .btn {
@@ -291,17 +273,16 @@ p code, li code, td code, dd code, .decl code {
               background-color var(--dur-ui) var(--ease-ui),
               border-color var(--dur-ui) var(--ease-ui);
 }
-.btn--primary { background: var(--on-deep); color: var(--dawn-1); }
-.btn--primary:hover { opacity: .86; color: var(--dawn-1); }
+.btn--primary { background: var(--ink); color: var(--on-ink); }
+.btn--primary:hover { opacity: .86; color: var(--on-ink); }
 .btn--primary .prompt { font-family: var(--font-mono); opacity: .6; }
 .btn--ghost {
-  background: var(--fill-on-deep); color: var(--on-deep);
-  border-color: var(--line-on-deep-strong);
+  background: var(--bg); color: var(--ink);
+  border-color: var(--line-strong);
   border-radius: var(--radius-lg);
   padding: var(--s3) var(--s5); font-weight: var(--weight-body-strong);
 }
-.btn--ghost:hover { background: var(--line-on-deep); color: var(--on-deep); }
-.masthead :focus-visible { outline-color: var(--brand-on-dark); }
+.btn--ghost:hover { background: var(--surface-2); color: var(--ink); }
 
 /* ── the terminal: the pack's bounded dark surface ──────────────────────── */
 
@@ -310,43 +291,44 @@ p code, li code, td code, dd code, .decl code {
   max-width: 560px;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--ring-inset);
-  background: var(--deep-3);
+  background: var(--surface);
+  box-shadow: var(--ring-hairline);
 }
+.term--wide { max-width: none; }
 .term__bar {
   display: flex; align-items: center; gap: var(--s3);
-  background: var(--deep-2);
+  background: color-mix(in srgb, var(--surface-2) 60%, transparent);
+  border-bottom: 1px solid var(--line);
   padding: var(--s2) var(--s3);
   font-family: var(--font-mono); font-size: var(--t-tag);
   letter-spacing: var(--track-tag); text-transform: uppercase;
-  color: var(--on-deep);
+  color: var(--ink-soft);
 }
-.term__bar > span:first-child { opacity: .55; }
-.term__title { flex: 1; opacity: .55; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.term__bar > span:first-child { color: var(--brand-ink); opacity: .8; }
+.term__title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .term__body {
   margin: 0; padding: var(--s4);
   font-size: var(--t-mono); line-height: var(--lh-mono);
-  color: var(--on-deep);
+  color: var(--ink);
   overflow-x: auto;
 }
 .term__body code { white-space: pre; }
-.term__body .p { color: var(--brand-on-dark); user-select: none; }
-.term__body .k { color: var(--verify); }
-.term__body .s { opacity: .78; }
+.term__body .p { color: var(--brand-ink); user-select: none; }
+.term__body .k { color: var(--verify-ink); }
+.term__body .s { color: var(--ink-soft); }
 
 .copy {
   font-family: var(--font-mono); font-size: var(--t-tag);
   letter-spacing: var(--track-tag); text-transform: uppercase;
-  color: var(--on-deep);
-  background: var(--fill-on-deep);
-  border: 1px solid var(--line-on-deep-strong);
+  color: var(--ink-soft);
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
   padding: var(--s1) var(--s2); cursor: pointer; line-height: 1.4; flex: none;
   transition: background-color var(--dur-ui) var(--ease-ui), color var(--dur-ui) var(--ease-ui);
 }
-.copy:hover { background: var(--line-on-deep-strong); }
-.copy[data-done="1"] { color: var(--verify); border-color: var(--verify); }
-.term :focus-visible { outline-color: var(--brand-on-dark); }
+.copy:hover { background: var(--surface-2); color: var(--ink); }
+.copy[data-done="1"] { color: var(--verify-ink); border-color: var(--verify-ink); }
 
 /* ═══════════════════════ THE PAPER ══════════════════════════════════════ */
 
@@ -570,17 +552,6 @@ p code, li code, td code, dd code, .decl code {
 .card figcaption[data-state] { display: flex; justify-content: space-between; gap: var(--s3); }
 .card figcaption[data-state]::after { content: "[" attr(data-state) "]"; opacity: .7; }
 
-/* a paper terminal — the document's code blocks */
-.term--paper { background: var(--surface); box-shadow: var(--ring-hairline); max-width: none; }
-.term--paper .term__bar { background: color-mix(in srgb, var(--surface-2) 60%, transparent); color: var(--ink-soft); border-bottom: 1px solid var(--line); }
-.term--paper .term__body { color: var(--ink); }
-.term--paper .term__body .p { color: var(--brand-ink); }
-.term--paper .term__body .k { color: var(--verify-ink); }
-.term--paper .term__body .s { color: var(--ink-soft); opacity: 1; }
-.term--paper .copy { background: var(--surface); border-color: var(--line-strong); color: var(--ink-soft); }
-.term--paper .copy:hover { background: var(--surface-2); color: var(--ink); }
-.term--paper .copy[data-done="1"] { color: var(--verify-ink); border-color: var(--verify-ink); }
-
 /* tables */
 .tablewrap {
   overflow-x: auto; margin: var(--s5) 0 var(--s6);
@@ -777,10 +748,8 @@ tbody tr:hover td { background: color-mix(in srgb, var(--surface-2) 40%, transpa
 
 @media print {
   .nav, .progress, .toc, .copy, .anchor, .grain, .crop, .notation, .masthead__act { display: none !important; }
-  .dawn { min-height: 0; background: none; color: var(--ink); }
-  .dawn::after { display: none; }
-  .display, .masthead__sub, .masthead__lede { color: var(--ink); }
-  .term, .term__bar, .term__body { background: none; color: var(--ink); box-shadow: none; }
+  .dawn { min-height: 0; border-bottom: 0; }
+  .term, .term__bar, .term__body { background: none; box-shadow: none; }
   .layout { display: block; }
   .reveal { opacity: 1 !important; transform: none !important; }
   .sec { break-inside: auto; }
