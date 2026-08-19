@@ -2,8 +2,17 @@
 """Prove that index.html carries the canonical text of manifesto.md.
 
 manifesto.md is the one authoritative home for the words. index.html renders them.
-This check fails when the two drift, so "the site matches the text" is a command with
-an exit code rather than a sentence in a commit message.
+This check fails when a canonical sentence is MISSING from the page, so "the site carries
+the text" is a command with an exit code rather than a sentence in a commit message.
+
+**It measures one direction only, and the docstring used to claim both.** Every block of
+`manifesto.md` must appear in `index.html`; nothing here asserts the reverse, so the page
+can carry prose that exists in no canonical source and this check stays green. Some of
+that is deliberate — the masthead, the footnotes, the proofline are page chrome and were
+never in the canonical text — which is why the reverse pass needs an enumerated allowlist
+rather than a stricter regex, and is filed as its own row rather than bolted on here. The
+sentence that used to stand in this docstring said "fails when the two drift", which is
+wider than what runs; on 2026-08-20 it was narrowed to what it does.
 
 Usage:  python3 tools/check-parity.py [--verbose]
 Exit:   0 = every canonical sentence is present in the page
