@@ -16,19 +16,19 @@
 <meta property="og:title" content="Proof of Done — The Agentic Software Development Manifesto">
 <meta property="og:description" content="When agents write the code, done is not the last message of the run. Done is a state of the system that can be proven.">
 <meta property="og:url" content="https://podmanifesto.org/">
-<meta property="og:image" content="https://podmanifesto.org/og.png">
+<meta property="og:image" content="https://podmanifesto.org/og.png?v=f2076ede00">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Proof of Done — The Agentic Software Development Manifesto">
 <meta name="twitter:description" content="When agents write the code, done is not the last message of the run. Done is a state of the system that can be proven.">
-<meta name="twitter:image" content="https://podmanifesto.org/og.png">
+<meta name="twitter:image" content="https://podmanifesto.org/og.png?v=f2076ede00">
 
 <link rel="icon" href="/favicon.svg?v=d79f4d92bc" type="image/svg+xml">
 <link rel="alternate" type="text/markdown" href="/manifesto.md" title="Proof of Done — full text in Markdown">
 <link rel="preload" href="/assets/fonts/geist-latin.woff2?v=9b6f5ff45b" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/jetbrains-mono-latin.woff2?v=1e06740a02" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts/fonts.css?v=1ffbd10636">
+<link rel="stylesheet" href="/assets/fonts/fonts.css?v=e9ff3f16cd">
 <link rel="stylesheet" href="/assets/style.css?v=cbc81ef7d0">
 
 <script>
@@ -48,10 +48,11 @@
   "description": "Proof of Done requires every completion claim between an intended outcome and an accepted result to point to its supporting record at an address another actor can resolve; if the address does not resolve, the claim is not proven.",
   "url": "https://podmanifesto.org/",
   "inLanguage": "en",
+  "dateModified": "2026-08-20",
   "datePublished": "2026-08-17",
   "version": "1.0",
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "image": "https://podmanifesto.org/og.png",
+  "image": "https://podmanifesto.org/og.png?v=f2076ede00",
   "author": {
     "@type": "Person",
     "name": "Sergey Sheleg",
@@ -111,12 +112,13 @@
       <div><dt>Document</dt><dd>POD&#8202;/&#8202;001</dd></div>
       <div><dt>Version</dt><dd>1.0</dd></div>
       <div><dt>Published</dt><dd><time datetime="2026-08-17">2026-08-17</time></dd></div>
+      <div><dt>Updated</dt><dd><time class="docmeta__updated" datetime="2026-08-20">2026-08-20</time></dd></div>
       <div><dt>Author</dt><dd>Sergey Sheleg <span class="muted">(Siarhei Sheleh)</span></dd></div>
       <div><dt>Canonical</dt><dd><a href="https://podmanifesto.org/">podmanifesto.org</a></dd></div>
       <div><dt>Source</dt><dd><a href="https://github.com/ssheleg/pod-manifesto">ssheleg&#8202;/&#8202;pod-manifesto</a></dd></div>
     </dl>
 
-    <p class="proofline"><b data-cases>9</b> cases in this document, each resolving to <a href="#notes">a line in a public repository</a></p>
+    <p class="proofline"><b data-cases>9</b> cases in this document, each resolving to <a href="#notes">a receipt in a public repository</a></p>
 
     <div class="masthead__cta">
       <a class="btn btn--primary" href="#preamble">Read the manifesto</a>
@@ -652,7 +654,7 @@ support. Tests pass.</code></pre>
 
   <p>I didn&#8217;t arrive at this model by designing an ideal process on a blank page. I arrived at it while building and repeatedly breaking a working agent delivery system (the failures above are records from that work). Rules that existed only in prose were skipped. Green checks turned out not to observe their subject. Reviews began finding defects introduced by the previous review. Context summaries preserved the story and lost the state. Each failure added a mechanism, or removed a rule that had been pretending to be one.</p>
 
-  <p>One reference implementation is packaged in my <a href="https://github.com/ssheleg/sshlg-skills">sshlg-skills</a> project. At <a href="https://github.com/ssheleg/task-pipeline/commit/0fb706ca28c3ec127875ee891235f32cdb8346ba"><code>0fb706c</code></a>, I had not yet built four requirements this manifesto names: judgment gates, resolvable requirement-to-execution edges, per-node completion checks, and proof invalidation. They were filed as open backlog rows <a href="https://github.com/ssheleg/task-pipeline/blob/404fd09afd919d57834a095d05ddaa4f0d693d9c/docs/evidence/backlog.md#L21-L22">B-076 and B-077</a> and <a href="https://github.com/ssheleg/task-pipeline/blob/404fd09afd919d57834a095d05ddaa4f0d693d9c/docs/evidence/backlog.md#L15-L16">B-080 and B-081</a> rather than described as shipped. <strong>All four have since been built</strong> &#8212; a judgment gate the schema distinguishes from a measurement at <a href="https://github.com/ssheleg/task-pipeline/commit/9d8695dc4b73da5b65f2dde6894d351f2e738612"><code>9d8695d</code></a>, a <code>serves</code> edge that must resolve at <a href="https://github.com/ssheleg/task-pipeline/commit/fbd8a67e6988a0893f273eb37bd9a075a036c223"><code>fbd8a67</code></a>, expiring verification at <a href="https://github.com/ssheleg/task-pipeline/commit/0bc5eb632e6c94181c528cf8cff315e2b7c5a2a9"><code>0bc5eb6</code></a>, and a node that states its own completion check at <a href="https://github.com/ssheleg/task-pipeline/commit/8b7de18eceb8b3f58ceea35410201344bf470f49"><code>8b7de18</code></a> &#8212; the last of them on 2026-08-19, two days after this paragraph first claimed all four were open. That gap is the subject of this document happening to it: those two permalinks still resolve and still read <code>open</code>, because a permalink is pinned to a commit, so for a day and a half the receipt confirmed a belief that had stopped being true. <strong>A citation that resolves is not the same as a citation that is current</strong>, and only the first of those was ever checked here. The launcher installs the implementation as Claude Code plugins and as portable Agent Skills for other coding agents through one command. <a class="prov" href="#n3">E3</a></p>
+  <p>One reference implementation is packaged in my <a href="https://github.com/ssheleg/sshlg-skills">sshlg-skills</a> project. At <a href="https://github.com/ssheleg/task-pipeline/commit/0fb706ca28c3ec127875ee891235f32cdb8346ba"><code>0fb706c</code></a>, I had not yet built four requirements this manifesto names: judgment gates, resolvable requirement-to-execution edges, per-node completion checks, and proof invalidation. They were filed as open backlog rows <a href="https://github.com/ssheleg/task-pipeline/blob/404fd09afd919d57834a095d05ddaa4f0d693d9c/docs/evidence/backlog.md#L21-L22">B-076 and B-077</a> and <a href="https://github.com/ssheleg/task-pipeline/blob/404fd09afd919d57834a095d05ddaa4f0d693d9c/docs/evidence/backlog.md#L15-L16">B-080 and B-081</a> rather than described as shipped. <strong>All four have since been built</strong> &#8212; a judgment gate the schema distinguishes from a measurement at <a href="https://github.com/ssheleg/task-pipeline/commit/9d8695dc4b73da5b65f2dde6894d351f2e738612"><code>9d8695d</code></a>, a <code>serves</code> edge that must resolve at <a href="https://github.com/ssheleg/task-pipeline/commit/fbd8a67e6988a0893f273eb37bd9a075a036c223"><code>fbd8a67</code></a>, expiring verification at <a href="https://github.com/ssheleg/task-pipeline/commit/0bc5eb632e6c94181c528cf8cff315e2b7c5a2a9"><code>0bc5eb6</code></a>, and a node that states its own completion check at <a href="https://github.com/ssheleg/task-pipeline/commit/8b7de18eceb8b3f58ceea35410201344bf470f49"><code>8b7de18</code></a> &#8212; the last of them on 2026-08-19, two days after this paragraph first claimed all four were open. That gap is the subject of this document happening to it: those two permalinks still resolve and still read <code>open</code>, because a permalink is pinned to a commit, so the receipt confirmed a belief that had stopped being true for two days and six hours: from 11:49 on 2026-08-17, when the first of the four rows closed, to 18:01 on 2026-08-19, when this paragraph was corrected. <strong>A citation that resolves is not the same as a citation that is current</strong>, and only the first of those was ever checked here. The launcher installs the implementation as Claude Code plugins and as portable Agent Skills for other coding agents through one command. <a class="prov" href="#n3">E3</a></p>
 
   <figure class="term term--wide">
     <figcaption class="term__bar">
@@ -711,12 +713,12 @@ support. Tests pass.</code></pre>
 <section id="notes" class="sec reveal">
   <p class="eyebrow">Apparatus</p>
   <h2 class="sec__h">Evidence <a class="anchor" href="#notes" aria-label="Link to this section">&#9633;</a></h2>
-  <p>Every case in this document resolves to a line in a public repository. That is the standard the document asks for, so it applies to the document itself.</p>
+  <p>Every case in this document resolves to a receipt in a public repository — a line range, a file, or a commit. That is the standard the document asks for, so it applies to the document itself.</p>
   <ol class="notes">
-    <li id="n1"><span class="prov">E1</span> The empty inventory and the live poller &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/f0402c22b147d6d143c55833ef906fb817972ab9/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L28-L62">task-pipeline &#8250; references/residue.md#L28-L48</a></li>
+    <li id="n1"><span class="prov">E1</span> The empty inventory and the live poller &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/f0402c22b147d6d143c55833ef906fb817972ab9/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L28-L62">task-pipeline &#8250; references/residue.md#L28-L62</a></li>
     <li id="n2"><span class="prov">E2</span> Audit pass 6: 10 of 13 findings self-inflicted &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/audit.md#L44-L64">task-pipeline &#8250; references/audit.md#L44-L64</a></li>
     <li id="n3"><span class="prov">E3</span> One-command install, Claude Code plugins and portable Agent Skills &#8212; <a href="https://github.com/ssheleg/sshlg-skills/blob/b01050170cf8c2a7ee56f645e2d01e87cf3b0d17/README.md#L7-L16">sshlg-skills &#8250; README.md#L7-L16</a></li>
-    <li id="n4"><span class="prov">E4</span> 18 containers alive across four projects, oldest 3 days &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/f0402c22b147d6d143c55833ef906fb817972ab9/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L187-L220">task-pipeline &#8250; references/residue.md#L173-L206</a></li>
+    <li id="n4"><span class="prov">E4</span> 18 containers alive across four projects, oldest 3 days &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/f0402c22b147d6d143c55833ef906fb817972ab9/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L187-L220">task-pipeline &#8250; references/residue.md#L187-L220</a></li>
     <li id="n5"><span class="prov">N1</span> The negative-control suite: every guard is fed a planted defect and required to reject it &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/test/negatives.py">task-pipeline &#8250; test/negatives.py</a></li>
     <li id="n6"><span class="prov">N2</span> Loop-guard detection rules and their bookkeeping &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/loop-guard.md#L51-L72">task-pipeline &#8250; references/loop-guard.md#L51-L72</a></li>
     <li id="n7"><span class="prov">N3</span> Convergence: the submodule pointer that makes both repositories look right alone &#8212; <a href="https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/acceptance.md#L155-L190">task-pipeline &#8250; references/acceptance.md#L155-L190</a></li>

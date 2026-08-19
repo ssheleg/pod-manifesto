@@ -129,7 +129,10 @@ def check_plain(url):
 
 def check(url):
     if url.startswith(SELF):
-        path = url[len(SELF):].split("#")[0].lstrip("/") or "index.html"
+        # `?v=<hash>` is a cache fingerprint, not part of the path — stamp-assets
+        # puts one on every same-origin asset, including the absolute og:image url,
+        # and resolving the query as a filename reported a shipped file missing.
+        path = url[len(SELF):].split("#")[0].split("?")[0].lstrip("/") or "index.html"
         here = (ROOT / path).exists()
         return here, "local file" if here else "MISSING FILE"
     if url.startswith("https://github.com/"):

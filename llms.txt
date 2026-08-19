@@ -5,7 +5,7 @@
 > its supporting record at an address another actor can resolve; if the address does not
 > resolve, the claim is not proven.
 
-Author: Sergey Sheleg (Siarhei Sheleh). Version 1.0, published 2026-08-17.
+Author: Sergey Sheleg (Siarhei Sheleh). Version 1.0, published 2026-08-17, last modified 2026-08-20.
 Canonical URL: https://podmanifesto.org/
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — attribution and link required.
 
@@ -53,7 +53,7 @@ An agent should not return `done` without these four fields:
 ## Evidence cited in the document
 
 - [E1 — empty inventory, live poller](https://github.com/ssheleg/task-pipeline/blob/f0402c22b147d6d143c55833ef906fb817972ab9/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L28-L62)
-- [E2 — audit pass 6: 10 of 13 findings self-inflicted](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/audit.md#L44-L64)
+- [E2 — audit pass 6: 10 of 13 findings self-inflicted, and a seventh pass at 4 of 19](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/audit.md#L44-L64)
 - [E3 — one-command install](https://github.com/ssheleg/sshlg-skills/blob/b01050170cf8c2a7ee56f645e2d01e87cf3b0d17/README.md#L7-L16)
 - [E4 — 18 containers alive across four projects](https://github.com/ssheleg/task-pipeline/blob/f0402c22b147d6d143c55833ef906fb817972ab9/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L187-L220)
 - [Negative controls — every guard must reject its planted defect](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/test/negatives.py)

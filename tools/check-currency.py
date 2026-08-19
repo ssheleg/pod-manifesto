@@ -5,10 +5,11 @@
 green answer for a permalink forever, because a permalink is pinned to a commit and a
 commit does not change. It is the wrong question to ask alone.
 
-On 2026-08-19 this repository shipped a paragraph asserting that four requirements were
-"filed as open backlog rows", with two permalinks as the receipt. Three of the four rows
-had closed on 2026-08-17 — a day and a half before. Both permalinks resolved. `check-links`
-was green. The receipt confirmed a belief that had stopped being true, which is a worse
+On 2026-08-17 this repository shipped a paragraph asserting that four requirements were
+"filed as open backlog rows", with two permalinks as the receipt (`790f053`, 05:05+02).
+Three of the four rows closed the same day, the first at 11:49+02, and the paragraph was
+not corrected until `4b3694d` on 2026-08-19 at 18:01+02 — two days and six hours later.
+Both permalinks resolved throughout. `check-links` was green. The receipt confirmed a belief that had stopped being true, which is a worse
 failure than a dead link: a reader who follows a dead link knows to distrust it.
 
 So resolution and **currency** are two properties, and this repository had a mechanism for
@@ -45,13 +46,20 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
+from datetime import datetime
 import urllib.error
 import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 API = "https://api.github.com"
+# This repository, for the interval endpoints. Read from the local git when there
+# is one and from the API when there is not — `tools/negatives.py` runs the gates
+# against a copy of the tree with no `.git`, and a check that cannot look there
+# would report exit 2 for a reason that has nothing to do with its subject.
+SELF_REPO = "ssheleg/pod-manifesto"
 
 # ---------------------------------------------------------------------------
 # The registry. One entry per claim this document makes ABOUT a cited artifact.
@@ -81,6 +89,99 @@ CLAIMS = [
 ]
 
 STATE_WORDS = ("open", "closed", "parked", "dropped")
+
+# ---------------------------------------------------------------------------
+# Intervals. A duration in the prose is a computed quantity like any other, and
+# this document learned that the hard way twice: the paragraph about a stale
+# receipt carried "a day and a half" against commit timestamps that give two days
+# and six hours. A restated interval is a restated number — the class §5 of the
+# manifesto forbids — so each one is registered here with its two endpoints and
+# recomputed from the commits themselves.
+#
+# `start` and `end` are (repo, sha); the repo "self" means this repository, read
+# from the local git rather than the API.
+# ---------------------------------------------------------------------------
+INTERVALS = [
+    {
+        "id": "stale-receipt-window",
+        "what": "how long the receipt confirmed a belief that had stopped being true",
+        # the first of the four rows closing is when the claim went false
+        "start": ("ssheleg/task-pipeline", "fbd8a67e6988a0893f273eb37bd9a075a036c223"),
+        # the commit that corrected the paragraph is when it stopped being false
+        "end": ("self", "4b3694d"),
+        "where": ["manifesto.md", "index.html"],
+    },
+]
+
+WORDS = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
+         "nine", "ten", "eleven", "twelve")
+
+
+def render_interval(seconds):
+    """The phrase the document is allowed to print for a duration.
+
+    Floors to whole hours deliberately: a document that says "two days and six hours"
+    should not have to be re-edited every time a minute is recounted. Rendering and
+    checking share this one function, so the prose cannot drift from the arithmetic.
+    """
+    days, rem = divmod(int(seconds), 86400)
+    hours = rem // 3600
+
+    def word(n):
+        return WORDS[n] if n < len(WORDS) else str(n)
+
+    parts = []
+    if days:
+        parts.append(f"{word(days)} day" + ("s" if days != 1 else ""))
+    if hours or not days:
+        parts.append(f"{word(hours)} hour" + ("s" if hours != 1 else ""))
+    return " and ".join(parts)
+
+
+def commit_date(repo, sha, token):
+    """The committer date of a commit, as an aware datetime, or (None, reason)."""
+    if repo == "self":
+        try:
+            out = subprocess.run(["git", "show", "-s", "--format=%cI", sha],
+                                 cwd=ROOT, capture_output=True, text=True, check=True)
+            return datetime.fromisoformat(out.stdout.strip()), None
+        except (subprocess.CalledProcessError, ValueError, FileNotFoundError):
+            repo = SELF_REPO                        # no git here; ask the API instead
+    url = f"{API}/repos/{repo}/commits/{sha}"
+    headers = {"Accept": "application/vnd.github+json",
+               "User-Agent": "podmanifesto-check-currency"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=20) as r:
+            body = json.load(r)
+        return datetime.fromisoformat(body["commit"]["committer"]["date"].replace("Z", "+00:00")), None
+    except (urllib.error.URLError, OSError, KeyError, ValueError) as e:
+        return None, f"unreachable ({e})"
+
+
+def check_intervals(token, verbose=False):
+    """Every registered interval is recomputed and must appear, so worded, in its surfaces."""
+    problems, unlooked = [], []
+    for iv in INTERVALS:
+        start, why = commit_date(*iv["start"], token)
+        if start is None:
+            unlooked.append(f"{iv['id']}: start {iv['start'][1][:7]} — {why}")
+            continue
+        end, why = commit_date(*iv["end"], token)
+        if end is None:
+            unlooked.append(f"{iv['id']}: end {iv['end'][1][:7]} — {why}")
+            continue
+        phrase = render_interval((end - start).total_seconds())
+        for surface in iv["where"]:
+            text = (ROOT / surface).read_text(encoding="utf-8")
+            if phrase not in text:
+                problems.append(f"{surface}: {iv['id']} computes to \"{phrase}\" "
+                                f"({iv['start'][1][:7]} -> {iv['end'][1][:7]}), "
+                                f"and that phrase is not in the file")
+            elif verbose:
+                print(f"  {surface}: {iv['id']} = {phrase} — as printed")
+    return problems, unlooked
 
 
 def fetch(repo, ref, path, token):
@@ -198,8 +299,21 @@ def check(verbose=False):
     if unlooked:
         print(f"\nCould not look at {len(unlooked)} claim(s). Not a pass.")
         return 2
+    iv_problems, iv_unlooked = check_intervals(token, verbose)
+    for u in iv_unlooked:
+        print(f"  unlooked: {u}")
+    for pr in iv_problems:
+        print(f"  STALE: {pr}")
+    if iv_problems:
+        print(f"\n{len(iv_problems)} interval(s) printed a number the commits do not give.")
+        return 1
+    if iv_unlooked:
+        print(f"\n{len(iv_unlooked)} interval(s) could not be recomputed — exit 2, not 0.")
+        return 2
+
     n = sum(len(c["rows"]) for c in CLAIMS)
     print(f"{n} cited row(s) across {len(CLAIMS)} claim(s): correctly transcribed and current.")
+    print(f"{len(INTERVALS)} interval(s): recomputed from their endpoint commits and printed as computed.")
     return 0
 
 
@@ -232,6 +346,14 @@ PLANTS = [
      lambda: row_state(BOARD_TODAY, "B-080") == "open"),
     ("the pinned state read correctly",
      lambda: row_state(BOARD_PINNED, "B-076") == "open"),
+    ("an interval rounded up instead of floored to the hour",
+     lambda: render_interval(2 * 86400 + 6 * 3600 + 3599) == "two days and six hours"),
+    ("a sub-day interval rendered as days",
+     lambda: render_interval(5 * 3600) == "five hours"),
+    ("the interval this document actually prints",
+     lambda: render_interval(195714) == "two days and six hours"),
+    ("a singular hour printed as a plural",
+     lambda: render_interval(86400 + 3600) == "one day and one hour"),
 ]
 
 
