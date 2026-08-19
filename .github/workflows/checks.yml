@@ -35,6 +35,23 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
+  currency:
+    name: every characterised citation is still current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # A permalink resolves forever, so resolution is the wrong question asked alone.
+      # This document asserted four requirements were "filed as open backlog rows" for a
+      # day and a half after three of them had closed: both permalinks resolved, the link
+      # check above was green, and the receipt confirmed a belief that had stopped being
+      # true — a worse failure than a dead link, because a reader who follows a dead link
+      # knows to distrust it. Currency is a second property; this is its check.
+      # The self-test runs first and offline: a guard nobody has watched fail is not evidence.
+      - run: python3 tools/check-currency.py --self-test
+      - run: python3 tools/check-currency.py --verbose
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
   pack:
     name: the page still looks like the pack
     runs-on: ubuntu-latest

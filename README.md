@@ -70,6 +70,10 @@ python3 tools/check-parity.py --verbose   # every canonical sentence of manifest
 python3 tools/check-html.py               # the page closes every element it opens
 python3 tools/stamp-assets.py --check     # every asset URL carries the hash of its current contents
 python3 tools/check-links.py              # every reference resolves, and every cited line range exists
+python3 tools/check-currency.py           # every citation this document CHARACTERISES still says what
+                                          # is claimed of it — a permalink resolves forever, so
+                                          # resolution alone cannot detect a receipt gone stale.
+                                          # `--self-test` runs the rules offline against planted cases
 python3 tools/check-pack.py               # no colour or radius literal outside the token block;
                                           # reduced motion has a path
 python3 tools/build-figures.py --check    # every figure's geometry is asserted, not eyeballed
