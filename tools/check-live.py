@@ -30,6 +30,7 @@ import argparse
 import re
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -61,6 +62,28 @@ def training_denied(live: bytes) -> bool:
     return bool(m and b"ai-train=no" in m.group(1))
 
 
+def beacon_present(page: str) -> bool:
+    """Is the analytics snippet actually in what the reader received?"""
+    return "static.cloudflareinsights.com" in page and "data-cf-beacon" in page
+
+
+def off_origin(page: str, origin_host: str = "podmanifesto.org"):
+    """Hosts the browser will GO AND FETCH, not hosts merely linked to.
+
+    A hyperlink to github.com is not a request. Counting one would make the claim
+    "exactly one off-origin request" fail on a document full of citations, which is
+    how a check earns the habit of being ignored.
+    """
+    urls = set()
+    for pat in (r'<script\b[^>]*\bsrc="([^"]+)"',
+                r'<link\b[^>]*\brel="(?:stylesheet|preload|icon)"[^>]*\bhref="([^"]+)"',
+                r'<link\b[^>]*\bhref="([^"]+)"[^>]*\brel="(?:stylesheet|preload|icon)"',
+                r'<img\b[^>]*\bsrc="([^"]+)"'):
+        urls |= {m.group(1) for m in re.finditer(pat, page)}
+    return sorted({urllib.parse.urlsplit(u).netloc for u in urls
+                   if u.startswith("http")} - {origin_host})
+
+
 def self_test() -> int:
     """Each rule above, fed a case it must decide. No network, no deploy.
 
@@ -68,6 +91,12 @@ def self_test() -> int:
     served on 2026-08-23, and the repository's own file.
     """
     repo = (ROOT / "robots.txt").read_bytes()
+    local_page = (ROOT / "index.html").read_text(encoding="utf-8")
+    plain = ('<link rel="stylesheet" href="/assets/style.css?v=1">'
+             '<a href="https://github.com/ssheleg/pod-manifesto">Source</a>'
+             '<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>')
+    with_beacon = (plain + '<script defer src="https://static.cloudflareinsights.com/'
+                   'beacon.min.js" data-cf-beacon=\'{"token": "x"}\'></script>')
     cloudflare = (b"# BEGIN Cloudflare Managed content\n\n"
                   b"User-agent: *\n"
                   b"Content-Signal: search=yes,ai-train=no,use=reference\n"
@@ -93,6 +122,24 @@ def self_test() -> int:
          lambda: training_denied(repo) is False),
         ("a permissive content signal is not a restriction",
          lambda: training_denied(b"Content-Signal: search=yes,ai-train=yes\n") is False),
+
+        # The beacon rules, fed the page shapes they must tell apart. Analytics was
+        # enabled with automatic injection on while the served HTML was byte-identical
+        # to the file in git — configuration reporting green over no measurement.
+        ("the beacon is recognised when it is there",
+         lambda: beacon_present(with_beacon) is True),
+        ("a page without the beacon is not read as measured",
+         lambda: beacon_present(plain) is False),
+        ("a hyperlink to another host is not a request",
+         lambda: off_origin(plain) == []),
+        ("a script from another host is a request",
+         lambda: off_origin(with_beacon) == ["static.cloudflareinsights.com"]),
+        ("a stylesheet from a CDN would be caught",
+         lambda: off_origin('<link rel="stylesheet" href="https://cdn.example.com/a.css">')
+                 == ["cdn.example.com"]),
+        ("this repository's own page satisfies both rules",
+         lambda: beacon_present(local_page)
+                 and off_origin(local_page) == ["static.cloudflareinsights.com"]),
     ]
 
     bad = 0
@@ -203,6 +250,20 @@ def main() -> int:
         elif a.verbose:
             print(f"     200  {len(payload):>7}b  {u}")
     check(f"every referenced asset resolves ({len(urls)} checked)", not bad, "; ".join(bad[:5]))
+
+    # ---- the measurement is actually being taken -------------------------
+    # Cloudflare Web Analytics was enabled, its automatic injection on and its
+    # ruleset bound to this zone, while the served HTML was byte-identical to the
+    # file in git: the beacon never reached a reader and the dashboard said nothing
+    # was wrong. Configuration is not measurement. The snippet is in the page now,
+    # and this is the check that it stays there.
+    check("the analytics beacon reaches the reader", beacon_present(page),
+          "the page is served without it — nothing is being counted")
+
+    foreign = off_origin(page)
+    check("the beacon is the only off-origin request",
+          foreign == ["static.cloudflareinsights.com"],
+          "off-origin: " + (", ".join(foreign) if foreign else "none, so the beacon is missing"))
 
     # ---- the published companions --------------------------------------
     for path in ("/manifesto.md", "/llms.txt", "/sitemap.xml", "/404.html"):

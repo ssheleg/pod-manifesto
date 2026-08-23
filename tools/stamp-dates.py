@@ -38,6 +38,7 @@ SERVES = {
     "https://podmanifesto.org/": ["index.html", "assets"],
     "https://podmanifesto.org/manifesto.md": ["manifesto.md"],
     "https://podmanifesto.org/llms.txt": ["llms.txt"],
+    "https://podmanifesto.org/feed.xml": ["feed.xml"],
 }
 # the modification date of the document as a whole
 DOCUMENT = ["manifesto.md", "index.html", "llms.txt"]
@@ -65,14 +66,13 @@ def last_change(paths):
     return out.stdout.strip() or None
 
 
-def main() -> int:
-    check = "--check" in sys.argv
+def run_once(check):
+    """One pass. Returns (stale, edits, doc_date) — or (None, None, None) with no git."""
     stale, edits = [], {}
 
     doc_date = last_change(DOCUMENT)
     if not doc_date:
-        print("no git history here — a check that cannot look is not a pass")
-        return 2
+        return None, None, None
 
     # ---- sitemap ---------------------------------------------------------
     sitemap = ROOT / "sitemap.xml"
@@ -96,6 +96,7 @@ def main() -> int:
     # ---- JSON-LD dateModified -------------------------------------------
     page = ROOT / "index.html"
     html = page.read_text(encoding="utf-8")
+    page_original = html
     if '"dateModified"' in html:
         new = re.sub(r'("dateModified":\s*")(\d{4}-\d{2}-\d{2})(")',
                      lambda m: m.group(1) + doc_date + m.group(3), html, count=1)
@@ -117,7 +118,15 @@ def main() -> int:
             stale.append(f"index.html: masthead Updated says {found.group(2)}, git says {doc_date}")
         html = re.sub(r'(<time class="docmeta__updated" datetime=")\d{4}-\d{2}-\d{2}("[^>]*>)\d{4}-\d{2}-\d{2}(</time>)',
                       lambda m: m.group(1) + doc_date + m.group(2) + doc_date + m.group(3), html, count=1)
+
+    # Only an actual difference is an edit. This branch used to register the page
+    # unconditionally, so every run reported a rewrite whether or not a byte moved —
+    # harmless while nothing read the list, and a loop that never converges once
+    # something did.
+    if html != page_original:
         edits[page] = html
+    else:
+        edits.pop(page, None)
 
     # ---- llms.txt --------------------------------------------------------
     llms = ROOT / "llms.txt"
@@ -135,6 +144,32 @@ def main() -> int:
     if lnew != ltext:
         edits[llms] = lnew
 
+    return stale, edits, doc_date
+
+
+def main() -> int:
+    check = "--check" in sys.argv
+
+    # One pass is not enough, and the reason is this tool's own subject. The date
+    # for a sitemap url is read from git BEFORE the pass rewrites the file that url
+    # serves — so stamping `llms.txt` turns it from clean to dirty, and its sitemap
+    # entry, already computed against the clean state, is wrong the moment the pass
+    # ends. Measured 2026-08-23: two runs were needed and the first one printed as
+    # if it had finished. Writing until nothing changes removes the ordering
+    # question instead of documenting it.
+    rounds, written = 0, set()
+    while True:
+        rounds += 1
+        stale, edits, doc_date = run_once(check)
+        if doc_date is None:
+            print("no git history here — a check that cannot look is not a pass")
+            return 2
+        if check or not edits or rounds > 5:
+            break
+        for path, out in edits.items():
+            path.write_text(out, encoding="utf-8")
+            written.add(path.name)
+
     for s in stale:
         print(f"  STALE  {s}")
     print(f"\ndocument last changed {doc_date} (git); "
@@ -143,10 +178,15 @@ def main() -> int:
     if check:
         return 1 if stale else 0
 
-    for path, out in edits.items():
-        path.write_text(out, encoding="utf-8")
     if edits:
-        print(f"rewrote {len(edits)} file(s): " + ", ".join(p.name for p in edits))
+        # A pass that still wants to edit after five rounds is not converging, and
+        # a tool that reports success on a moving target is the failure it checks for.
+        print(f"did not converge after {rounds} rounds; still wants to rewrite "
+              + ", ".join(p.name for p in edits))
+        return 1
+    if written:
+        print(f"rewrote {len(written)} file(s) over {rounds - 1} round(s): "
+              + ", ".join(sorted(written)))
     return 0
 
 

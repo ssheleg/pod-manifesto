@@ -18,6 +18,7 @@ verifies it, the limits of that evidence, and the decision that accepts it.
 
 - [manifesto.md](https://podmanifesto.org/manifesto.md): The complete canonical text in Markdown, including all five diagrams. Read this file if you need the document itself rather than a summary.
 - [index.html](https://podmanifesto.org/): The same text rendered for human reading.
+- [feed.xml](https://podmanifesto.org/feed.xml): An Atom feed with one entry per version of the canonical text. A new entry means a sentence moved; corrections to the site do not appear.
 - [Source repository](https://github.com/ssheleg/pod-manifesto): Version control for the text and the site.
 
 ## The four-field protocol
@@ -64,3 +65,10 @@ An agent should not return `done` without these four fields:
 ## How to cite
 
 Sheleg, Sergey (Siarhei Sheleh). *Proof of Done: The Agentic Software Development Manifesto.* Version 1.0, 2026. https://podmanifesto.org/
+
+The text of that version, frozen: https://github.com/ssheleg/pod-manifesto/blob/v1.0/manifesto.md
+Quote the tag rather than the live page if the quotation has to stay reachable — the live page moves with the version, the tag does not. What changes and when: https://github.com/ssheleg/pod-manifesto/blob/main/CHANGELOG.md
+
+## Disagreeing with it
+
+The licence invites argument and this is the address: https://github.com/ssheleg/pod-manifesto/blob/main/CONTRIBUTING.md — what a useful objection looks like, where to put it, and how to submit a translation.

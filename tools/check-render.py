@@ -81,6 +81,14 @@ def normalise(text: str) -> str:
     # "At 0fb706c , I had". check-parity.py:47 collapses the same gap for the same
     # reason; without this the gate reports a sentence absent that is on the page.
     text = re.sub(r"\s+([,.;:!?])", r"\1", text)
+    # Reference links are drawn with bracket decoration by the stylesheet, so the
+    # PDF carries "[ loop guard ] — the rules" where the canonical sentence reads
+    # "loop guard - the rules". The brackets are CSS, not content; prose here has
+    # none of its own, because markdown links are reduced to their text before the
+    # comparison on the other side.
+    text = text.replace("[", " ").replace("]", " ")
+    text = re.sub(r"\s+", " ", text)
+    text = re.sub(r"\s+([,.;:!?])", r"\1", text)
     return text.strip()
 
 
@@ -201,8 +209,13 @@ def main() -> int:
     httpd, port = serve()
     try:
         proc = subprocess.run(
+            # Both spellings of the same intent: the flag was renamed, and the old
+            # one alone left the running header in — which pdftotext then splices
+            # into the middle of any sentence unlucky enough to cross a page break,
+            # reporting text as absent that is printed and readable.
             [chrome, "--headless", "--disable-gpu", "--no-sandbox",
-             "--virtual-time-budget=15000", "--print-to-pdf-no-header",
+             "--virtual-time-budget=15000",
+             "--print-to-pdf-no-header", "--no-pdf-header-footer",
              f"--print-to-pdf={pdf}", f"http://127.0.0.1:{port}/"],
             capture_output=True, text=True, timeout=180)
     except subprocess.TimeoutExpired:

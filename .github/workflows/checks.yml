@@ -61,6 +61,19 @@ jobs:
           fetch-depth: 0        # a date derived from the log needs the log
       - run: python3 tools/stamp-dates.py --check
 
+  version:
+    name: the stated version is the tag it claims to be
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # tags, and the log they hang on
+      # The version is written in nine places, and CHANGELOG.md promises the
+      # canonical text does not move without one. A reader is told to cite
+      # `blob/v<version>/manifesto.md`; if the stated version and the newest tag
+      # disagree, that address points at text which is not the text on the page.
+      - run: python3 tools/check-version.py --verbose
+
   render:
     name: the rendered document carries the text
     runs-on: ubuntu-latest

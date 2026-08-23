@@ -102,6 +102,46 @@ def plant_stale_published_date(tree):
                     "<lastmod>2019-01-01</lastmod>")
 
 
+def plant_version_ahead_of_tag(tree):
+    """Tag v1.0, then bump every stated version to 9.9 — consistently.
+
+    The interesting failure is not two files disagreeing; that is the case above.
+    It is the whole document agreeing on a version no tag carries, because then
+    `blob/v9.9/manifesto.md` — the address a reader is told to cite — resolves to
+    nothing. The copy is tagged first so the gate is refusing the version rather
+    than the missing repository.
+    """
+    env = {**os.environ,
+           "GIT_AUTHOR_NAME": "negatives", "GIT_AUTHOR_EMAIL": "negatives@example.invalid",
+           "GIT_COMMITTER_NAME": "negatives", "GIT_COMMITTER_EMAIL": "negatives@example.invalid"}
+    git = lambda *a: subprocess.run(["git", *a], cwd=tree, env=env,
+                                    capture_output=True, text=True, check=True)
+    git("init", "-q")
+    git("add", "-A")
+    git("commit", "-q", "-m", "baseline")
+    git("tag", "v1.0")
+
+    changed, first = 0, None
+    for rel in ("index.html", "llms.txt", "CHANGELOG.md", "README.md"):
+        p = tree / rel
+        if not p.exists():
+            continue
+        before = p.read_text(encoding="utf-8")
+        after = (before.replace('"version": "1.0"', '"version": "9.9"')
+                       .replace('topbar__ver">v1.0<', 'topbar__ver">v9.9<')
+                       .replace("<dt>Version</dt><dd>1.0</dd>", "<dt>Version</dt><dd>9.9</dd>")
+                       .replace("POD/001 &#183; v1.0", "POD/001 &#183; v9.9")
+                       .replace("Version 1.0,", "Version 9.9,")
+                       .replace("## v1.0 — ", "## v9.9 — ")
+                       .replace("blob/v1.0/", "blob/v9.9/"))
+        if after != before:
+            p.write_text(after, encoding="utf-8")
+            changed += 1
+            if first is None:
+                first = (p, before, after)
+    return first if first else (tree / "index.html", "", "")
+
+
 CASES = [
     # ---- check-parity ----------------------------------------------------
     dict(
@@ -190,6 +230,22 @@ CASES = [
         gate=["tools/stamp-dates.py", "--check"],
         expect=r"STALE",
         plant=plant_stale_published_date,
+    ),
+    # ---- check-version ---------------------------------------------------
+    # The version is written in nine places. Nine chances for eight to be right.
+    dict(
+        name="version: one of the nine statements of the version disagrees",
+        gate=["tools/check-version.py"],
+        expect=r"every stated version agrees|do not agree",
+        plant=lambda t: replace_once(t, "index.html",
+                                     '<dt>Version</dt><dd>1.0</dd>',
+                                     '<dt>Version</dt><dd>1.1</dd>'),
+    ),
+    dict(
+        name="version: every statement agrees, and none of them is the tag",
+        gate=["tools/check-version.py"],
+        expect=r"the stated version is the newest tag",
+        plant=lambda t: plant_version_ahead_of_tag(t),
     ),
     # ---- render ----------------------------------------------------------
     # The defect this gate was built for, put back. Without the print reset the

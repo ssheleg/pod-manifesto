@@ -1,7 +1,7 @@
 # Self-hosted faces
 
 Two families, two jobs. Both are served from this repository rather than a font
-CDN, so the page owes no third-party request at read time and keeps its
+CDN, so the page owes no third-party request for its typography and keeps its
 typography when a CDN changes.
 
 | Family | Role | Upstream | Licence |

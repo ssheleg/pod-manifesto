@@ -12,7 +12,7 @@ The bottleneck moved from production to assurance. This is why I no longer treat
 
 ## The manifesto
 
-Everything below this line argues for what this section asserts. The argument is long because the failures it answers are specific; the assertion is short because a standard nobody can hold in mind is not one.
+Everything below this line argues for what this section asserts. The argument is long because the failures it answers are specific; the assertion is short because a standard nobody can hold in mind is not one. What this document refuses is narrow and it is everywhere: a completion claim that cannot be checked. Not agents, not speed, not autonomy — those are only the reasons such a claim now arrives faster than anyone can audit it.
 
 ### The declaration
 
@@ -22,13 +22,13 @@ Everything below this line argues for what this section asserts. The argument is
 
 3. We believe an agent's report is a useful interface and an insufficient source of truth. Agent-produced work carries provenance, and agreement between two agents counts as independent evidence only when their evidence paths are genuinely independent.
 
-4. We believe autonomy should expand where evidence and limits are mechanical, then stop where meaning, authority, or irreversible consequence begins (the boundary should be visible before the run reaches it).
+4. We believe autonomy should expand where evidence and limits are mechanical, then stop where meaning, authority, or irreversible consequence begins. The boundary should be visible before the run reaches it.
 
 5. We believe the work graph should expose dependencies, the evidence graph should expose uncertainty, and acceptance should reconnect both to the original intent. Unchecked, abstained, partial, deferred, and unknown are engineering states, not embarrassing words to hide behind `done`.
 
 6. We believe documentation is part of the executable memory of a software system. A fact with two homes will diverge, a number copied from an earlier report will decay, and a reference that does not resolve is a claim with its receipt removed. Evidence is versioned and perishable, and invalidation preserves history without pretending the old proof still covers the current state.
 
-7. We believe every repeated failure should make the next run structurally better. The best lesson is the one no future agent has to remember because a mechanism now carries it (and the best retired rule leaves its history behind).
+7. We believe every repeated failure should make the next run structurally better. The best lesson is the one no future agent has to remember because a mechanism now carries it, and the best retired rule leaves its history behind.
 
 ### The four values
 
@@ -36,7 +36,7 @@ We value:
 
 **Evidence over confidence.** A calm, detailed report isn't stronger than the artifact it describes. **Intent over output.** A large change cannot compensate for a requirement that disappeared before implementation. **Explicit structure over emergent motion.** Activity is not a plan, and chronology is not dependency. **Durable truth over conversational state.** The context window helps an agent think, but it isn't the system's memory.
 
-The items on the right still matter. Confidence helps people act, output is why the work exists, discovery changes plans, and conversation is where much of the reasoning happens. The items on the left are what make their results trustworthy (and what let you disagree with the result precisely).
+The items on the right still matter. Confidence helps people act, output is why the work exists, discovery changes plans, and conversation is where much of the reasoning happens. The items on the left are what make their results trustworthy, and what let you disagree with the result precisely.
 
 This does not mean every change needs the same pipeline, every uncertainty can be automated away, every agent needs a person watching it, or every internal thought belongs in a permanent log. Proof should be proportionate, privacy-preserving, and produced by the work itself. The standard governs the completion claim, not one mandatory toolchain.
 
@@ -81,7 +81,7 @@ That gives agentic development a specific threat model:
 | Parallel agency | locally correct work collides at shared state | ownership and an explicit concurrency protocol |
 | Operational authority | code generation becomes action on real systems | typed gates and bounded credentials |
 
-The response cannot be “review harder.” Human attention is the resource agents were meant to stop consuming one keystroke at a time. If a feature takes 15 minutes to generate and an hour of archaeology every time it reaches review, the operating model has failed even when the code is correct. What is needed is a system in which the routine path is autonomous, consequential boundaries are explicit, and every completion claim can be challenged without reconstructing the whole conversation (or trusting the agent that produced it).
+The response cannot be “review harder.” Human attention is the resource agents were meant to stop consuming one keystroke at a time. If a feature takes 15 minutes to generate and an hour of archaeology every time it reaches review, the operating model has failed even when the code is correct. What is needed is a system in which the routine path is autonomous, consequential boundaries are explicit, and every completion claim can be challenged without reconstructing the whole conversation, or trusting the agent that produced it.
 
 ## 2. What Proof of Done means
 
@@ -249,7 +249,7 @@ Stop when a change returns from shape A to shape B and back to A, the same file 
 
 [loop guard](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/plugins/task-pipeline/skills/task-pipeline/references/loop-guard.md#L51-L72) — the detection rules, and the bookkeeping that makes them mechanical rather than a matter of noticing.
 
-If the plan contradicts the specification, return to the specification or plan. If two modules claim the same entity, repair the decomposition. I have never seen patching code until it satisfies two incompatible meanings resolve the disagreement. It only hides where the conflict belongs (and charges the next run for finding it again).
+If the plan contradicts the specification, return to the specification or plan. If two modules claim the same entity, repair the decomposition. I have never seen patching code until it satisfies two incompatible meanings resolve the disagreement. It only hides where the conflict belongs, and charges the next run for finding it again.
 
 ## 5. The Proof record
 
@@ -424,7 +424,7 @@ The reverse matters as much. When a rule becomes a check, the prose rule should 
 
 ## 8. From four lines to a full pipeline
 
-This manifesto doesn't require every typo to cross a full delivery process. The amount of machinery should be proportional to the cost of being wrong (and the reversibility of the action).
+This manifesto doesn't require every typo to cross a full delivery process. The amount of machinery should be proportional to the cost of being wrong, and to the reversibility of the action.
 
 A local, mechanical, reversible edit may need a narrow check, a diff inspection, and the four-line Done Report. A normal feature or fix needs explicit intent, a work graph, implementation, review, the appropriate suite, documentation, and acceptance coverage. A change that moves money, reaches production data, changes access, deletes state, or sends an external message needs isolation, independent evidence, bounded credentials, manual authority at the consequential boundary, rollback, and a post-action observation. You should be able to explain why the second path costs more than the first without appealing to ceremony.
 

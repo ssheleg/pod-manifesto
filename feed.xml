@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One entry per version of the canonical text, and nothing else.
+
+  A reader who agrees with this document has no way to learn that it changed:
+  the site is one page and there is nothing to follow. This feed is that, and it
+  is deliberately narrow — corrections to the site, the tooling or the prose
+  about the document do not appear here, because a feed that fires on every
+  commit teaches its subscribers to ignore it. The rule is the one in
+  CHANGELOG.md: a new entry here means a sentence of the manifesto moved.
+-->
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Proof of Done — versions</title>
+  <subtitle>A new entry means the canonical text changed. Nothing else appears here.</subtitle>
+  <link href="https://podmanifesto.org/feed.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://podmanifesto.org/" rel="alternate" type="text/html"/>
+  <id>https://podmanifesto.org/</id>
+  <updated>2026-08-23T00:00:00Z</updated>
+  <author>
+    <name>Sergey Sheleg</name>
+    <uri>https://github.com/ssheleg</uri>
+  </author>
+  <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
+
+  <entry>
+    <title>v1.0 — the first public release</title>
+    <link href="https://podmanifesto.org/" rel="alternate" type="text/html"/>
+    <id>tag:podmanifesto.org,2026:v1.0</id>
+    <updated>2026-08-23T00:00:00Z</updated>
+    <published>2026-08-23T00:00:00Z</published>
+    <summary type="text">Proof of Done requires every completion claim between an intended outcome and an accepted result to point to its supporting record at an address another actor can resolve. Eight sections and a declaration of seven beliefs, built on the four-field report — DONE, PROOF, SCOPE, NOT VERIFIED — the three graphs, bounded autonomy, the Proof record, the seam walk, and the learning loop. First published 2026-08-17 and corrected in place until this tag; the text does not change from here without a version. The frozen text: https://github.com/ssheleg/pod-manifesto/blob/v1.0/manifesto.md</summary>
+  </entry>
+</feed>
