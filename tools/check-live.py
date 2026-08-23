@@ -62,9 +62,40 @@ def training_denied(live: bytes) -> bool:
     return bool(m and b"ai-train=no" in m.group(1))
 
 
+BEACON_TAG = re.compile(
+    r'<script\b[^>]*\bsrc="https://static\.cloudflareinsights\.com/[^"]*"[^>]*>\s*</script>')
+
+
+def beacon_count(page: str) -> int:
+    """How many analytics beacons the reader actually received.
+
+    Exactly one is the answer. Zero means nothing is counted. Two means every
+    visit is counted twice, and a number that is wrong by a factor is worse than
+    no number, because it will be believed.
+
+    Two can happen here without anyone editing the page: the zone's Web Analytics
+    is bound to the zone with automatic injection, which Cloudflare's API refuses
+    to switch off (`autoInstallRequired`), and the edge intermittently adds its own
+    tag on top of the one in the file. Observed on 2026-08-23: the served page was
+    359 bytes larger than the committed one for one deploy and identical for the
+    next.
+    """
+    return len(BEACON_TAG.findall(page))
+
+
 def beacon_present(page: str) -> bool:
-    """Is the analytics snippet actually in what the reader received?"""
-    return "static.cloudflareinsights.com" in page and "data-cf-beacon" in page
+    return beacon_count(page) >= 1
+
+
+def without_beacon(page: str) -> str:
+    """The page with every analytics tag removed, for comparing document bytes.
+
+    The byte comparison asks whether the deploy landed. An analytics tag the edge
+    may or may not have added is a different question, asked and answered directly
+    above — folding the two together makes a real staleness look like injection and
+    an injection look like staleness.
+    """
+    return re.sub(r"\s*" + BEACON_TAG.pattern, "", page)
 
 
 def off_origin(page: str, origin_host: str = "podmanifesto.org"):
@@ -126,10 +157,14 @@ def self_test() -> int:
         # The beacon rules, fed the page shapes they must tell apart. Analytics was
         # enabled with automatic injection on while the served HTML was byte-identical
         # to the file in git — configuration reporting green over no measurement.
-        ("the beacon is recognised when it is there",
-         lambda: beacon_present(with_beacon) is True),
-        ("a page without the beacon is not read as measured",
-         lambda: beacon_present(plain) is False),
+        ("one beacon is counted as one",
+         lambda: beacon_count(with_beacon) == 1),
+        ("a page without the beacon counts none",
+         lambda: beacon_count(plain) == 0),
+        ("an edge-injected second beacon is counted, not absorbed",
+         lambda: beacon_count(with_beacon + with_beacon) == 2),
+        ("removing the beacons leaves the document itself",
+         lambda: without_beacon(with_beacon) == without_beacon(plain) == plain),
         ("a hyperlink to another host is not a request",
          lambda: off_origin(plain) == []),
         ("a script from another host is a request",
@@ -206,10 +241,11 @@ def main() -> int:
     # ---- the deployed page is the committed page -------------------------
     # A fingerprint proves no cache answered with old bytes. It does not prove
     # the deploy landed: both sides can be consistently stale.
-    local_page = (ROOT / "index.html").read_bytes()
-    same = body == local_page
+    local_page = (ROOT / "index.html").read_text(encoding="utf-8")
+    served = body.decode("utf-8", "replace")
+    same = without_beacon(served) == without_beacon(local_page)
     check("the deployed document is the committed document", same,
-          f"live {len(body)} bytes vs repository {len(local_page)} bytes; "
+          f"live {len(served)} chars vs repository {len(local_page)}, beacons aside; "
           "the deploy has not landed, or the checkout is not the deployed commit")
 
     # ---- robots.txt says what the repository says ------------------------
@@ -257,8 +293,10 @@ def main() -> int:
     # file in git: the beacon never reached a reader and the dashboard said nothing
     # was wrong. Configuration is not measurement. The snippet is in the page now,
     # and this is the check that it stays there.
-    check("the analytics beacon reaches the reader", beacon_present(page),
-          "the page is served without it — nothing is being counted")
+    n = beacon_count(page)
+    check("exactly one analytics beacon reaches the reader", n == 1,
+          "none — nothing is being counted" if n == 0 else
+          f"{n} — every visit is counted {n} times; the edge injected one on top of the file's")
 
     foreign = off_origin(page)
     check("the beacon is the only off-origin request",
