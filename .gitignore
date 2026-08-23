@@ -1,0 +1,26 @@
+# Local working state, never part of the published document.
+#
+# `.preview/` held 13 MB of screenshots for months, ignored only by this
+# machine's `.git/info/exclude` — a file that is not versioned and therefore not
+# shared. A second person putting screenshots in the same directory would have
+# committed them into a 1.2 MB repository. The ignore rule belongs where the
+# repository can carry it.
+
+.preview/
+
+# Python bytecode. `negatives.py` imports `check-render.py` to ask whether a
+# browser is present, and importing writes here.
+__pycache__/
+*.py[cod]
+
+# Audit and render byproducts
+*.pdf
+!docs/**/*.pdf
+
+# macOS / editor litter
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/

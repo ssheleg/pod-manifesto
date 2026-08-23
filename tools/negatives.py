@@ -72,6 +72,36 @@ def sub_once(tree, rel, pattern, new):
     return p, before, after
 
 
+def plant_stale_published_date(tree):
+    """Give the copy a history, bring every date true, then falsify one.
+
+    `stamp-dates.py` derives its answer from `git log`, and the case tree is
+    copied without `.git` — so a naive plant makes the gate exit 2 ("a check that
+    cannot look is not a pass") and the case would record a refusal it did not
+    earn. The gate must refuse the *date*, not the missing repository.
+
+    Three steps, in this order: commit a baseline so the log exists; run the
+    stamper so every published date equals what this new history says; then
+    falsify one `lastmod`. The only staleness left in the tree is the plant.
+    """
+    env = {**os.environ,
+           "GIT_AUTHOR_NAME": "negatives", "GIT_AUTHOR_EMAIL": "negatives@example.invalid",
+           "GIT_COMMITTER_NAME": "negatives", "GIT_COMMITTER_EMAIL": "negatives@example.invalid"}
+    git = lambda *a: subprocess.run(["git", *a], cwd=tree, env=env,
+                                    capture_output=True, text=True, check=True)
+    git("init", "-q")
+    git("add", "-A")
+    git("commit", "-q", "-m", "baseline")
+    subprocess.run([sys.executable, "tools/stamp-dates.py"], cwd=tree,
+                   capture_output=True, text=True)
+    git("add", "-A")
+    git("commit", "-q", "--allow-empty", "-m", "dates stamped to this history")
+
+    return sub_once(tree, "sitemap.xml",
+                    r"<lastmod>\d{4}-\d{2}-\d{2}</lastmod>",
+                    "<lastmod>2019-01-01</lastmod>")
+
+
 CASES = [
     # ---- check-parity ----------------------------------------------------
     dict(
@@ -149,6 +179,41 @@ CASES = [
         expect=r"Traceback|assert|error|leaves",
         plant=lambda t: sub_once(t, "tools/build-figures.py", r'\b960\b', "120"),
     ),
+    # ---- stamp-dates -----------------------------------------------------
+    # The ninth gate, and the last one to get a control. Between 2026-08-19 and
+    # 2026-08-23 this file covered eight of the nine tools while `README.md:75`
+    # described it as covering "every gate above" — with `stamp-dates.py` listed
+    # three lines above that sentence. The gate was green the whole time and
+    # nobody had watched it go red.
+    dict(
+        name="dates: a published lastmod the git history contradicts",
+        gate=["tools/stamp-dates.py", "--check"],
+        expect=r"STALE",
+        plant=plant_stale_published_date,
+    ),
+    # ---- render ----------------------------------------------------------
+    # The defect this gate was built for, put back. Without the print reset the
+    # twelve sections stay at `opacity: 0`, printing never scrolls, and the
+    # document goes to paper as 30 pages of running header. Every file-reading
+    # gate in this repository stayed green through that for four days.
+    dict(
+        name="render: the print reset removed, and the document prints blank",
+        gate=["tools/check-render.py"],
+        expect=r"below the \d+ character floor|below the \d+ floor|did not render|absent from the printed",
+        browser=True,
+        plant=lambda t: sub_once(
+            t, "assets/style.css",
+            r"\n  \.reveal, \.boot > \* \{ opacity: 1 !important; transform: none !important; \}",
+            ""),
+    ),
+    dict(
+        name="render: a quiet ink dropped under the contrast floor",
+        gate=["tools/check-render.py"],
+        expect=r"below the WCAG AA floor",
+        browser=True,
+        plant=lambda t: replace_once(t, "assets/style.css",
+                                     "--faint:      #7a897f;", "--faint:      #2c332e;"),
+    ),
     # ---- network ---------------------------------------------------------
     dict(
         name="links: a cited line range beyond the end of the file",
@@ -179,7 +244,8 @@ CASES = [
 def run_case(case, keep_all=False):
     tmp = Path(tempfile.mkdtemp(prefix="podmanifesto-negative-"))
     tree = tmp / "repo"
-    shutil.copytree(ROOT, tree, ignore=shutil.ignore_patterns(".git", "*.pyc", "__pycache__"))
+    shutil.copytree(ROOT, tree, ignore=shutil.ignore_patterns(
+        ".git", "*.pyc", "__pycache__", ".preview"))
 
     path, before, after = case["plant"](tree)
     if before == after:
@@ -221,6 +287,20 @@ def main():
     a = ap.parse_args()
 
     has_token = bool(os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN"))
+    # A browser case that runs without a browser would report the gate's "cannot
+    # look" exit as a refusal it never earned — the exact false green this file
+    # exists to prevent. Detect it the way the gate itself does.
+    sys.path.insert(0, str(ROOT / "tools"))
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "check_render", ROOT / "tools" / "check-render.py")
+        cr = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cr)
+        has_browser = bool(cr.find_chrome()) and bool(shutil.which("pdftotext"))
+    except Exception:
+        has_browser = False
+
     ran = passed = 0
     skipped = []
 
@@ -228,13 +308,16 @@ def main():
         if a.k and a.k not in case["name"]:
             continue
         if case.get("network") and (a.offline or not has_token):
-            skipped.append(case["name"])
+            skipped.append(f"{case['name']} — needs GITHUB_TOKEN")
+            continue
+        if case.get("browser") and not has_browser:
+            skipped.append(f"{case['name']} — needs a browser and pdftotext")
             continue
         ran += 1
         passed += 1 if run_case(case, a.keep) else 0
 
     for name in skipped:
-        print(f"  skipped  {name} — needs GITHUB_TOKEN; a check that cannot look is not a pass")
+        print(f"  skipped  {name}; a check that cannot look is not a pass")
 
     gates = sorted({c["gate"][0].split("/")[-1] for c in CASES})
     print(f"\n{passed} of {ran} planted defect(s) refused, across {len(gates)} gates: "

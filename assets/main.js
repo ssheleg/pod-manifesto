@@ -19,9 +19,13 @@
     return root.getAttribute('data-theme') || systemTheme();
   }
 
-  function applyTheme(theme) {
+  // `persist` is what the reader chose, not what the page defaulted to. Applying
+  // the default used to write it, so a first visit stored a preference nobody
+  // expressed — and a reader who later wanted the system to decide had a stored
+  // answer standing in the way of a question they never asked.
+  function applyTheme(theme, persist) {
     root.setAttribute('data-theme', theme);
-    try { localStorage.setItem(STORE, theme); } catch (e) {}
+    if (persist) { try { localStorage.setItem(STORE, theme); } catch (e) {} }
     var meta = document.querySelector('meta[name="theme-color"]:not([media])');
     if (!meta) {
       meta = document.createElement('meta');
@@ -37,9 +41,9 @@
 
   var toggle = document.getElementById('theme-toggle');
   if (toggle) {
-    applyTheme(currentTheme());
+    applyTheme(currentTheme(), false);
     toggle.addEventListener('click', function () {
-      applyTheme(currentTheme() === 'dark' ? 'light' : 'dark');
+      applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true);
     });
   }
 

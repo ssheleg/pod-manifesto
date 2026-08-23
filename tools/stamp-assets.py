@@ -23,7 +23,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PAGE = ROOT / "index.html"
+# Every HTML page in the root, not just the document. `404.html` references the
+# same stylesheet and the same fonts; scanning one page would have left the other
+# pinned to whatever hash it was written with — this tool's own bug, one file over.
+PAGES = sorted(ROOT.glob("*.html"))
 FONTS = ROOT / "assets" / "fonts" / "fonts.css"
 
 # Two holes were measured on 2026-08-20 and closed here, because the README
@@ -91,13 +94,16 @@ def main() -> int:
     if not check and fonts_after != fonts_before:
         FONTS.write_text(fonts_after, encoding="utf-8")
 
-    page_before = PAGE.read_text(encoding="utf-8")
-    page_after = apply(PAGE, page_before, REF,
-                       lambda url: ROOT / url.lstrip("/"),
-                       lambda m, h: f'{m.group("attr")}="{m.group("origin") or ""}{m.group("url")}?v={h}"')
-    page_after = apply(PAGE, page_after, JSONLD_REF,
-                       lambda url: ROOT / url.lstrip("/"),
-                       lambda m, h: f'{m.group("attr")}{m.group("origin")}{m.group("url")}?v={h}"')
+    pages = {}
+    for page in PAGES:
+        before = page.read_text(encoding="utf-8")
+        after = apply(page, before, REF,
+                      lambda url: ROOT / url.lstrip("/"),
+                      lambda m, h: f'{m.group("attr")}="{m.group("origin") or ""}{m.group("url")}?v={h}"')
+        after = apply(page, after, JSONLD_REF,
+                      lambda url: ROOT / url.lstrip("/"),
+                      lambda m, h: f'{m.group("attr")}{m.group("origin")}{m.group("url")}?v={h}"')
+        pages[page] = (before, after)
 
     for where, url, h in stamped:
         print(f"  {h}  {where} -> {url}")
@@ -110,8 +116,10 @@ def main() -> int:
     # The residual scan is what makes "every asset URL" checkable instead of
     # asserted: any same-origin asset reference the patterns above did not reach
     # is reported here rather than shipping unfingerprinted.
-    unstamped = sorted({m.group(0) for m in RESIDUAL.finditer(page_after)}
-                       | {m.group(0) for m in RESIDUAL.finditer(fonts_after)})
+    residual = {m.group(0) for m in RESIDUAL.finditer(fonts_after)}
+    for _, after in pages.values():
+        residual |= {m.group(0) for m in RESIDUAL.finditer(after)}
+    unstamped = sorted(residual)
     for u in unstamped:
         print(f"  UNSTAMPED  {u}")
     if unstamped:
@@ -119,13 +127,19 @@ def main() -> int:
         return 1
 
     if check:
-        current = fonts_after == fonts_before and page_after == page_before
+        current = (fonts_after == fonts_before
+                   and all(before == after for before, after in pages.values()))
         print(f"\n{len(stamped)} assets stamped — {'current' if current else 'STALE'}")
         return 0 if current else 1
 
-    if page_after != page_before:
-        PAGE.write_text(page_after, encoding="utf-8")
-    print(f"\n{len(stamped)} assets stamped into index.html and fonts.css")
+    written = []
+    for page, (before, after) in pages.items():
+        if after != before:
+            page.write_text(after, encoding="utf-8")
+            written.append(page.name)
+    print(f"\n{len(stamped)} assets stamped across "
+          f"{len(pages)} page(s) and fonts.css"
+          + (f" — rewrote {', '.join(written)}" if written else ""))
     return 0
 
 

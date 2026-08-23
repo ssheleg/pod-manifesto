@@ -10,42 +10,35 @@ Coding agents have made producing software dramatically cheaper. They can create
 
 The bottleneck moved from production to assurance. This is why I no longer treat an agent's last message as the unit of progress. The useful unit is an **evidence-carrying change**: a change that carries the intent it implements, the evidence that verifies it, the limits of that evidence, and the decision that accepts it. I call the standard for that change **Proof of Done**.
 
-## 1. When “done” broke
+## The manifesto
 
-Traditional software development already has tests, code review, CI, runbooks, acceptance criteria, and a Definition of Done. None of those became obsolete when agents arrived (I use all of them). The problem is that the old system assumed a production rate and a shape of work that no longer hold.
+Everything below this line argues for what this section asserts. The argument is long because the failures it answers are specific; the assertion is short because a standard nobody can hold in mind is not one.
 
-An agent can produce changes faster than a reviewer can form a reliable mental model of them, lose part of the task across compaction or handoff and then continue fluently from an incomplete state, or write a test that agrees with its implementation because both contain the same misunderstanding. It can run a narrow suite and report the part as the whole. Several agents can act in parallel (each locally correct) while colliding on a shared file, contract, identifier, or external system.
+### The declaration
 
-The dangerous property isn't that an agent may be wrong. Developers have always been wrong. It is that an incomplete result can now arrive at high speed with code, tests, documentation, and explanation all supporting the same mistake.
+1. We believe the unit of progress is not generated code but an evidence-carrying change, and that intent must survive decomposition, implementation, verification, and acceptance without becoming a different request at every boundary.
 
-I don't assume that an agent lies. I assume that it can be wrong, persuasive, interrupted, incomplete, and authorised to act. If you design only for malicious behaviour, you miss the ordinary failure: a system doing exactly what it understood, at a speed that makes the misunderstanding expensive.
+2. We believe implementation proof and product proof are different. A change may be ready to release while its product hypothesis remains unobserved, and the system should preserve that uncertainty rather than promote it to success.
 
-That gives agentic development a specific threat model:
+3. We believe an agent's report is a useful interface and an insufficient source of truth. Agent-produced work carries provenance, and agreement between two agents counts as independent evidence only when their evidence paths are genuinely independent.
 
-| Property | Failure it creates | System response |
-|---|---|---|
-| High production rate | More change than a person can inspect deeply | explicit scope and acceptance coverage |
-| Plausible reporting | confidence mistaken for observation | artifacts over self-report |
-| Context discontinuity | goals, decisions, and verified state drift | durable state outside the conversation |
-| Nondeterministic execution | the route changes between runs | a stable result contract and recorded graph |
-| Parallel agency | locally correct work collides at shared state | ownership and an explicit concurrency protocol |
-| Operational authority | code generation becomes action on real systems | typed gates and bounded credentials |
+4. We believe autonomy should expand where evidence and limits are mechanical, then stop where meaning, authority, or irreversible consequence begins (the boundary should be visible before the run reaches it).
 
-The response cannot be “review harder.” Human attention is the resource agents were meant to stop consuming one keystroke at a time. If a feature takes 15 minutes to generate and an hour of archaeology every time it reaches review, the operating model has failed even when the code is correct. I want a system in which the routine path is autonomous, consequential boundaries are explicit, and you can challenge every completion claim without reconstructing the whole conversation (or trusting the agent that produced it).
+5. We believe the work graph should expose dependencies, the evidence graph should expose uncertainty, and acceptance should reconnect both to the original intent. Unchecked, abstained, partial, deferred, and unknown are engineering states, not embarrassing words to hide behind `done`.
 
-## 2. What Proof of Done means
+6. We believe documentation is part of the executable memory of a software system. A fact with two homes will diverge, a number copied from an earlier report will decay, and a reference that does not resolve is a claim with its receipt removed. Evidence is versioned and perishable, and invalidation preserves history without pretending the old proof still covers the current state.
 
-Definition of Done and Proof of Done answer different questions.
+7. We believe every repeated failure should make the next run structurally better. The best lesson is the one no future agent has to remember because a mechanism now carries it (and the best retired rule leaves its history behind).
 
-> **Definition of Done states what must be true. Proof of Done shows that it is true.**
+### The four values
 
-More precisely:
+We value:
 
-> **Proof of Done requires every completion claim between an intended outcome and an accepted result to point to its supporting record at an address another actor can resolve; if the address does not resolve, the claim is not proven.**
+**Evidence over confidence.** A calm, detailed report isn't stronger than the artifact it describes. **Intent over output.** A large change cannot compensate for a requirement that disappeared before implementation. **Explicit structure over emergent motion.** Activity is not a plan, and chronology is not dependency. **Durable truth over conversational state.** The context window helps an agent think, but it isn't the system's memory.
 
-This is an operational boundary. “The tests pass” is a claim. The command, its exit code, the selected test names, the commit they ran against, and the stored result are evidence. If you cannot resolve the test name, you don't have that evidence. If you cannot open the CI run, the badge proves only that a badge was rendered. A report that says nothing about what was skipped cannot distinguish a clean result from a check that never looked (two opposite states with the same output).
+The items on the right still matter. Confidence helps people act, output is why the work exists, discovery changes plans, and conversation is where much of the reasoning happens. The items on the left are what make their results trustworthy (and what let you disagree with the result precisely).
 
-Proof of Done is not a mathematical proof of correctness. Most software teams can't produce one, and pretending otherwise would make the term useless. It is a bounded engineering claim supported by evidence that another person or mechanism can reach, which is why every proof is **scoped, versioned, and perishable**. It belongs to a particular change, environment, set of checks, policy version, and observation time (the validity domain of the claim). A green result on commit A does not prove commit B, a staging smoke test does not silently become production evidence, and a document that was true one month before a migration doesn't remain true by inertia.
+This does not mean every change needs the same pipeline, every uncertainty can be automated away, every agent needs a person watching it, or every internal thought belongs in a permanent log. Proof should be proportionate, privacy-preserving, and produced by the work itself. The standard governs the completion claim, not one mandatory toolchain.
 
 ### The smallest protocol
 
@@ -67,7 +60,44 @@ NOT VERIFIED
 
 An agent shouldn't return `done` without those fields. `NOT VERIFIED: none within the stated scope` is a valid answer. Silence is not. If you adopt nothing else in this document, these four fields already separate completion from a plausible completion story.
 
-The difference is visible in a small example. The identifiers are illustrative:
+## 1. When “done” broke
+
+Traditional software development already has tests, code review, CI, runbooks, acceptance criteria, and a Definition of Done. None of those became obsolete when agents arrived (I use all of them). The problem is that the old system assumed a production rate and a shape of work that no longer hold.
+
+An agent can produce changes faster than a reviewer can form a reliable mental model of them, lose part of the task across compaction or handoff and then continue fluently from an incomplete state, or write a test that agrees with its implementation because both contain the same misunderstanding. It can run a narrow suite and report the part as the whole. Several agents can act in parallel (each locally correct) while colliding on a shared file, contract, identifier, or external system.
+
+The dangerous property isn't that an agent may be wrong. Developers have always been wrong. It is that an incomplete result can now arrive at high speed with code, tests, documentation, and explanation all supporting the same mistake.
+
+This document does not assume that an agent lies. It assumes that an agent can be wrong, persuasive, interrupted, incomplete, and authorised to act. If you design only for malicious behaviour, you miss the ordinary failure: a system doing exactly what it understood, at a speed that makes the misunderstanding expensive.
+
+That gives agentic development a specific threat model:
+
+| Property | Failure it creates | System response |
+|---|---|---|
+| High production rate | More change than a person can inspect deeply | explicit scope and acceptance coverage |
+| Plausible reporting | confidence mistaken for observation | artifacts over self-report |
+| Context discontinuity | goals, decisions, and verified state drift | durable state outside the conversation |
+| Nondeterministic execution | the route changes between runs | a stable result contract and recorded graph |
+| Parallel agency | locally correct work collides at shared state | ownership and an explicit concurrency protocol |
+| Operational authority | code generation becomes action on real systems | typed gates and bounded credentials |
+
+The response cannot be “review harder.” Human attention is the resource agents were meant to stop consuming one keystroke at a time. If a feature takes 15 minutes to generate and an hour of archaeology every time it reaches review, the operating model has failed even when the code is correct. What is needed is a system in which the routine path is autonomous, consequential boundaries are explicit, and every completion claim can be challenged without reconstructing the whole conversation (or trusting the agent that produced it).
+
+## 2. What Proof of Done means
+
+Definition of Done and Proof of Done answer different questions.
+
+> **Definition of Done states what must be true. Proof of Done shows that it is true.**
+
+More precisely:
+
+> **Proof of Done requires every completion claim between an intended outcome and an accepted result to point to its supporting record at an address another actor can resolve; if the address does not resolve, the claim is not proven.**
+
+This is an operational boundary. “The tests pass” is a claim. The command, its exit code, the selected test names, the commit they ran against, and the stored result are evidence. If you cannot resolve the test name, you don't have that evidence. If you cannot open the CI run, the badge proves only that a badge was rendered. A report that says nothing about what was skipped cannot distinguish a clean result from a check that never looked (two opposite states with the same output).
+
+Proof of Done is not a mathematical proof of correctness. Most software teams can't produce one, and pretending otherwise would make the term useless. It is a bounded engineering claim supported by evidence that another person or mechanism can reach, which is why every proof is **scoped, versioned, and perishable**. It belongs to a particular change, environment, set of checks, policy version, and observation time (the validity domain of the claim). A green result on commit A does not prove commit B, a staging smoke test does not silently become production evidence, and a document that was true one month before a migration doesn't remain true by inertia.
+
+The difference those four fields make is visible in a small example. The identifiers are illustrative:
 
 ```text
 Agent report:
@@ -95,23 +125,13 @@ The word `done` also hides several states that should not be collapsed:
 
 The common failure is a jump from `generated` to `done`. Once you name the intermediate states, you can see where the claim outran the evidence and stop there without pretending the whole change failed.
 
-### The four values
-
-We value:
-
-**Evidence over confidence.** A calm, detailed report isn't stronger than the artifact it describes. **Intent over output.** A large change cannot compensate for a requirement that disappeared before implementation. **Explicit structure over emergent motion.** Activity is not a plan, and chronology is not dependency. **Durable truth over conversational state.** The context window helps an agent think, but it isn't the system's memory.
-
-The items on the right still matter. Confidence helps people act, output is why the work exists, discovery changes plans, and conversation is where much of the reasoning happens. The items on the left are what make their results trustworthy (and what let you disagree with the result precisely).
-
-This does not mean every change needs the same pipeline, every uncertainty can be automated away, every agent needs a person watching it, or every internal thought belongs in a permanent log. Proof should be proportionate, privacy-preserving, and produced by the work itself. The standard governs the completion claim, not one mandatory toolchain.
-
 ## 3. The three graphs
 
 Agentic development is usually drawn as one pipeline: prompt in, code out. When you draw it that way, you omit the two graphs that decide whether the output is useful. A complete system aligns three graphs (not three documents that happen to use the same feature name).
 
 ### The intent graph
 
-The intent graph says why the change should exist and what must become true. It starts before requirements, with a user or system problem, a hypothesis about what will improve it, and a signal that could show whether the hypothesis survived contact with reality. Requirements, decisions, constraints, scenarios, contracts, and failure behaviour follow. I treat a requirement with no observable as unfinished because you cannot connect it to the evidence graph later without inventing the test after seeing the implementation.
+The intent graph says why the change should exist and what must become true. It starts before requirements, with a user or system problem, a hypothesis about what will improve it, and a signal that could show whether the hypothesis survived contact with reality. Requirements, decisions, constraints, scenarios, contracts, and failure behaviour follow. A requirement with no observable is unfinished, because you cannot connect it to the evidence graph later without inventing the test after seeing the implementation.
 
 ### The execution graph
 
@@ -187,15 +207,15 @@ flowchart LR
 
 The checker confirms that every expected output arrived, matches its contract, carries its evidence, and does not contradict a sibling (including a sibling that used different words for the same shared assumption). Convergence shouldn't quietly repair malformed inputs. It either consumes validated results or stops.
 
-The checker needs proof too. A mechanism that always returns green is only another agent-shaped source of confidence. Before I trust a new check, I want evidence that it can discriminate failure from success (a planted defect, mutation test, known failing fixture, or recorded historical failure can provide it). You don't need to repeat the negative control on every run, but you do need to know that green has an opposite state. In the reference implementation this is a suite rather than a habit: every guard is fed a planted defect and required to reject it, and a check that no longer rejects its own plant is a red step rather than a green one. [negatives](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/test/negatives.py)
+The checker needs proof too. A mechanism that always returns green is only another agent-shaped source of confidence. Before a new check is trusted, it owes evidence that it can discriminate failure from success (a planted defect, mutation test, known failing fixture, or recorded historical failure can provide it). You don't need to repeat the negative control on every run, but you do need to know that green has an opposite state. In the reference implementation this is a suite rather than a habit: every guard is fed a planted defect and required to reject it, and a check that no longer rejects its own plant is a red step rather than a green one. [negatives](https://github.com/ssheleg/task-pipeline/blob/17ef1a6346384094455ae3fa0ffadf790b586d83/test/negatives.py)
 
 ### Stable graph, bounded discovery
 
-The planned dependency graph should be acyclic, retries should be bounded, and learning should remain cyclic. Discovery is allowed to reveal missing work, a new dependency, or a bad module boundary. It may propose a new graph, but it may not silently become one. I record the revision and its reason, then make the graph stable again before execution continues (otherwise the run can always explain completion by appealing to a plan that existed only at the end). A self-modifying graph may be flexible, but if you cannot reconstruct its shape, you cannot falsify its completion claim.
+The planned dependency graph should be acyclic, retries should be bounded, and learning should remain cyclic. Discovery is allowed to reveal missing work, a new dependency, or a bad module boundary. It may propose a new graph, but it may not silently become one. Record the revision and its reason, then make the graph stable again before execution continues (otherwise the run can always explain completion by appealing to a plan that existed only at the end). A self-modifying graph may be flexible, but if you cannot reconstruct its shape, you cannot falsify its completion claim.
 
 ## 4. Bounded autonomy
 
-The answer to agent risk is not constant supervision. If you must approve every file read, test command, or local edit, the agent is an expensive keyboard macro. Even a hypothetical 30-second local operation can then acquire an hour-long human round trip. Autonomy should be granted before execution and interrupted only at named boundaries. I see three parties in that arrangement (not the usual two).
+The answer to agent risk is not constant supervision. If you must approve every file read, test command, or local edit, the agent is an expensive keyboard macro. Even a hypothetical 30-second local operation can then acquire an hour-long human round trip. Autonomy should be granted before execution and interrupted only at named boundaries. There are three parties in that arrangement, not the usual two.
 
 The human owns meaning: goals, trade-offs, unresolved product decisions, acceptance policy, and authority over consequential actions. The agent owns execution: investigation, decomposition, implementation, testing, evidence collection, documentation updates, and the honest reporting of limits. The mechanism owns enforcement: schemas, permissions, gates, isolation, leases, logs, state, and the checks that must run even when nobody remembers to ask.
 
@@ -209,7 +229,7 @@ An automatic gate decides a fact a machine can establish: a schema resolves, a s
 
 When an agent produces the change, the proof should identify the execution that produced it: model and runtime, policy and instruction versions, tools and permissions, context boundaries, retries, abstentions, and the trace that connects actions to results. A correct final artifact can follow an unsafe trajectory, while a clean-looking trajectory can still produce the wrong artifact. Proof of Done needs enough provenance to investigate both without preserving every private token forever.
 
-A second agent is not automatically an independent reviewer. If implementer and reviewer share the same model, context, sources, specification error, and judge, their agreement can be one correlated mistake reported twice. Independence comes from a different evidence path: a deterministic runner, a contract maintained at another boundary, an isolated context, a differently calibrated judge, an external system, or a production observation.
+A second agent is not automatically an independent reviewer. If implementer and reviewer share the same model, context, sources, specification error, and judge, their agreement can be one correlated mistake reported twice. Independence comes from a different evidence path: a deterministic runner, a contract maintained at another boundary, an isolated context, a differently calibrated judge, an external system, or a production observation. In the reference implementation this is a mechanism rather than an intention: a node is closed by three readings that cannot see one another — one over the changed lines, one over everything that can reach them, one over the documentation and the features sharing the path — and a report whose prose cites another tier's verdict is refused, because three readings that inform each other are one opinion with three signatures. [three blind readings](https://github.com/ssheleg/task-pipeline/blob/2ab290203199927bbd8db56d308dce9d25487c2f/plugins/task-pipeline/agents/verifier-seam.md#L10-L13)
 
 Where the check itself is probabilistic, its proof includes the rubric, calibration evidence, trace ids, and abstentions. A judge that has never been observed disagreeing is the agentic version of a green check nobody watched turn red.
 
@@ -217,7 +237,7 @@ Not every acceptance requires a human click. You can define a policy that closes
 
 ### One item to its gate
 
-Continuous execution should advance one recorded item to its next gate, then re-read the goal and queue before selecting another. The queue lives in an artifact, not in the agent's recollection of the plan. This prevents a common form of drift: the agent continues efficiently after the reason for the next task has changed. I don't call a loop without a durable queue autonomy. It is a timer attached to memory. The loop stops for a manual gate, an unresolved dependency, genuine ambiguity, or completion, but it doesn't stop to ask whether it should continue when that choice was already granted at intake.
+Continuous execution should advance one recorded item to its next gate, then re-read the goal and queue before selecting another. The queue lives in an artifact, not in the agent's recollection of the plan. This prevents a common form of drift: the agent continues efficiently after the reason for the next task has changed. A loop without a durable queue is not autonomy. It is a timer attached to memory. The loop stops for a manual gate, an unresolved dependency, genuine ambiguity, or completion, but it doesn't stop to ask whether it should continue when that choice was already granted at intake.
 
 ### Churn is a decision at the wrong layer
 
@@ -290,7 +310,7 @@ Use the cost as a design test: if maintaining proof takes 20 minutes after a hyp
 
 Evidence has an address and a scope. It may be a command with output, an executed test by name, a commit, a trace id, a deployment identifier, a screenshot tied to a scenario, a production observation, or a decision record. The medium is less important than three properties: you can resolve it, it belongs to the change being claimed, and it proves no more than it observed (the last property is the one green dashboards routinely lose).
 
-The producer of a claim shouldn't be its only judge. Independence can come from a deterministic runner, a contract test maintained at another boundary, an isolated reviewer, an external system, or production telemetry. I don't need a human reviewer for every line, but I do want the strongest evidence farther from the component that produced the claim as the cost of being wrong rises (a billing webhook and a colour token shouldn't carry the same burden).
+The producer of a claim shouldn't be its only judge. Independence can come from a deterministic runner, a contract test maintained at another boundary, an isolated reviewer, an external system, or production telemetry. Not every line needs a human reviewer, but the strongest evidence belongs farther from the component that produced the claim as the cost of being wrong rises (a billing webhook and a colour token shouldn't carry the same burden).
 
 An honest negative is evidence too. “Not done: the production check requires a credential this run does not have” is a complete report. “Done, with one small caveat” for the same state is not. A closed status vocabulary helps because you can route each state without negotiating its meaning again:
 
@@ -377,7 +397,7 @@ Agents are unusually good at generating volume, which makes breadth-first implem
 
 The planned work graph should converge. The engineering system around it should learn forever (the first is delivery, the second is adaptation).
 
-A retrospective is owed when the run diverges: a gate reopened, a stage was re-entered, a fix broke an unrelated surface, an assumption turned out to be false, or a person had to intervene where the operating contract said they wouldn't. I don't write one merely because a run ended. A ritual retrospective consumes time and teaches the system that silence means success.
+A retrospective is owed when the run diverges: a gate reopened, a stage was re-entered, a fix broke an unrelated surface, an assumption turned out to be false, or a person had to intervene where the operating contract said they wouldn't. One is not owed merely because a run ended. A ritual retrospective consumes time and teaches the system that silence means success.
 
 The lesson should name the symptom, where it surfaced, which earlier layer let it through, the root cause, the correction, the check that would have caught it sooner, and the commit that carries the fix. “The agent was careless” isn't a root cause. If you cannot turn the explanation into a changed mechanism or decision, the next run has nothing to execute differently.
 
@@ -400,7 +420,7 @@ The strongest is mechanical: a test, lint rule, gate, hook, schema, or policy. T
 
 > **A failure class that repeats becomes a mechanism, not another paragraph.**
 
-The reverse matters as much. When a rule becomes a check, the prose rule should retire. When the surface it protects disappears, the rule should retire. I keep the history reachable but the active instruction floor short enough to read (a rule that costs tokens forever needs to keep earning them).
+The reverse matters as much. When a rule becomes a check, the prose rule should retire. When the surface it protects disappears, the rule should retire. Keep the history reachable and the active instruction floor short enough to read (a rule that costs tokens forever needs to keep earning them).
 
 ## 8. From four lines to a full pipeline
 
@@ -452,21 +472,7 @@ npx sshlg-skills install
 
 The implementation is evidence that this process can run. It isn't the authority for the manifesto. You should still be able to use the four-line protocol, the three graphs, and the seam walk if every tool, runtime, and package name in that repository changes.
 
-## The declaration
-
-We believe the unit of progress is not generated code but an evidence-carrying change, and that intent must survive decomposition, implementation, verification, and acceptance without becoming a different request at every boundary.
-
-We believe implementation proof and product proof are different. A change may be ready to release while its product hypothesis remains unobserved, and the system should preserve that uncertainty rather than promote it to success.
-
-We believe an agent's report is a useful interface and an insufficient source of truth. Agent-produced work carries provenance, and agreement between two agents counts as independent evidence only when their evidence paths are genuinely independent.
-
-We believe autonomy should expand where evidence and limits are mechanical, then stop where meaning, authority, or irreversible consequence begins (the boundary should be visible before the run reaches it).
-
-We believe the work graph should expose dependencies, the evidence graph should expose uncertainty, and acceptance should reconnect both to the original intent. Unchecked, abstained, partial, deferred, and unknown are engineering states, not embarrassing words to hide behind `done`.
-
-We believe documentation is part of the executable memory of a software system. A fact with two homes will diverge, a number copied from an earlier report will decay, and a reference that does not resolve is a claim with its receipt removed. Evidence is versioned and perishable, and invalidation preserves history without pretending the old proof still covers the current state.
-
-We believe every repeated failure should make the next run structurally better. The best lesson is the one no future agent has to remember because a mechanism now carries it (and the best retired rule leaves its history behind).
+## The close
 
 Agents can produce code, tests, documentation, and convincing explanations at extraordinary speed. None of those artifacts proves the others.
 

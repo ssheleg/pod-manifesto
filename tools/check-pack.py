@@ -33,12 +33,20 @@ def main() -> int:
     css_code = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
 
     # ── the pack owns the values ─────────────────────────────────────────────
-    # Colour literals belong in the token block at the top and nowhere else. The
-    # block is everything up to the first non-:root selector.
-    split = css_code.index("*, *::before")
-    print_at = css_code.index("@media print")
-    tokens = css_code[:split] + css_code[print_at:]   # print re-declares the tokens
-    components = css_code[split:print_at]
+    # A colour literal may be written inside a `:root` block and nowhere else.
+    #
+    # This used to be expressed positionally — everything before `*, *::before`
+    # and everything from `@media print` onward was treated as token territory.
+    # The second half of that was a hole: `@media print` sits at line 646 and 147
+    # lines of components follow it, so every rule in the "ADDED AFTER THE FIRST
+    # VERSION" section was exempt from the check that names this file. It was
+    # clean when measured on 2026-08-23, which is luck rather than a gate.
+    #
+    # Stated as the rule instead of as a position, it covers the whole stylesheet
+    # and stays correct wherever a future `:root` block is written.
+    ROOT_BLOCK = re.compile(r":root[^{]*\{[^{}]*\}", re.S)
+    tokens = "".join(m.group(0) for m in ROOT_BLOCK.finditer(css_code))
+    components = ROOT_BLOCK.sub(" ", css_code)
     hexes = re.findall(r"#[0-9a-fA-F]{3,8}\b", components)
     check("no colour literal outside the token block", not hexes, ", ".join(sorted(set(hexes))[:6]))
     check("the token block defines the field and the accent",

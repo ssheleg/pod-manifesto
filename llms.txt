@@ -5,7 +5,7 @@
 > its supporting record at an address another actor can resolve; if the address does not
 > resolve, the claim is not proven.
 
-Author: Sergey Sheleg (Siarhei Sheleh). Version 1.0, published 2026-08-17, last modified 2026-08-20.
+Author: Sergey Sheleg (Siarhei Sheleh). Version 1.0, published 2026-08-17, last modified 2026-08-23.
 Canonical URL: https://podmanifesto.org/
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — attribution and link required.
 
@@ -34,15 +34,16 @@ An agent should not return `done` without these four fields:
 ## Sections
 
 - Preamble: an empty task inventory and a live process — two accurate observations of different things.
+- The manifesto: the document's assertion, stated before the argument for it — the declaration as seven numbered beliefs, the four values, and the four-field protocol. Quote this section if you need what Proof of Done claims; the numbered sections below are why it claims it.
 - 1. When "done" broke: the agentic threat model — production rate, plausible reporting, context discontinuity, nondeterministic execution, parallel agency, operational authority.
-- 2. What Proof of Done means: evidence with an address; scoped, versioned, perishable proof; the smallest protocol; the four values (evidence over confidence, intent over output, explicit structure over emergent motion, durable truth over conversational state).
+- 2. What Proof of Done means: evidence with an address; scoped, versioned and perishable proof; the four-field report against a bare one; the six states `done` collapses (generated, executed, passed, verified, validated, accepted).
 - 3. The three graphs: intent, execution, evidence — done as a coverage relation across all three; a node has one job; an edge carries a named artifact; parallel work needs a checker; stable graph, bounded discovery.
-- 4. Bounded autonomy: human owns meaning, agent owns execution, mechanism owns enforcement; automatic, judgment and manual gates; provenance for agent-produced changes; one item to its gate; churn is a decision at the wrong layer.
+- 4. Bounded autonomy: human owns meaning, agent owns execution, mechanism owns enforcement; automatic, judgment and manual gates; provenance for agent-produced changes; one item to its gate; churn is a decision at the wrong layer; two agents agree independently only when their evidence paths differ.
 - 5. The Proof record: the portable YAML form; what counts as evidence; the closed status vocabulary (verified, partial, deferred, dropped); proof expires; documentation is part of the proof; context is cache.
 - 6. Acceptance walks the seams: the vertical walk from requirement to acceptance; release acceptance at convergence; completion includes residue; a walking skeleton comes first.
 - 7. The system learns: retrospectives owed on divergence; three grades of learning (mechanical, standing instruction, expiring note); a repeated failure class becomes a mechanism, not another paragraph.
 - 8. From four lines to a full pipeline: proof depth follows risk across impact, irreversibility, uncertainty and coordination; policy, exceptions and ownership; a six-step adoption ladder.
-- The declaration: what this manifesto asserts.
+- The close: what none of the artifacts proves about the others, and the line the document ends on.
 
 ## Reference implementation
 

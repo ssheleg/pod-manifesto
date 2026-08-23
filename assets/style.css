@@ -21,6 +21,10 @@
 /* ── tokens ──────────────────────────────────────────────────────────────── */
 
 :root {
+  /* Follows the active theme, not the system preference — the toggle decides, so
+     the scrollbars and form widgets the UA paints must follow the toggle too. */
+  color-scheme: light;
+
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --sans: "Geist", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
           "Helvetica Neue", Arial, sans-serif;
@@ -57,13 +61,20 @@
    a choice the reader makes with the toggle, and it is remembered. The system
    preference no longer decides, because the page has an opinion. */
 :root[data-theme="dark"] {
+    color-scheme: dark;
+
     --bg:         #090b0a;
     --bg-2:       #0e1211;
     --panel:      #0f1413;
     --ink:        #dbe2dd;
     --ink-2:      #b3bdb7;
     --muted:      #99a29c;   /* 7.52 on --bg */
-    --faint:      #717f77;   /* 4.70 on --bg, was 3.40 */
+    /* Measured against the panel, not only the field. At #717f77 this cleared
+       4.70 on --bg and fell to 4.43 on --panel, where the contents index and its
+       summary actually sit — under the floor, and invisible to a sweep run from
+       the top of the page because those rows were inside a collapsed details.
+       Raised until both grounds clear: 5.37 on --bg, 5.13 on --panel. */
+    --faint:      #7a897f;
     --rule:       #1c2321;
     --rule-2:     #2b3532;
     --accent:     #4ee08f;
@@ -558,14 +569,21 @@ td:first-child { color: var(--ink); }
   border-top: 1px solid var(--rule-2); border-bottom: 1px solid var(--rule-2);
   padding: 1.9rem 0; margin: 0 0 2rem;
 }
+/* The seven beliefs are numbered so they can be cited. A reader who wants to
+   argue with one needs to be able to name it, and "the fourth bullet" is not a
+   name. The counter lives here rather than in the markup because the numbers are
+   a property of the list, not seven facts to keep in sync by hand. */
+.decl { counter-reset: belief; }
 .decl p {
-  position: relative; padding-left: 1.6rem; margin-bottom: 1.25rem;
+  position: relative; padding-left: 1.9rem; margin-bottom: 1.25rem;
   color: var(--ink) !important;
 }
 .decl p:last-child { margin-bottom: 0; }
 .decl p::before {
-  content: "\25B8"; position: absolute; left: 0; top: 0;
+  counter-increment: belief;
+  content: counter(belief); position: absolute; left: 0; top: 0;
   color: var(--accent); font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .sign {
@@ -650,8 +668,15 @@ td:first-child { color: var(--ink); }
     --muted: #444; --faint: #555; --rule: #ccc; --rule-2: #999;
     --accent: #000; --accent-bg: transparent; --accent-line: #999; --grid: transparent;
   }
-  body { background: #fff; font-size: 11pt; }
+  body { background: var(--bg); font-size: 11pt; }
   .topbar, .progress, .toc, .copy, .anchor, .masthead__cta, .skip, .foot__grid { display: none !important; }
+  /* The reveal keeps every section at opacity 0 until the observer fires, and
+     printing never scrolls, so the observer never fires: 27 of the 30 pages
+     shipped blank, carrying only the browser's own header. Measured 2026-08-23
+     against the live site — 4 857 printable characters, against 51 558 once
+     this rule existed. The page is the document; a document that will not print
+     is not one. */
+  .reveal, .boot > * { opacity: 1 !important; transform: none !important; }
   .term, .fig__well, .tablewrap { box-shadow: none; break-inside: avoid; }
   .sec { break-before: auto; }
   .sec__h { break-after: avoid; }
