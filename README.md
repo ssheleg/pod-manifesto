@@ -82,16 +82,19 @@ python3 tools/check-render.py             # the properties only a browser can se
 python3 tools/check-live.py               # the PUBLISHED site matches this repository — the served
                                           # robots.txt, the deployed bytes, every asset, the 404.
                                           # `--self-test` runs its rules offline against planted cases
-python3 tools/negatives.py                # 18 planted defects across the 11 gates that read this
+python3 tools/negatives.py                # 23 planted defects across the 12 gates that read this
                                           # tree, each required to refuse its own; a green nobody
                                           # watched fail is not evidence. `check-live.py` is the
-                                          # twelfth and is not in here — its subject is the live
+                                          # thirteenth and is not in here — its subject is the live
                                           # site, which cannot be planted in a temp directory, so
                                           # its rules are decided offline by its own `--self-test`
 python3 tools/check-currency.py           # every citation this document CHARACTERISES still says what
                                           # is claimed of it — a permalink resolves forever, so
                                           # resolution alone cannot detect a receipt gone stale.
                                           # `--self-test` runs the rules offline against planted cases
+python3 tools/check-downloads.py          # the install count in the colophon, resummed from npm
+                                          # over a window that must end on a day that is over;
+                                          # `--self-test` decides its rules offline
 python3 tools/check-version.py            # every place the document states its version agrees, and
                                           # equals the newest tag — so the citable address points at
                                           # the text that is on the page

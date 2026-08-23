@@ -105,6 +105,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
+  downloads:
+    name: the install count is the one npm reports
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The colophon prints how many times the reference implementation has been
+      # installed. §5 of the document says a number should be computed rather than
+      # carried from an earlier report, and an install count carried by hand is
+      # wrong the next morning while still looking authoritative. The self-test
+      # runs first and offline; the window is required to end on a day that is over.
+      - run: python3 tools/check-downloads.py --self-test
+      - run: python3 tools/check-downloads.py --verbose
+
   pack:
     name: the page still looks like the pack
     runs-on: ubuntu-latest

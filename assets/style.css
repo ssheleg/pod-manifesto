@@ -803,6 +803,26 @@ td:first-child { color: var(--ink); }
 .linkcol a { font-size: .875rem; text-decoration: none; display: flex; justify-content: space-between; gap: 1rem; padding: .7rem .25rem; color: var(--ink-2); }
 .linkcol a:hover { background: var(--accent-bg); color: var(--accent-2); }
 .linkcol span { font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+/* The install count, and the sentence that keeps it from being a boast. The
+   figure is set in the display face because it is a measurement; the qualifier
+   is set small because it is the part that stops the measurement overreaching,
+   and both belong to the same claim. */
+.installs {
+  margin: 1.1rem 0 0; padding-top: 1rem; border-top: 1px solid var(--rule);
+  display: flex; align-items: baseline; gap: .7rem; flex-wrap: wrap;
+}
+.installs b {
+  font-family: var(--mono); font-size: 1.35rem; font-weight: 500;
+  letter-spacing: -.02em; color: var(--accent-2);
+  font-variant-numeric: tabular-nums; flex: none;
+}
+.installs span {
+  flex: 1 1 15rem; font-size: .78rem; line-height: 1.6; color: var(--faint);
+}
+.installs a { color: var(--muted); }
+.installs a:hover { color: var(--accent-2); }
+.installs code { font-size: .95em; }
+
 .colophon__end {
   margin: 3rem 0 0; padding-top: 1.5rem; border-top: 1px solid var(--rule);
   font-family: var(--mono); font-size: 1rem; color: var(--ink); text-align: center;

@@ -283,6 +283,32 @@ CASES = [
         expect=r"the stated version is the newest tag",
         plant=lambda t: plant_version_ahead_of_tag(t),
     ),
+    # ---- check-downloads --------------------------------------------------
+    # The colophon prints an install count. A hand-typed one decays the next
+    # morning and goes on looking authoritative, which is what §5 forbids.
+    dict(
+        name="downloads: the printed install count is not what npm reports",
+        gate=["tools/check-downloads.py"],
+        expect=r"the printed figure is what npm reports|the registry says",
+        network=True,
+        plant=lambda t: sub_once(t, "index.html",
+                                 r'(<b data-installs[^>]*>)[\d,   ]+(</b>)',
+                                 r"\g<1>999,999\g<2>"),
+    ),
+    dict(
+        name="downloads: the window reaches a day that is not over",
+        gate=["tools/check-downloads.py"],
+        expect=r"the window is closed",
+        plant=lambda t: sub_once(t, "index.html",
+                                 r'(<b data-installs[^>]*data-to=")\d{4}-\d{2}-\d{2}(")',
+                                 r"\g<1>2099-01-01\g<2>"),
+    ),
+    dict(
+        name="downloads: the colophon drops the figure it claims to carry",
+        gate=["tools/check-downloads.py"],
+        expect=r"states no install figure",
+        plant=lambda t: sub_once(t, "index.html", r"<b data-installs", "<b data-removed"),
+    ),
     # ---- render ----------------------------------------------------------
     # The defect this gate was built for, put back. Without the print reset the
     # twelve sections stay at `opacity: 0`, printing never scrolls, and the
