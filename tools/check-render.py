@@ -76,6 +76,11 @@ def normalise(text: str) -> str:
                  (" ", " "), (" ", " "), (" ", " ")):
         text = text.replace(a, b)
     text = re.sub(r"\s+", " ", text)
+    # An inline <code> span becomes its own text run in the PDF, so extraction
+    # puts a space before whatever punctuation follows it: "to done ." and
+    # "At 0fb706c , I had". check-parity.py:47 collapses the same gap for the same
+    # reason; without this the gate reports a sentence absent that is on the page.
+    text = re.sub(r"\s+([,.;:!?])", r"\1", text)
     return text.strip()
 
 

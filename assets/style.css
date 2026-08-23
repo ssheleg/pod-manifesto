@@ -569,14 +569,21 @@ td:first-child { color: var(--ink); }
   border-top: 1px solid var(--rule-2); border-bottom: 1px solid var(--rule-2);
   padding: 1.9rem 0; margin: 0 0 2rem;
 }
+/* The seven beliefs are numbered so they can be cited. A reader who wants to
+   argue with one needs to be able to name it, and "the fourth bullet" is not a
+   name. The counter lives here rather than in the markup because the numbers are
+   a property of the list, not seven facts to keep in sync by hand. */
+.decl { counter-reset: belief; }
 .decl p {
-  position: relative; padding-left: 1.6rem; margin-bottom: 1.25rem;
+  position: relative; padding-left: 1.9rem; margin-bottom: 1.25rem;
   color: var(--ink) !important;
 }
 .decl p:last-child { margin-bottom: 0; }
 .decl p::before {
-  content: "\25B8"; position: absolute; left: 0; top: 0;
+  counter-increment: belief;
+  content: counter(belief); position: absolute; left: 0; top: 0;
   color: var(--accent); font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .sign {
