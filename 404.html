@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>404 — the address does not resolve · Proof of Done</title>
+<meta name="description" content="This address does not resolve. The document lives at podmanifesto.org.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f4f4ef">
+
+<link rel="icon" href="/favicon.svg?v=d79f4d92bc" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/fonts/fonts.css?v=e9ff3f16cd">
+<link rel="stylesheet" href="/assets/style.css?v=8e3651dbfb">
+
+<script>
+  document.documentElement.classList.remove('no-js');
+  try {
+    var t = localStorage.getItem('pod-theme');
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+</script>
+
+<style>
+  /* Scoped to this page. Colours come from the token layer in style.css — no
+     literal is written here, which is the rule the stylesheet is held to. */
+  .lost { max-width: 46rem; margin: 0 auto; padding: 5rem 1.5rem 6rem; }
+  .lost__mark { font-family: var(--mono); font-size: .72rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 2.4rem; }
+  .lost__code { font-family: var(--mono); font-size: clamp(2.4rem, 9vw, 3.6rem);
+    line-height: 1; letter-spacing: -.02em; color: var(--ink); margin: 0 0 .6rem; }
+  .lost__say { font-family: var(--mono); font-size: .76rem; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--accent-2); margin: 0 0 2.2rem; }
+  .lost p { color: var(--ink-2); line-height: 1.68; margin: 0 0 1.4rem; }
+  .lost__nav { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2.4rem; }
+</style>
+</head>
+<body>
+
+<main class="lost">
+  <p class="lost__mark">&#8866;&nbsp; Proof of Done &middot; podmanifesto.org</p>
+
+  <p class="lost__code">404</p>
+  <p class="lost__say">the address does not resolve</p>
+
+  <figure class="term">
+    <figcaption class="term__bar">
+      <span>&#8250;_</span>
+      <span class="term__title">this page, in the document's own protocol</span>
+    </figcaption>
+    <pre class="term__body"><code>DONE
+  Nothing. No document is served at this address.
+
+PROOF
+  HTTP 404 from podmanifesto.org, which is this page.
+
+SCOPE
+  The path you requested, at this moment.
+
+NOT VERIFIED
+  Whether the address was ever valid, or was mistyped,
+  or once pointed somewhere that has since moved.</code></pre>
+  </figure>
+
+  <p>The document itself is one page and it is at the root. If you followed a link
+  from somewhere that should have worked, the broken reference is worth reporting —
+  a reference that does not resolve is the failure this document is about.</p>
+
+  <div class="lost__nav">
+    <a class="tbtn tbtn--wide" href="/">Read the document</a>
+    <a class="tbtn tbtn--wide" href="/manifesto.md">Plain text</a>
+    <a class="tbtn tbtn--wide" href="https://github.com/ssheleg/pod-manifesto/issues">Report the link</a>
+  </div>
+</main>
+
+</body>
+</html>

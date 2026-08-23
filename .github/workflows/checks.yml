@@ -61,6 +61,20 @@ jobs:
           fetch-depth: 0        # a date derived from the log needs the log
       - run: python3 tools/stamp-dates.py --check
 
+  render:
+    name: the rendered document carries the text
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Every other job here reads a file. All of them were green for four days
+      # while the document printed 27 of its 30 pages blank: the sections sit at
+      # opacity 0 until an observer marks them seen, and printing never scrolls.
+      # A property nobody rendered is a property nobody checked. This job renders.
+      # It also runs the contrast sweep, which used to be the one manual check —
+      # it needs a browser, which is not the same as needing a person.
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
+      - run: python3 tools/check-render.py --verbose
+
   negatives:
     name: every gate refuses a planted defect
     runs-on: ubuntu-latest
@@ -69,7 +83,11 @@ jobs:
       # `manifesto.md:190`: a check must be shown able to discriminate failure from
       # success. Eight of the nine tools here had no negative control until this job
       # existed — they were trusted because they were green, which is the position this
-      # document argues against, held by this document's own repository.
+      # document argues against, held by this document's own repository. The ninth,
+      # `stamp-dates.py`, was still uncovered on 2026-08-23 while `README.md:75`
+      # described this file as covering "every gate above". It is covered now.
+      # The browser cases skip loudly without these, and a skip is not a pass.
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
       - run: python3 tools/negatives.py
         env:
           GITHUB_TOKEN: ${{ github.token }}

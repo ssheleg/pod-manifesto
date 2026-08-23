@@ -7,9 +7,12 @@
 <meta name="description" content="A foundation for building software when agents write the code. Done is not the last message of the run. Done is a state of the system that can be proven.">
 <meta name="author" content="Sergey Sheleg (Siarhei Sheleh)">
 <link rel="canonical" href="https://podmanifesto.org/">
-<meta name="theme-color" content="#f4f4ef" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#090b0a" media="(prefers-color-scheme: dark)">
-<meta name="color-scheme" content="light dark">
+<!-- One theme-color, no media condition: the system preference does not decide this
+     page's register (light is the default; dark is the reader's toggle), so a
+     media-scoped pair painted dark browser chrome around a light document on every
+     dark-preference device. main.js keeps this in sync with the active --bg.
+     `color-scheme` follows the same rule from the stylesheet, not from the system. -->
+<meta name="theme-color" content="#f4f4ef">
 
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Proof of Done">
@@ -29,7 +32,7 @@
 <link rel="preload" href="/assets/fonts/geist-latin.woff2?v=9b6f5ff45b" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/jetbrains-mono-latin.woff2?v=1e06740a02" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css?v=e9ff3f16cd">
-<link rel="stylesheet" href="/assets/style.css?v=cbc81ef7d0">
+<link rel="stylesheet" href="/assets/style.css?v=8e3651dbfb">
 
 <script>
   document.documentElement.classList.remove('no-js');
@@ -48,7 +51,7 @@
   "description": "Proof of Done requires every completion claim between an intended outcome and an accepted result to point to its supporting record at an address another actor can resolve; if the address does not resolve, the claim is not proven.",
   "url": "https://podmanifesto.org/",
   "inLanguage": "en",
-  "dateModified": "2026-08-20",
+  "dateModified": "2026-08-23",
   "datePublished": "2026-08-17",
   "version": "1.0",
   "license": "https://creativecommons.org/licenses/by/4.0/",
@@ -81,7 +84,7 @@
 
 <header class="topbar">
   <div class="topbar__in">
-    <a class="topbar__mark" href="#top" aria-label="Proof of Done, top of document">
+    <a class="topbar__mark" href="#top" aria-label="Proof of Done v1.0 — top of document">
       <span class="glyph" aria-hidden="true">&#8866;</span>
       <span class="topbar__name">PROOF&nbsp;OF&nbsp;DONE</span>
       <span class="topbar__ver">v1.0</span>
@@ -112,7 +115,7 @@
       <div><dt>Document</dt><dd>POD&#8202;/&#8202;001</dd></div>
       <div><dt>Version</dt><dd>1.0</dd></div>
       <div><dt>Published</dt><dd><time datetime="2026-08-17">2026-08-17</time></dd></div>
-      <div><dt>Updated</dt><dd><time class="docmeta__updated" datetime="2026-08-20">2026-08-20</time></dd></div>
+      <div><dt>Updated</dt><dd><time class="docmeta__updated" datetime="2026-08-23">2026-08-23</time></dd></div>
       <div><dt>Author</dt><dd>Sergey Sheleg <span class="muted">(Siarhei Sheleh)</span></dd></div>
       <div><dt>Canonical</dt><dd><a href="https://podmanifesto.org/">podmanifesto.org</a></dd></div>
       <div><dt>Source</dt><dd><a href="https://github.com/ssheleg/pod-manifesto">ssheleg&#8202;/&#8202;pod-manifesto</a></dd></div>
@@ -232,7 +235,7 @@
     <figcaption class="term__bar">
       <span>&#8250;_</span>
       <span class="term__title">the four-field done report</span>
-      <button class="copy" type="button" data-copy="DONE
+      <button class="copy" type="button" aria-label="Copy the four-field done report" data-copy="DONE
   What became true.
 
 PROOF
@@ -660,7 +663,7 @@ support. Tests pass.</code></pre>
     <figcaption class="term__bar">
       <span>&#8250;_</span>
       <span class="term__title">install</span>
-      <button class="copy" type="button" data-copy="npx sshlg-skills install">copy</button>
+      <button class="copy" type="button" aria-label="Copy the install command" data-copy="npx sshlg-skills install">copy</button>
     </figcaption>
     <pre class="term__body"><code><span class="p">$</span> npx sshlg-skills install</code></pre>
   </figure>
@@ -795,7 +798,7 @@ support. Tests pass.</code></pre>
           <figcaption class="term__bar">
             <span>&#8250;_</span>
             <span class="term__title">install the implementation</span>
-            <button class="copy" type="button" data-copy="npx sshlg-skills install">copy</button>
+            <button class="copy" type="button" aria-label="Copy the install command" data-copy="npx sshlg-skills install">copy</button>
           </figcaption>
           <pre class="term__body"><code><span class="p">$</span> npx sshlg-skills install</code></pre>
         </figure>
@@ -807,6 +810,6 @@ support. Tests pass.</code></pre>
   </div>
 </footer>
 
-<script src="/assets/main.js?v=265c23f36e" defer></script>
+<script src="/assets/main.js?v=8d613f0a05" defer></script>
 </body>
 </html>
