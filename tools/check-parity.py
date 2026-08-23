@@ -5,18 +5,23 @@ manifesto.md is the one authoritative home for the words. index.html renders the
 This check fails when a canonical sentence is MISSING from the page, so "the site carries
 the text" is a command with an exit code rather than a sentence in a commit message.
 
-**It measures one direction only, and the docstring used to claim both.** Every block of
-`manifesto.md` must appear in `index.html`; nothing here asserts the reverse, so the page
-can carry prose that exists in no canonical source and this check stays green. Some of
-that is deliberate — the masthead, the footnotes, the proofline are page chrome and were
-never in the canonical text — which is why the reverse pass needs an enumerated allowlist
-rather than a stricter regex, and is filed as its own row rather than bolted on here. The
-sentence that used to stand in this docstring said "fails when the two drift", which is
-wider than what runs; on 2026-08-20 it was narrowed to what it does.
+It measures three things, and for two days it measured only the first. Every block of
+`manifesto.md` must appear in `index.html`. Nothing asserted the reverse, so the page could
+carry prose that exists in no canonical source; and nothing compared the ORDER, so moving
+the document's whole assertion to the front in one file and not the other would have left
+every gate here green. Both are checked now.
+
+The reverse pass drops what the forward pass already drops on the other side — fenced code,
+tables, headings — plus the sections and chrome that exist only on the page, enumerated in
+`PAGE_ONLY`. Symmetry is the rule rather than a stricter regex: compared naively the two
+sides differ in 69 places and not one of them is a defect, and a check that loud is one
+people learn to skip.
 
 Usage:  python3 tools/check-parity.py [--verbose]
-Exit:   0 = every canonical sentence is present in the page
-        1 = at least one sentence is missing
+Exit:   0 = the page carries every canonical sentence, carries nothing that is not
+            canonical, and carries it in the canonical order
+        1 = a sentence is missing, a sentence has no canonical source, the section
+            order differs, or the stated case count is not the number listed
 """
 
 import html
@@ -80,6 +85,65 @@ def sentences(block: str) -> list:
     return [p.strip() for p in parts if len(p.strip()) >= MIN_LEN]
 
 
+# ---------------------------------------------------------------------------
+# The reverse pass, and what it is allowed to ignore.
+#
+# The page carries things the canonical text does not and should not: the
+# masthead, the contents index, the colophon, the evidence list, the machine
+# section. Comparing everything would report sixty-nine differences, of which
+# none is a defect, and a check that cries that loudly is one people learn to
+# skip.
+#
+# So the reverse pass drops exactly what the FORWARD pass already drops on the
+# other side — fenced code, tables, headings — plus the two sections and the few
+# chrome elements that exist only on the page. Symmetry is the rule: anything
+# `md_blocks` refuses to look at, this refuses to look at too.
+# ---------------------------------------------------------------------------
+PAGE_ONLY = [
+    (r'<section id="notes".*?</section>', "the evidence list"),
+    (r'<section id="machines".*?</section>', "the machine-readable section"),
+    (r'<pre\b.*?</pre>', "code blocks — fenced in the canonical text"),
+    (r'<table\b.*?</table>', "tables — skipped by md_blocks"),
+    (r'<h[1-6]\b[^>]*>.*?</h[1-6]>', "headings — skipped by md_blocks"),
+    (r'<figcaption\b.*?</figcaption>', "figure and terminal captions"),
+    (r'<p class="eyebrow"[^>]*>.*?</p>', "the section index"),
+    (r'<blockquote class="q q--final">.*?</blockquote>', "the closing pull-quote"),
+    (r'<p class="sign">.*?</p>', "the signature"),
+    (r'<p class="card__note">.*?</p>', "the comparison cards' labels"),
+]
+
+
+def document_body(doc: str) -> str:
+    """The part of the page that claims to render the canonical text."""
+    m = re.search(r'<main class="doc">(.*?)</main>', doc, re.S)
+    body = m.group(1) if m else doc
+    for pattern, _ in PAGE_ONLY:
+        body = re.sub(pattern, " \n ", body, flags=re.S | re.I)
+    return body
+
+
+def section_order(md: str, doc: str):
+    """The canonical `##` headings, and the page's, in the order each states them.
+
+    The forward pass proves every sentence is somewhere on the page. It cannot
+    prove they are in the same order, and on 2026-08-23 the whole assertion of
+    this document was moved to the front — had that move been made in one file and
+    not the other, every gate here would have stayed green.
+    """
+    md_heads = [normalise(h) for h in re.findall(r"^## (.+)$", md, re.M)]
+    page_heads = []
+    for raw in re.findall(r'<h2 class="sec__h">(.*?)</h2>', doc, re.S):
+        text = normalise(html.unescape(re.sub(r"<[^>]+>", "", raw))).rstrip(" □")
+        page_heads.append(text.strip())
+    # The page numbers its sections in the eyebrow, not the heading; the canonical
+    # text numbers them in the heading. Compare what both actually say.
+    md_heads = [re.sub(r"^\d+\.\s*", "", h) for h in md_heads]
+    # Sections that exist only on the page are not part of the canonical sequence.
+    page_only_headings = {"Preamble", "Evidence", "For machines"}
+    page_heads = [h for h in page_heads if h not in page_only_headings]
+    return md_heads, page_heads
+
+
 def main() -> int:
     verbose = "--verbose" in sys.argv
     rendered = page_text(PAGE.read_text(encoding="utf-8"))
@@ -96,6 +160,35 @@ def main() -> int:
     for s in missing:
         print(f"\n  MISSING: {s}")
 
+    # ---- the reverse direction ------------------------------------------
+    # Symmetric to the forward pass in both what it compares and how: a sentence
+    # against the whole canonical text, not against a set of sentences, because a
+    # reference label at a paragraph's end moves the boundary on one side only.
+    md_text = normalise(" ".join(md_blocks(MD.read_text(encoding="utf-8"))))
+    body = document_body(PAGE.read_text(encoding="utf-8"))
+    page_sentences = sentences(page_text(body))
+    uncanonical = [s for s in page_sentences if s not in md_text]
+
+    print(f"page sentences checked      : {len(page_sentences)}")
+    print(f"with no canonical source    : {len(uncanonical)}")
+    for s in uncanonical:
+        print(f"\n  NOT IN manifesto.md: {s}")
+
+    # ---- and the order ---------------------------------------------------
+    md_heads, page_heads = section_order(MD.read_text(encoding="utf-8"),
+                                         PAGE.read_text(encoding="utf-8"))
+    order_ok = md_heads == page_heads
+    print(f"section order               : {len(md_heads)} canonical / "
+          f"{len(page_heads)} on the page"
+          f" {'ok' if order_ok else 'MISMATCH'}")
+    if not order_ok:
+        for i, (a, b) in enumerate(zip(md_heads + [""] * len(page_heads),
+                                       page_heads + [""] * len(md_heads))):
+            if a != b:
+                print(f"\n  ORDER: position {i + 1} — manifesto.md says "
+                      f"{a or '(nothing)'!r}, the page says {b or '(nothing)'!r}")
+                break
+
     # The page states how many cases it carries. That number is computed here
     # rather than trusted, because the document forbids restating a figure.
     doc = PAGE.read_text(encoding="utf-8")
@@ -106,9 +199,11 @@ def main() -> int:
           f"{claimed.group(1) if claimed else '—'} / {actual}"
           f" {'ok' if counted_ok else 'MISMATCH'}")
 
-    if verbose and not missing and counted_ok:
-        print("\nindex.html carries every canonical sentence of manifesto.md.")
-    return 0 if (not missing and counted_ok) else 1
+    ok = not missing and counted_ok and not uncanonical and order_ok
+    if verbose and ok:
+        print("\nindex.html carries every canonical sentence of manifesto.md, "
+              "carries nothing else, and carries it in the same order.")
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":

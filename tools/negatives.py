@@ -102,6 +102,25 @@ def plant_stale_published_date(tree):
                     "<lastmod>2019-01-01</lastmod>")
 
 
+def plant_swapped_sections(tree):
+    """Swap two section headings on the page, leaving the canonical text alone.
+
+    The forward pass cannot see this: every sentence is still present, just in a
+    different place. On 2026-08-23 the document's whole assertion moved to the
+    front, and had that move landed in one file and not the other, every gate here
+    would have stayed green.
+    """
+    p = tree / "index.html"
+    before = p.read_text(encoding="utf-8")
+    a = '<h2 class="sec__h">The three graphs '
+    b = '<h2 class="sec__h">Bounded autonomy '
+    if a not in before or b not in before:
+        return p, before, before
+    after = before.replace(a, "@@SWAP@@", 1).replace(b, a, 1).replace("@@SWAP@@", b, 1)
+    p.write_text(after, encoding="utf-8")
+    return p, before, after
+
+
 def plant_version_ahead_of_tag(tree):
     """Tag v1.0, then bump every stated version to 9.9 — consistently.
 
@@ -230,6 +249,23 @@ CASES = [
         gate=["tools/stamp-dates.py", "--check"],
         expect=r"STALE",
         plant=plant_stale_published_date,
+    ),
+    dict(
+        name="parity: the page grows a paragraph the canonical text never had",
+        gate=["tools/check-parity.py", "--verbose"],
+        expect=r"with no canonical source\s*:\s*[1-9]",
+        plant=lambda t: replace_once(
+            t, "index.html",
+            '<section id="learns" class="sec reveal">',
+            '<section id="learns" class="sec reveal">\n  <p>This paragraph exists only on '
+            'the page and in no canonical source, which is the state the reverse pass was '
+            'built to refuse.</p>'),
+    ),
+    dict(
+        name="parity: the page states the sections in a different order",
+        gate=["tools/check-parity.py", "--verbose"],
+        expect=r"section order.*MISMATCH|ORDER: position",
+        plant=plant_swapped_sections,
     ),
     # ---- check-version ---------------------------------------------------
     # The version is written in nine places. Nine chances for eight to be right.
