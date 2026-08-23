@@ -837,8 +837,15 @@ support. Tests pass.</code></pre>
      and on 2026-08-23 the served HTML was byte-identical to the file in git — a
      dashboard reporting green over a measurement that was not being taken. The
      one third-party request this page makes; `check-live.py` fails if a reader
-     stops receiving it. -->
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+     stops receiving it.
+
+     `type="module"`, matching the edge's own snippet exactly, and that is the
+     point rather than a style choice: the zone's automatic injection cannot be
+     switched off through Cloudflare's API, and it intermittently adds a second
+     tag. Two module scripts with the same URL are evaluated once — the module map
+     is keyed by URL — so the duplicate collapses instead of counting every visit
+     twice. A classic `defer` tag beside a module tag would not. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
         data-cf-beacon='{"token": "38fa6644fa464c828f166e4bd95a4efc"}'></script>
 </body>
 </html>

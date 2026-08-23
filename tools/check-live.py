@@ -67,20 +67,37 @@ BEACON_TAG = re.compile(
 
 
 def beacon_count(page: str) -> int:
-    """How many analytics beacons the reader actually received.
-
-    Exactly one is the answer. Zero means nothing is counted. Two means every
-    visit is counted twice, and a number that is wrong by a factor is worse than
-    no number, because it will be believed.
-
-    Two can happen here without anyone editing the page: the zone's Web Analytics
-    is bound to the zone with automatic injection, which Cloudflare's API refuses
-    to switch off (`autoInstallRequired`), and the edge intermittently adds its own
-    tag on top of the one in the file. Observed on 2026-08-23: the served page was
-    359 bytes larger than the committed one for one deploy and identical for the
-    next.
-    """
+    """How many beacon tags the served page carries."""
     return len(BEACON_TAG.findall(page))
+
+
+def beacon_executions(page: str):
+    """How many times the beacon will actually run, and why.
+
+    Tags are not executions. The zone's Web Analytics is bound to the zone with
+    automatic injection, which Cloudflare's API refuses to switch off
+    (`autoInstallRequired`), and the edge intermittently adds its own tag on top of
+    the one in this file — observed 2026-08-23, one deploy 359 bytes larger than
+    the committed page and the next identical.
+
+    A duplicate is harmless when both tags are `type="module"` with the same URL:
+    the module map is keyed by URL, so the module is evaluated once. Measured in
+    Chrome on 2026-08-23 with the tag deliberately doubled — one GET for
+    beacon.min.js, one POST to cdn-cgi/rum. A classic script beside a module is two
+    evaluations and every visit counted twice, which is worse than counting none,
+    because a number wrong by a factor will be believed.
+
+    Returns (executions, reason).
+    """
+    tags = BEACON_TAG.findall(page)
+    if not tags:
+        return 0, "no beacon in the served page"
+    modules = [x for x in tags if 'type="module"' in x or "type='module'" in x]
+    srcs = {re.search(r'src="([^"]+)"', x).group(1) for x in tags}
+    if len(modules) == len(tags) and len(srcs) == 1:
+        return 1, f"{len(tags)} tag(s), all modules on one URL — evaluated once"
+    return len(tags), (f"{len(tags)} tag(s), {len(modules)} of them modules, "
+                       f"{len(srcs)} distinct URL(s) — they do not collapse")
 
 
 def beacon_present(page: str) -> bool:
@@ -126,8 +143,12 @@ def self_test() -> int:
     plain = ('<link rel="stylesheet" href="/assets/style.css?v=1">'
              '<a href="https://github.com/ssheleg/pod-manifesto">Source</a>'
              '<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>')
-    with_beacon = (plain + '<script defer src="https://static.cloudflareinsights.com/'
+    # The tag as the page actually carries it: a module, so a duplicate collapses.
+    with_beacon = (plain + '<script type="module" src="https://static.cloudflareinsights.com/'
                    'beacon.min.js" data-cf-beacon=\'{"token": "x"}\'></script>')
+    # And the shape that does not collapse, for the rule that must tell them apart.
+    with_classic = (plain + '<script defer src="https://static.cloudflareinsights.com/'
+                    'beacon.min.js" data-cf-beacon=\'{"token": "x"}\'></script>')
     cloudflare = (b"# BEGIN Cloudflare Managed content\n\n"
                   b"User-agent: *\n"
                   b"Content-Signal: search=yes,ai-train=no,use=reference\n"
@@ -161,8 +182,16 @@ def self_test() -> int:
          lambda: beacon_count(with_beacon) == 1),
         ("a page without the beacon counts none",
          lambda: beacon_count(plain) == 0),
-        ("an edge-injected second beacon is counted, not absorbed",
+        ("two tags are two tags",
          lambda: beacon_count(with_beacon + with_beacon) == 2),
+        ("but two identical module tags evaluate once",
+         lambda: beacon_executions(with_beacon + with_beacon)[0] == 1),
+        ("a classic script beside a module does not collapse",
+         lambda: beacon_executions(with_beacon + with_classic)[0] == 2),
+        ("no beacon is no execution",
+         lambda: beacon_executions(plain)[0] == 0),
+        ("this repository's own page runs it once",
+         lambda: beacon_executions(local_page)[0] == 1),
         ("removing the beacons leaves the document itself",
          lambda: without_beacon(with_beacon) == without_beacon(plain) == plain),
         ("a hyperlink to another host is not a request",
@@ -293,10 +322,8 @@ def main() -> int:
     # file in git: the beacon never reached a reader and the dashboard said nothing
     # was wrong. Configuration is not measurement. The snippet is in the page now,
     # and this is the check that it stays there.
-    n = beacon_count(page)
-    check("exactly one analytics beacon reaches the reader", n == 1,
-          "none — nothing is being counted" if n == 0 else
-          f"{n} — every visit is counted {n} times; the edge injected one on top of the file's")
+    runs, why = beacon_executions(page)
+    check("the analytics beacon runs exactly once per visit", runs == 1, why)
 
     foreign = off_origin(page)
     check("the beacon is the only off-origin request",
