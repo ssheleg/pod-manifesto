@@ -241,6 +241,117 @@ def row_state(text, row_id):
     return None
 
 
+
+# ── the figures that characterise pinned evidence ────────────────────────────
+# A permalink at a fixed SHA cannot rot: the evidence is frozen. What CAN rot is the
+# other direction -- the prose is reworded and the FIGURE moves while the link stays,
+# so the document drifts from evidence it still points at. `CLAIMS` cannot express
+# that: it compares a *state* in another repository against what this page says it is,
+# and a pinned range has no current state to compare.
+#
+# Registered 2026-08-24 from `sshlg-skills` PM-07: the page characterised nine cases
+# and one of them was registered. The other eight had been re-verified by hand on
+# 2026-08-20 and were correct, which is exactly the shape the tool was built for -- a
+# resolving citation nobody re-reads. Each row below names the string in the pinned
+# range that carries the figure, so the check is a comparison rather than a reading.
+FIGURES = [
+    {"id": "e1-monitor-elapsed",
+     "figure": "more than 3 minutes",
+     "pinned": ("ssheleg/task-pipeline",
+                "f0402c22b147d6d143c55833ef906fb817972ab9",
+                "plugins/task-pipeline/skills/task-pipeline/references/residue.md"),
+     "supports": "03:12",
+     "where": ["manifesto.md"]},
+    {"id": "e2-pass6-selfinflicted",
+     "figure": "10 of 13",
+     "pinned": ("ssheleg/task-pipeline",
+                "17ef1a6346384094455ae3fa0ffadf790b586d83",
+                "plugins/task-pipeline/skills/task-pipeline/references/audit.md"),
+     "supports": "| 6 | 13 | 10 |",
+     "where": ["manifesto.md"]},
+    {"id": "e2-pass7-selfinflicted",
+     "figure": "4 of 19",
+     "pinned": ("ssheleg/task-pipeline",
+                "17ef1a6346384094455ae3fa0ffadf790b586d83",
+                "plugins/task-pipeline/skills/task-pipeline/references/audit.md"),
+     "supports": "| 7 | 19 | 4 |",
+     "where": ["manifesto.md"]},
+    {"id": "e4-foreign-containers",
+     "figure": "18 containers",
+     "pinned": ("ssheleg/task-pipeline",
+                "f0402c22b147d6d143c55833ef906fb817972ab9",
+                "plugins/task-pipeline/skills/task-pipeline/references/residue.md"),
+     "supports": "18 running",
+     "where": ["manifesto.md"]},
+    {"id": "e4-oldest-container",
+     "figure": "3 days",
+     "pinned": ("ssheleg/task-pipeline",
+                "f0402c22b147d6d143c55833ef906fb817972ab9",
+                "plugins/task-pipeline/skills/task-pipeline/references/residue.md"),
+     "supports": "oldest 3 days",
+     "where": ["manifesto.md"]},
+    {"id": "e3-one-command",
+     "figure": "one command",
+     "pinned": ("ssheleg/sshlg-skills",
+                "b01050170cf8c2a7ee56f645e2d01e87cf3b0d17",
+                "README.md"),
+     "supports": "one command",
+     "where": ["manifesto.md"]},
+]
+
+
+def figure_verdict(page_text, pinned_body, figure, supports):
+    """The decision, with no network in it — `[]` when both halves hold.
+
+    Pure so the plants can feed it, which is the whole reason it is a function: a rule
+    whose decision exists only inside a fetch loop can be watched failing only by
+    taking the network away, and that proves the fetch rather than the rule.
+
+    `pinned_body is None` is not a verdict. It means the check could not look, and the
+    caller reports that as unlooked instead of folding it into either answer — an
+    unreachable pin is not evidence that the figure is wrong, and it is not evidence
+    that it is right.
+    """
+    out = []
+    if figure not in page_text:
+        out.append("dropped-from-page")
+    if pinned_body is not None and supports not in pinned_body:
+        out.append("unsupported-by-pinned-evidence")
+    return out
+
+def check_figures(token, verbose=False):
+    """Every registered figure is in the page AND carried by the range it cites.
+
+    Two halves, because either alone is satisfiable while the pair is false: a figure
+    the page dropped is a registration nothing reads, and a figure the pinned evidence
+    does not carry is a characterisation of something else. The decision itself is
+    `figure_verdict`, which has no network in it.
+    """
+    problems, unlooked = [], []
+    for fig in FIGURES:
+        body, why = fetch(*fig["pinned"], token)
+        if body is None:
+            unlooked.append(
+                f"{fig['id']}: {fig['pinned'][0]}@{fig['pinned'][1][:7]} -- {why}")
+        for surface in fig["where"]:
+            text = (ROOT / surface).read_text(encoding="utf-8")
+            verdict = figure_verdict(text, body, fig["figure"], fig["supports"])
+            for kind in verdict:
+                if kind == "dropped-from-page":
+                    problems.append(
+                        f"{surface}: registered figure {fig['figure']!r} ({fig['id']}) "
+                        f"is no longer in the file -- a figure the page dropped is a "
+                        f"registration nothing reads")
+                else:
+                    problems.append(
+                        f"{fig['id']}: the pinned range at {fig['pinned'][0]}@"
+                        f"{fig['pinned'][1][:7]} no longer carries {fig['supports']!r}, "
+                        f"which is what makes {fig['figure']!r} a measurement rather "
+                        f"than a memory")
+            if not verdict and body is not None and verbose:
+                print(f"  {fig['id']}: {fig['figure']!r} carried by "
+                      f"{fig['supports']!r} at {fig['pinned'][1][:7]} — as printed")
+    return problems, unlooked
 def check(verbose=False):
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
     problems, unlooked = [], []
@@ -300,6 +411,9 @@ def check(verbose=False):
         print(f"\nCould not look at {len(unlooked)} claim(s). Not a pass.")
         return 2
     iv_problems, iv_unlooked = check_intervals(token, verbose)
+    fg_problems, fg_unlooked = check_figures(token, verbose)
+    iv_problems += fg_problems
+    iv_unlooked += fg_unlooked
     for u in iv_unlooked:
         print(f"  unlooked: {u}")
     for pr in iv_problems:
@@ -350,6 +464,25 @@ PLANTS = [
      lambda: render_interval(2 * 86400 + 6 * 3600 + 3599) == "two days and six hours"),
     ("a sub-day interval rendered as days",
      lambda: render_interval(5 * 3600) == "five hours"),
+    # `figure_verdict`, fed offline. Each case is one half of the pair, plus the two
+    # readings that must NOT be verdicts: a figure both halves support, and a pin the
+    # check could not reach. The last one is the reason `pinned_body is None` is
+    # handled rather than defaulted -- an unreachable pin is not evidence either way,
+    # and a rule that treated it as agreement would pass hardest exactly when it saw
+    # least.
+    ("a figure the page has dropped",
+     lambda: figure_verdict("nothing here", "carries 03:12", "3 minutes", "03:12")
+     == ["dropped-from-page"]),
+    ("a figure the pinned evidence does not carry",
+     lambda: figure_verdict("says 3 minutes", "no such string", "3 minutes", "03:12")
+     == ["unsupported-by-pinned-evidence"]),
+    ("both halves broken at once",
+     lambda: figure_verdict("nothing", "nothing", "3 minutes", "03:12")
+     == ["dropped-from-page", "unsupported-by-pinned-evidence"]),
+    ("a figure both halves support",
+     lambda: figure_verdict("says 3 minutes", "carries 03:12", "3 minutes", "03:12") == []),
+    ("a pin the check could not reach is not a verdict",
+     lambda: figure_verdict("says 3 minutes", None, "3 minutes", "03:12") == []),
     ("the interval this document actually prints",
      lambda: render_interval(195714) == "two days and six hours"),
     ("a singular hour printed as a plural",
