@@ -122,7 +122,7 @@ def plant_swapped_sections(tree):
 
 
 def plant_version_ahead_of_tag(tree):
-    """Tag v1.0, then bump every stated version to 9.9 — consistently.
+    """Tag the current release, then bump every stated version to 9.9 consistently.
 
     The interesting failure is not two files disagreeing; that is the case above.
     It is the whole document agreeing on a version no tag carries, because then
@@ -138,7 +138,10 @@ def plant_version_ahead_of_tag(tree):
     git("init", "-q")
     git("add", "-A")
     git("commit", "-q", "-m", "baseline")
-    git("tag", "v1.0")
+    changelog = (tree / "CHANGELOG.md").read_text(encoding="utf-8")
+    current_match = re.search(r"^## v([0-9]+\.[0-9]+)(?:\s*[—:]\s*)", changelog, re.M)
+    current = current_match.group(1) if current_match else "1.0"
+    git("tag", f"v{current}")
 
     changed, first = 0, None
     for rel in ("index.html", "llms.txt", "CHANGELOG.md", "README.md"):
@@ -146,13 +149,14 @@ def plant_version_ahead_of_tag(tree):
         if not p.exists():
             continue
         before = p.read_text(encoding="utf-8")
-        after = (before.replace('"version": "1.0"', '"version": "9.9"')
-                       .replace('topbar__ver">v1.0<', 'topbar__ver">v9.9<')
-                       .replace("<dt>Version</dt><dd>1.0</dd>", "<dt>Version</dt><dd>9.9</dd>")
-                       .replace("POD/001 &#183; v1.0", "POD/001 &#183; v9.9")
-                       .replace("Version 1.0,", "Version 9.9,")
-                       .replace("## v1.0 — ", "## v9.9 — ")
-                       .replace("blob/v1.0/", "blob/v9.9/"))
+        after = (before.replace(f'"version": "{current}"', '"version": "9.9"')
+                       .replace(f'topbar__ver">v{current}<', 'topbar__ver">v9.9<')
+                       .replace(f"<dt>Version</dt><dd>{current}</dd>", "<dt>Version</dt><dd>9.9</dd>")
+                       .replace(f"POD/001 &#183; v{current}", "POD/001 &#183; v9.9")
+                       .replace(f"Version {current},", "Version 9.9,")
+                       .replace(f"## v{current} — ", "## v9.9 — ")
+                       .replace(f"## v{current}: ", "## v9.9: ")
+                       .replace(f"blob/v{current}/", "blob/v9.9/"))
         if after != before:
             p.write_text(after, encoding="utf-8")
             changed += 1
@@ -273,9 +277,10 @@ CASES = [
         name="version: one of the nine statements of the version disagrees",
         gate=["tools/check-version.py"],
         expect=r"every stated version agrees|do not agree",
-        plant=lambda t: replace_once(t, "index.html",
-                                     '<dt>Version</dt><dd>1.0</dd>',
-                                     '<dt>Version</dt><dd>1.1</dd>'),
+        plant=lambda t: sub_once(
+            t, "index.html",
+            r'(<dt>Version</dt><dd>)[0-9]+\.[0-9]+(</dd>)',
+            r'\g<1>9.8\g<2>'),
     ),
     dict(
         name="version: every statement agrees, and none of them is the tag",

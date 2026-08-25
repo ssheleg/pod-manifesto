@@ -32,8 +32,8 @@ FONTS = ROOT / "assets" / "fonts" / "fonts.css"
 # Two holes were measured on 2026-08-20 and closed here, because the README
 # described this gate as covering "every asset URL":
 #
-#   1. `og.png` is referenced three times as an ABSOLUTE url
-#      (https://podmanifesto.org/og.png — og:image and twitter:image require it),
+#   1. `assets/og.png` is referenced three times as an ABSOLUTE url
+#      (https://podmanifesto.org/assets/og.png — og:image and twitter:image require it),
 #      and the root-relative pattern never matched it. A changed preview image
 #      would have kept its url forever.
 #   2. `fonts.css` carries its own four `url()` references. Its hash covers the
@@ -48,7 +48,7 @@ REF = re.compile(
     r'(?P<attr>href|src|content)="(?P<origin>https://podmanifesto\.org)?'
     r'(?P<url>/(?:assets/[^"?]+|favicon\.svg|og\.png))(?:\?v=[0-9a-f]+)?"'
 )
-# "image": "https://podmanifesto.org/og.png" inside the JSON-LD block — a
+# "image": "https://podmanifesto.org/assets/og.png" inside the JSON-LD block — a
 # crawler fetches it like any other asset, so it carries a fingerprint too.
 JSONLD_REF = re.compile(
     r'(?P<attr>"image":\s*")(?P<origin>https://podmanifesto\.org)'

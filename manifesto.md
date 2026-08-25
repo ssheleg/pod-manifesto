@@ -1,6 +1,6 @@
 # Proof of Done: The Agentic Software Development Manifesto
 
-**A foundation for building software when agents write the code.**
+**The standard for building software with AI agents.**
 
 The task inventory was empty. The process was still running. I found this during a real agent run (not a simulation arranged to make the point): a monitor had been started to poll a remote check, the harness reported `No tasks found` one minute later, and the operating system still showed the poller alive more than 3 minutes after it started. Both observations were accurate. They were simply observations of different things. [E1](https://github.com/ssheleg/task-pipeline/blob/f0402c22b147d6d143c55833ef906fb817972ab9/plugins/task-pipeline/skills/task-pipeline/references/residue.md#L28-L62)
 

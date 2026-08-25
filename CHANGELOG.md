@@ -12,8 +12,20 @@ document are not, and are not listed.
 Every released version is a git tag. The tag is the citable address:
 
 ```
-https://github.com/ssheleg/pod-manifesto/blob/v1.0/manifesto.md
+https://github.com/ssheleg/pod-manifesto/blob/v1.1/manifesto.md
 ```
+
+---
+
+## v1.1: 2026-08-25
+
+The positioning line now names what the manifesto is for: **The standard for building
+software with AI agents.** It replaces "A foundation for building software when agents
+write the code."
+
+No protocol, definition, belief or engineering requirement changed. This release changes
+one canonical line so the manifesto, its site, repository and social preview introduce the
+same thing in the same words.
 
 ---
 

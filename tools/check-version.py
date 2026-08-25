@@ -36,7 +36,7 @@ PATTERNS = [
     (r'<dt>Version</dt><dd>([0-9]+\.[0-9]+)</dd>', "a Version row"),
     (r'POD/001 &#183; v([0-9]+\.[0-9]+)', "a POD/001 signature"),
     (r'\bVersion ([0-9]+\.[0-9]+),', "a prose 'Version N.N,'"),
-    (r'^## v([0-9]+\.[0-9]+) — ', "the changelog's newest entry"),
+    (r'^## v([0-9]+\.[0-9]+)(?:\s*[—:]\s*)', "the changelog's newest entry"),
 ]
 FILES = ["index.html", "404.html", "llms.txt", "CHANGELOG.md", "README.md"]
 
@@ -74,7 +74,13 @@ def main() -> int:
             continue
         text = path.read_text(encoding="utf-8")
         for pattern, label in PATTERNS:
-            for m in re.finditer(pattern, text, re.M):
+            matches = list(re.finditer(pattern, text, re.M))
+            # A changelog contains every released version. Only the first
+            # version heading is the current one; scanning all headings made
+            # the version gate reject the second release by construction.
+            if label == "the changelog's newest entry":
+                matches = matches[:1]
+            for m in matches:
                 line = text.count("\n", 0, m.start()) + 1
                 found.append((m.group(1), f"{rel}:{line} ({label})"))
                 if verbose:

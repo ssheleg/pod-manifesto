@@ -254,10 +254,10 @@ p code, li code, td code, dd code {
 .masthead__sub {
   font-family: var(--mono);
   font-size: clamp(.9rem, 2.2vw, 1.15rem);
-  letter-spacing: .08em;
+  letter-spacing: .02em;
   color: var(--ink-2);
   margin: .35rem 0 0;
-  text-transform: uppercase;
+  text-transform: none;
 }
 .masthead__lede {
   font-size: clamp(1.05rem, 2.2vw, 1.25rem);

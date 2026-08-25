@@ -15,12 +15,21 @@
   <link href="https://podmanifesto.org/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="https://podmanifesto.org/" rel="alternate" type="text/html"/>
   <id>https://podmanifesto.org/</id>
-  <updated>2026-08-23T00:00:00Z</updated>
+  <updated>2026-08-25T00:00:00Z</updated>
   <author>
     <name>Sergey Sheleg</name>
     <uri>https://github.com/ssheleg</uri>
   </author>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
+
+  <entry>
+    <title>v1.1: one line for what the manifesto is for</title>
+    <link href="https://podmanifesto.org/" rel="alternate" type="text/html"/>
+    <id>tag:podmanifesto.org,2026:v1.1</id>
+    <updated>2026-08-25T00:00:00Z</updated>
+    <published>2026-08-25T00:00:00Z</published>
+    <summary type="text">The positioning line is now "The standard for building software with AI agents." It replaces "A foundation for building software when agents write the code." No protocol, definition, belief or engineering requirement changed. The frozen text: https://github.com/ssheleg/pod-manifesto/blob/v1.1/manifesto.md</summary>
+  </entry>
 
   <entry>
     <title>v1.0 — the first public release</title>

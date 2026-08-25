@@ -1,11 +1,11 @@
 # Proof of Done: The Agentic Software Development Manifesto
 
-> A foundation for building software when agents write the code. Proof of Done requires
+> The standard for building software with AI agents. Proof of Done requires
 > every completion claim between an intended outcome and an accepted result to point to
 > its supporting record at an address another actor can resolve; if the address does not
 > resolve, the claim is not proven.
 
-Author: Sergey Sheleg (Siarhei Sheleh). Version 1.0, published 2026-08-17, last modified 2026-08-25.
+Author: Sergey Sheleg (Siarhei Sheleh). Version 1.1, published 2026-08-17, last modified 2026-08-25.
 Canonical URL: https://podmanifesto.org/
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — attribution and link required.
 
@@ -66,9 +66,9 @@ An agent should not return `done` without these four fields:
 
 ## How to cite
 
-Sheleg, Sergey (Siarhei Sheleh). *Proof of Done: The Agentic Software Development Manifesto.* Version 1.0, 2026. https://podmanifesto.org/
+Sheleg, Sergey (Siarhei Sheleh). *Proof of Done: The Agentic Software Development Manifesto.* Version 1.1, 2026. https://podmanifesto.org/
 
-The text of that version, frozen: https://github.com/ssheleg/pod-manifesto/blob/v1.0/manifesto.md
+The text of that version, frozen: https://github.com/ssheleg/pod-manifesto/blob/v1.1/manifesto.md
 Quote the tag rather than the live page if the quotation has to stay reachable — the live page moves with the version, the tag does not. What changes and when: https://github.com/ssheleg/pod-manifesto/blob/main/CHANGELOG.md
 
 ## Disagreeing with it

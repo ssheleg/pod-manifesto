@@ -1,6 +1,8 @@
 # Proof of Done: The Agentic Software Development Manifesto
 
-**A foundation for building software when agents write the code.**
+![Proof of Done. The standard for building software with AI agents.](assets/og.png)
+
+**The standard for building software with AI agents.**
 
 > When agents write the code, done is not the last message of the run.
 > Done is a state of the system that can be proven.
@@ -137,7 +139,7 @@ The live page moves with the version; the tag does not. If a quotation has to st
 reachable, cite the tag:
 
 ```
-https://github.com/ssheleg/pod-manifesto/blob/v1.0/manifesto.md
+https://github.com/ssheleg/pod-manifesto/blob/v1.1/manifesto.md
 ```
 
 The canonical text does not change without a new version and an entry in

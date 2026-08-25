@@ -29,7 +29,7 @@ not evidence in either direction.
 
 **Open an issue.** One objection per issue, naming the section. `manifesto.md` line numbers
 move between versions — quote the sentence instead, or cite the tag:
-`https://github.com/ssheleg/pod-manifesto/blob/v1.0/manifesto.md`.
+`https://github.com/ssheleg/pod-manifesto/blob/v1.1/manifesto.md`.
 
 A pull request against the canonical text is welcome for a factual error, a broken
 reference, a number that no longer computes, or a typo. For an argument, open the issue
@@ -42,7 +42,7 @@ There are none yet, and the licence permits them: CC BY 4.0, attribution and a l
 If you translate it, open an issue with the address and it will be linked from here and
 from the document. Two requests, both from the text's own doctrine: translate the canonical
 sentences rather than a summary of them, and state the version you translated — a
-translation of v1.0 stays a translation of v1.0 after this document reaches v1.1.
+translation of v1.1 stays a translation of v1.1 after this document reaches v1.2.
 
 ## The site and the tooling
 
