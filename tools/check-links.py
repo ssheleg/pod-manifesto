@@ -23,6 +23,7 @@ Exit:   0 = every reference resolved
 """
 
 import base64
+import html
 import json
 import os
 import re
@@ -175,9 +176,21 @@ def check(url):
 
 
 def collect():
+    """Every URL published here, as the reader's browser will resolve it.
+
+    HTML escapes `&` inside an attribute, so a two-parameter query is written
+    `?a=1&amp;b=2` in the source and read as `?a=1&b=2` by every browser. Scraped
+    raw, the second parameter becomes one called `amp;b` — and the checker then
+    verifies an address nobody will ever request. It happened to return 200 for
+    the first such link added here, which is the worst way for it to be wrong: a
+    green over the wrong subject, which is the failure this file's docstring opens
+    on. Unescaped first, so what is checked is what is served.
+    """
     found = {}
     for name in SOURCES:
         text = (ROOT / name).read_text(encoding="utf-8")
+        if name.endswith((".html", ".xml")):
+            text = html.unescape(text)
         for url in re.findall(r'https?://[^\s"\'<>)\]]+', text):
             found.setdefault(url.rstrip(".,;"), set()).add(name)
     return found

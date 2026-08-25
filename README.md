@@ -82,7 +82,7 @@ python3 tools/check-render.py             # the properties only a browser can se
 python3 tools/check-live.py               # the PUBLISHED site matches this repository — the served
                                           # robots.txt, the deployed bytes, every asset, the 404.
                                           # `--self-test` runs its rules offline against planted cases
-python3 tools/negatives.py                # 23 planted defects across the 12 gates that read this
+python3 tools/negatives.py                # 25 planted defects across the 12 gates that read this
                                           # tree, each required to refuse its own; a green nobody
                                           # watched fail is not evidence. `check-live.py` is the
                                           # thirteenth and is not in here — its subject is the live

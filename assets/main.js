@@ -164,6 +164,39 @@
     targets.forEach(function (el) { spy.observe(el); });
   }
 
+  /* ── the follow button opens X's own dialog ──────────────────────────── */
+  /* The href is a complete intent URL and needs nothing from this file: with no
+     script it opens in a new tab and works. With script it opens in a sized
+     window instead — what X's own widget does — so the document the reader was
+     in the middle of stays where they left it.
+
+     Two things this deliberately does not do: it does not swallow a click the
+     reader modified (⌘, ctrl, shift, middle button all still mean "open it your
+     way"), and it does not preventDefault until `window.open` has actually
+     returned a window. A popup blocker that refuses silently would otherwise
+     leave the button doing nothing at all, which is worse than a new tab. */
+
+  var follow = document.querySelector('[data-x-intent]');
+  if (follow) {
+    follow.addEventListener('click', function (e) {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      var w = 560, h = 640;
+      var dualLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+      var dualTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+      var vw = window.innerWidth || document.documentElement.clientWidth || screen.width;
+      var vh = window.innerHeight || document.documentElement.clientHeight || screen.height;
+
+      var opened = window.open(
+        follow.href, 'x-intent-follow',
+        'popup=1,noopener,width=' + w + ',height=' + h +
+        ',left=' + Math.max(0, Math.round((vw - w) / 2 + dualLeft)) +
+        ',top=' + Math.max(0, Math.round((vh - h) / 2 + dualTop)));
+
+      if (opened) e.preventDefault();
+    });
+  }
+
   /* ── the contents panel: open on wide screens, collapsed on narrow ───── */
 
   var wrap = document.querySelector('.toc__wrap');

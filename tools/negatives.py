@@ -350,6 +350,15 @@ CASES = [
         plant=lambda t: sub_once(t, "manifesto.md", r"backlog\.md#L21-L22", "backlog.md#L9021-L9022"),
     ),
     dict(
+        name="links: an npm package that was never published",
+        gate=["tools/check-links.py"],
+        expect=r"unresolved|from the registry",
+        network=True,
+        plant=lambda t: replace_once(t, "index.html",
+                                     "https://www.npmjs.com/package/sshlg-skills",
+                                     "https://www.npmjs.com/package/sshlg-skills-not-a-real-pkg-9x7"),
+    ),
+    dict(
         name="currency: the document claims a state the row no longer has",
         gate=["tools/check-currency.py", "--verbose"],
         expect=r"STALE|stale",
