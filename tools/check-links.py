@@ -108,6 +108,34 @@ def check_github(url):
     return None, ""      # some other github.com URL — fall through to plain HTTP
 
 
+def check_npm(url):
+    """Resolve an npm package page through the registry, not the website.
+
+    The same shape as the github.com problem this file already solves one function
+    up: `npmjs.com/package/<name>` answers a scripted GET with 403 whether or not
+    the package exists, so a plain fetch measures the bot filter rather than the
+    reference. `registry.npmjs.org/<name>` is the address the package actually
+    lives at — it is what `npx` resolves against — and it answers 404 for a name
+    that is not published.
+    """
+    m = re.match(r"https://www\.npmjs\.com/package/([^/?#]+)", url)
+    if not m:
+        return None, ""
+    name = m.group(1)
+    req = urllib.request.Request(f"https://registry.npmjs.org/{name}",
+                                 headers=UA, method="GET")
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+            data = json.load(r)
+    except urllib.error.HTTPError as e:
+        return False, f"HTTP {e.code} from the registry"
+    except Exception as e:                                 # noqa: BLE001
+        return False, type(e).__name__
+    if data.get("name") != name:
+        return False, f"the registry serves {data.get('name')!r} at that name"
+    return True, f"ok ({len(data.get('versions', {}))} versions published)"
+
+
 def check_plain(url):
     req = urllib.request.Request(url, headers=UA, method="GET")
     for attempt in range(3):
@@ -137,6 +165,10 @@ def check(url):
         return here, "local file" if here else "MISSING FILE"
     if url.startswith("https://github.com/"):
         ok, note = check_github(url)
+        if ok is not None:
+            return ok, note
+    if url.startswith("https://www.npmjs.com/package/"):
+        ok, note = check_npm(url)
         if ok is not None:
             return ok, note
     return check_plain(url)
