@@ -28,6 +28,12 @@
 <meta name="twitter:image" content="https://podmanifesto.org/og.png?v=f2076ede00">
 
 <link rel="icon" href="/favicon.svg?v=d79f4d92bc" type="image/svg+xml">
+<!-- The same turnstile as a raster, for the surfaces that will not take an SVG:
+     older browsers' icon slot, and iOS, which crops a home-screen icon to its own
+     shape and wants an opaque square. Both are the brand rust #9a3f28 on paper —
+     the SVG is the one that also has a dark-surface variant, because it can. -->
+<link rel="icon" href="/assets/logo-512.png?v=6f076cb47f" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=0c3fcd32fb">
 <link rel="alternate" type="text/markdown" href="/manifesto.md" title="Proof of Done — full text in Markdown">
 <link rel="alternate" type="application/atom+xml" href="/feed.xml" title="Proof of Done — versions of the canonical text">
 <link rel="preload" href="/assets/fonts/geist-latin.woff2?v=9b6f5ff45b" as="font" type="font/woff2" crossorigin>
