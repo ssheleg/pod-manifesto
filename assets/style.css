@@ -29,7 +29,14 @@
   --sans: "Geist", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
           "Helvetica Neue", Arial, sans-serif;
 
-  --measure: 68ch;
+  /* 60ch, not 68. Measured on the live page: 17px Geist across 68 characters is
+     766px of travel per line, and the family's own packs cluster their prose at
+     60-64ch — `almanac`, whose register is literally "a manifesto page", sets 62.
+     At 19px the same 60 characters occupy 756px, so the column geometry barely
+     moves while the line carries eight fewer characters and the type is 12%
+     larger. Both axes improve at once; raising the size alone would have made the
+     line LONGER, because this token is in `ch`. */
+  --measure: 60ch;
   --shell: 1180px;
   --radius: 3px;
 
@@ -111,12 +118,26 @@ body {
   background-size: 26px 26px;
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 17px;
-  line-height: 1.68;
+  /* A 7,000-word document read start to finish, not a dashboard. The pack corpus
+     does not govern this number — none of its thirty-four is a long-read surface,
+     and the manifesto-register one sets 16px for a landing page. This is argued
+     from the surface instead, and said so rather than dressed as doctrine. */
+  font-size: 19px;
+  line-height: 1.65;
   font-kerning: normal;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   overflow-wrap: break-word;
+}
+
+/* A phone never had the room the desktop was not using. At 390px the shell
+   leaves a 358px column, which 19px Geist fills with 28 characters — short of the
+   35 a line needs to read. The step returns the narrow viewport to the size it
+   already had and keeps the gain where there is width to spend. A discrete step,
+   not a fluid clamp: the body size is a decision, and a decision should not slide
+   continuously with the window. */
+@media (max-width: 560px) {
+  body { font-size: 17px; }
 }
 
 ::selection { background: var(--sel); }
@@ -321,7 +342,7 @@ p code, li code, td code, dd code {
 .term__title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .term__body {
   margin: 0; padding: 1rem 1.1rem;
-  font-size: .82rem; line-height: 1.72;
+  font-size: .75em; line-height: 1.72;
   overflow-x: auto; color: var(--ink-2);
   tab-size: 2;
 }
@@ -426,7 +447,7 @@ p code, li code, td code, dd code {
 
 .sub {
   font-family: var(--mono);
-  font-size: 1.02rem; font-weight: 600; letter-spacing: -.005em;
+  font-size: 1.2em; font-weight: 600; letter-spacing: -.005em;
   margin: 2.9rem 0 1.1rem;
   color: var(--ink);
   display: flex; align-items: baseline; gap: .5rem;
@@ -442,7 +463,7 @@ p code, li code, td code, dd code {
 .doc p strong { color: var(--ink); font-weight: 650; }
 
 .lead {
-  font-size: clamp(1.15rem, 2.6vw, 1.4rem);
+  font-size: clamp(1.15em, 2.6vw, 1.3em);
   line-height: 1.5; color: var(--ink) !important;
   margin-bottom: 1.6rem !important;
   font-weight: 500;
@@ -462,18 +483,24 @@ p code, li code, td code, dd code {
   border-left: 2px solid var(--rule-2);
 }
 .q p {
-  margin: 0; font-size: 1.08rem; line-height: 1.5;
+  margin: 0; font-size: 1.2em; line-height: 1.5;
   color: var(--ink) !important; font-weight: 500;
 }
 .q--key { border-left-color: var(--accent); }
-.q--key p { font-family: var(--mono); font-size: 1rem; letter-spacing: -.01em; }
+.q--key p { font-family: var(--mono); font-size: 1.06em; letter-spacing: -.01em; }
 .q--final {
   border: 1px solid var(--accent-line); border-left-width: 2px; border-left-color: var(--accent);
   background: var(--accent-bg); padding: 1.5rem 1.6rem; border-radius: var(--radius);
   margin: 2.75rem 0;
 }
-.q--final p { font-family: var(--mono); font-size: clamp(1rem, 2.4vw, 1.15rem); line-height: 1.55; }
+.q--final p { font-family: var(--mono); font-size: clamp(1.02em, 2.4vw, 1.2em); line-height: 1.55; }
 
+/* Reading sizes are `em` — relative to the body — not `rem`, which is anchored to
+   the root and does not move when the body does. Raising the body from 17px to
+   19px left every one of these where it was: the subheading landed at 0.86 of the
+   text it introduces and the pull quote at 0.91, both smaller than the prose they
+   sit in. A scale written against the root is a scale that silently breaks the
+   first time the one number it should follow is changed. */
 /* lists */
 .list { margin: 0 0 1.35rem; padding: 0; list-style: none; }
 .list li {
@@ -541,7 +568,7 @@ p code, li code, td code, dd code {
 
 /* tables */
 .tablewrap { overflow-x: auto; margin: 1.75rem 0 2rem; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--panel); }
-table { border-collapse: collapse; width: 100%; font-size: .875rem; min-width: 480px; }
+table { border-collapse: collapse; width: 100%; font-size: .85em; min-width: 480px; }
 .tbl-cap {
   caption-side: top; text-align: left;
   font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;

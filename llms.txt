@@ -5,7 +5,7 @@
 > its supporting record at an address another actor can resolve; if the address does not
 > resolve, the claim is not proven.
 
-Author: Sergey Sheleg (Siarhei Sheleh). Version 1.1, published 2026-08-17, last modified 2026-08-25.
+Author: Sergey Sheleg (Siarhei Sheleh). Version 1.1, published 2026-08-17, last modified 2026-08-26.
 Canonical URL: https://podmanifesto.org/
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — attribution and link required.
 
