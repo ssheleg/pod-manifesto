@@ -304,6 +304,15 @@ CASES = [
                                  r"\g<1>2099-01-01\g<2>"),
     ),
     dict(
+        name="downloads: the window ends on a day npm has not finished counting",
+        gate=["tools/check-downloads.py"],
+        expect=r"has been counted|has not finished counting",
+        network=True,
+        plant=lambda t: sub_once(t, "index.html",
+                                 r'(<b data-installs[^>]*data-to=")\d{4}-\d{2}-\d{2}(")',
+                                 r"\g<1>2026-08-24\g<2>"),
+    ),
+    dict(
         name="downloads: the colophon drops the figure it claims to carry",
         gate=["tools/check-downloads.py"],
         expect=r"states no install figure",

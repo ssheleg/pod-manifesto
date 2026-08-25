@@ -823,6 +823,21 @@ td:first-child { color: var(--ink); }
 .installs a:hover { color: var(--accent-2); }
 .installs code { font-size: .95em; }
 
+/* The one ask on the page, and it is kept to the colophon on purpose: a founding
+   document is issued rather than marketed, so the request sits with the record
+   rather than beside the argument. */
+.cta {
+  margin: 1.6rem 0 0; padding-top: 1.2rem; border-top: 1px solid var(--rule);
+}
+.cta__k {
+  margin: 0 0 .7rem; font-family: var(--mono); font-size: .68rem;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+}
+.cta__row { display: flex; flex-wrap: wrap; gap: .6rem; }
+.cta__note {
+  margin: .9rem 0 0; font-size: .78rem; line-height: 1.6; color: var(--faint);
+}
+
 .colophon__end {
   margin: 3rem 0 0; padding-top: 1.5rem; border-top: 1px solid var(--rule);
   font-family: var(--mono); font-size: 1rem; color: var(--ink); text-align: center;

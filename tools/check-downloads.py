@@ -8,12 +8,17 @@ from an earlier report will decay. A hand-typed install count is that failure
 exactly, and a fast-moving one: it would be wrong the next morning and would go
 on looking authoritative.
 
-Two rules make the figure stable and checkable rather than merely impressive:
+Three rules make the figure stable and checkable rather than merely impressive:
 
   * **The window is closed.** It ends on a day that is over. npm reports the
     current day as a partial count — 0 for hours, then rising — so a window that
     reaches today is a number that changes under the page while nobody edits it.
     This check refuses such a window outright, before it even asks the registry.
+  * **Its last day has been counted.** Being over is not the same as being tallied:
+    on 2026-08-25 the registry still reported 0 for the 24th and 196 for the 23rd
+    against a 500-1000 trend. A window ending there would be stamped low and
+    contradicted a day later, and a gate that goes red for a reason nobody
+    remembers is a gate people switch off.
   * **The figure is a sum, not a memory.** It is fetched for that exact window
     and added up here. If the page disagrees with the registry, the page is wrong.
 
@@ -70,6 +75,21 @@ def window_is_closed(end: str, today: date) -> bool:
     return date.fromisoformat(end) < today
 
 
+def tail_has_data(points) -> bool:
+    """The last day of the window must have been counted, not merely be over.
+
+    npm finishes a day's tally some time after the day ends: on 2026-08-25 the
+    registry still reported 0 installs for the 24th and 196 for the 23rd against a
+    500-1000 trend. A window that ends on such a day looks closed and is not — the
+    figure would be stamped low and the registry would contradict it a day later,
+    turning a real gate into one that goes red for no reason anybody remembers.
+
+    For a package at this volume a zero on the final day is missing data rather
+    than a quiet day, so it is refused.
+    """
+    return bool(points) and points[-1]["downloads"] > 0
+
+
 def window_days(start: str, end: str) -> int:
     return (date.fromisoformat(end) - date.fromisoformat(start)).days + 1
 
@@ -99,6 +119,12 @@ def self_test() -> int:
          lambda: total([{"downloads": 3}, {"downloads": 4}, {"downloads": 0}]) == 7),
         ("an empty window totals nothing",
          lambda: total([]) == 0),
+        ("a counted final day is accepted",
+         lambda: tail_has_data([{"downloads": 5}, {"downloads": 533}]) is True),
+        ("a zero final day is missing data, not a quiet day",
+         lambda: tail_has_data([{"downloads": 533}, {"downloads": 0}]) is False),
+        ("no days at all is not a counted window",
+         lambda: tail_has_data([]) is False),
     ]
     bad = 0
     for name, fn in cases:
@@ -149,8 +175,13 @@ def main() -> int:
               f"not a pass\n  {e}")
         return 2
 
-    actual = total(data.get("downloads", []))
+    points = data.get("downloads", [])
+    actual = total(points)
     days = window_days(start, end)
+
+    check("the last day of the window has been counted", tail_has_data(points),
+          f"npm reports 0 installs on {end}; the registry has not finished "
+          "counting it, so this window is not closed in the way that matters")
 
     if verbose:
         live = [p for p in data.get("downloads", []) if p["downloads"]]
