@@ -1,0 +1,55 @@
+name: Objection or correction
+description: Challenge one claim, receipt, cost, or factual detail in the manifesto.
+title: "Objection: "
+body:
+  - type: markdown
+    attributes:
+      value: "A strong objection names one claim and the observation that would make it wrong."
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Which published version are you challenging?
+      placeholder: v1.1
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: Claim
+      description: Quote the sentence or name the section. Use a versioned link when possible.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of objection
+      options:
+        - The claim is false
+        - The claim is unfalsifiable
+        - The cost is understated
+        - The receipt is stale or broken
+        - Factual or editorial correction
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or counterexample
+      description: Give a reproducible case, resolvable source, measurement, or precise argument.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What would resolve this objection?
+      description: State the correction, additional evidence, or decision you expect.
+    validations:
+      required: true
+  - type: checkboxes
+    id: conduct
+    attributes:
+      label: Conduct
+      options:
+        - label: I have read and will follow the Code of Conduct.
+          required: true

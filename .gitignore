@@ -7,6 +7,7 @@
 # repository can carry it.
 
 .preview/
+.task-pipeline/
 
 # Python bytecode. `negatives.py` imports `check-render.py` to ask whether a
 # browser is present, and importing writes here.

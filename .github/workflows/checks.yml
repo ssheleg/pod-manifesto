@@ -9,12 +9,15 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   parity:
     name: index.html carries the canonical text
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: python3 tools/check-parity.py --verbose
       # an unclosed tag rendered fine in Chrome for several commits; error
       # recovery is not specified to agree between engines, so it is a check now
@@ -27,7 +30,7 @@ jobs:
     name: every published reference resolves
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # github.com answers anonymous blob requests with a 404 once it throttles,
       # so references are verified through the API — with the runner's token so
       # the check measures the reference and not the rate limit.
@@ -39,7 +42,7 @@ jobs:
     name: every characterised citation is still current
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # A permalink resolves forever, so resolution is the wrong question asked alone.
       # This document asserted four requirements were "filed as open backlog rows" for two
       # days and six hours after the first of them closed: both permalinks resolved, the link
@@ -56,7 +59,7 @@ jobs:
     name: every published date is the one git records
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0        # a date derived from the log needs the log
       - run: python3 tools/stamp-dates.py --check
@@ -65,7 +68,7 @@ jobs:
     name: the stated version is the tag it claims to be
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0        # tags, and the log they hang on
       # The version is written in nine places, and CHANGELOG.md promises the
@@ -78,7 +81,7 @@ jobs:
     name: the rendered document carries the text
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # Every other job here reads a file. All of them were green for four days
       # while the document printed 27 of its 30 pages blank: the sections sit at
       # opacity 0 until an observer marks them seen, and printing never scrolls.
@@ -92,7 +95,7 @@ jobs:
     name: every gate refuses a planted defect
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # `manifesto.md:190`: a check must be shown able to discriminate failure from
       # success. Eight of the nine tools here had no negative control until this job
       # existed — they were trusted because they were green, which is the position this
@@ -109,7 +112,7 @@ jobs:
     name: the install count is the one npm reports
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # The colophon prints how many times the reference implementation has been
       # installed. §5 of the document says a number should be computed rather than
       # carried from an earlier report, and an install count carried by hand is
@@ -122,13 +125,50 @@ jobs:
     name: the page still looks like the pack
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: python3 tools/check-pack.py
 
   figures:
     name: figure geometry holds and the page is current
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: python3 tools/build-figures.py --check
       - run: python3 tools/inline-figures.py --check
+
+  docs:
+    name: repository docs and public scenarios agree
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0        # the version gate compares against tags
+      - run: bash scripts/check-docs.sh --self-test
+      - run: bash scripts/check-docs.sh
+      - run: python3 docs/ux/lint.py
+
+  validate:
+    name: validate
+    if: always()
+    needs: [parity, links, currency, dates, version, render, negatives, downloads, pack, figures, docs]
+    runs-on: ubuntu-latest
+    steps:
+      - name: require every focused gate
+        env:
+          NEEDS_JSON: ${{ toJson(needs) }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+
+          results = {
+              name: data["result"]
+              for name, data in json.loads(os.environ["NEEDS_JSON"]).items()
+          }
+          failed = {name: result for name, result in results.items() if result != "success"}
+          if failed:
+              print("validate: refused — focused gates did not all succeed:", failed)
+              sys.exit(1)
+          print("validate: PASS — all focused gates succeeded")
+          PY

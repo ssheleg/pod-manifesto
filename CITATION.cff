@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you cite Proof of Done, cite this versioned record."
+type: generic
+title: "Proof of Done: The Agentic Software Development Manifesto"
+version: "1.1"
+date-released: "2026-08-25"
+authors:
+  - family-names: Sheleg
+    given-names: Sergey
+    alias: ssheleg
+url: "https://podmanifesto.org"
+repository-code: "https://github.com/ssheleg/pod-manifesto"
+license: CC-BY-4.0
+keywords:
+  - agentic software development
+  - AI coding agents
+  - definition of done
+  - software verification
+  - evidence-based engineering

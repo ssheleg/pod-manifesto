@@ -4,6 +4,11 @@
 
 **The standard for building software with AI agents.**
 
+[![checks](https://github.com/ssheleg/pod-manifesto/actions/workflows/checks.yml/badge.svg)](https://github.com/ssheleg/pod-manifesto/actions/workflows/checks.yml)
+[![live](https://github.com/ssheleg/pod-manifesto/actions/workflows/live.yml/badge.svg)](https://github.com/ssheleg/pod-manifesto/actions/workflows/live.yml)
+[![release](https://img.shields.io/github/v/release/ssheleg/pod-manifesto?label=release)](https://github.com/ssheleg/pod-manifesto/releases/latest)
+[![licence](https://img.shields.io/badge/text-CC%20BY%204.0%20%C2%B7%20code-MIT-9a3f28)](LICENSE)
+
 > When agents write the code, done is not the last message of the run.
 > Done is a state of the system that can be proven.
 
@@ -61,6 +66,10 @@ NOT VERIFIED
 | `tools/` | The checks below and the figure build. `contrast-sweep.js` measures composited colour, so it needs a real browser — `check-render.py` gives it one in CI, which is not the same as needing a person. |
 | [`CHANGELOG.md`](CHANGELOG.md) | What changed in the canonical text, and the rule that it does not change without a version. |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to argue with the document, and how to submit a translation. |
+| [`GOVERNANCE.md`](GOVERNANCE.md) | Who decides canonical changes, versions and releases. |
+| [`SECURITY.md`](SECURITY.md) / [`SUPPORT.md`](SUPPORT.md) | Private vulnerability reporting and the route for every other question. |
+| [`CITATION.cff`](CITATION.cff) | Machine-readable citation metadata for the current version. |
+| [`docs/DOCMAP.md`](docs/DOCMAP.md) | The authoritative home and propagation rule for each repository fact. |
 | `CNAME` | The custom domain served by GitHub Pages. |
 
 ### The checks
@@ -105,6 +114,11 @@ python3 tools/check-pack.py               # no colour or radius literal outside 
                                           # reduced motion has a path
 python3 tools/build-figures.py --check    # every figure's geometry is asserted, not eyeballed
 python3 tools/inline-figures.py --check   # the inlined figures match the generated ones
+bash scripts/check-docs.sh --self-test    # the governance and UX documentation gate is shown
+                                          # refusing a planted missing-file defect
+bash scripts/check-docs.sh                # required documentation homes, structured metadata,
+                                          # current version and CI wiring agree
+python3 docs/ux/lint.py                    # public-reader scenarios obey the shared UX contract
 ```
 
 ### Design
@@ -146,11 +160,16 @@ The canonical text does not change without a new version and an entry in
 [`CHANGELOG.md`](CHANGELOG.md). Corrections to the site, the tooling or the prose about the
 document are not versions and are not listed there.
 
+Citation tools can read [`CITATION.cff`](CITATION.cff). Human and machine citations should
+still use the versioned source address above so the quoted text cannot move.
+
 ## Disagreeing with it
 
 The licence says *argue with it*, and an invitation with no address is decoration:
 [`CONTRIBUTING.md`](CONTRIBUTING.md) says what a useful objection looks like, where to put
-it, and how to submit a translation.
+it, and how to submit a translation. [`GOVERNANCE.md`](GOVERNANCE.md) names the decision
+boundary; [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) and [`SUPPORT.md`](SUPPORT.md) name
+the participation and routing boundaries.
 
 ## Licence
 
