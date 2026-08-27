@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Reference implementation support
+    url: https://github.com/ssheleg/sshlg-skills/issues
+    about: Installation and behavior of the skill and plugin family live there.
+  - name: Private security report
+    url: https://github.com/ssheleg/pod-manifesto/security/advisories/new
+    about: Report exploitable vulnerabilities without publishing them first.

@@ -29,6 +29,9 @@ on:
     - cron: "17 6 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   live:
     name: the published site matches this repository
@@ -39,7 +42,7 @@ jobs:
       github.event_name != 'deployment_status' ||
       github.event.deployment_status.state == 'success'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # The rules that decide the robots comparison, run offline against planted
       # cases first. A guard nobody has watched fail is not evidence, and this one

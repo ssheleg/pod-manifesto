@@ -1,0 +1,51 @@
+name: Translation
+description: Register a translation or coordinate one before publishing it.
+title: "Translation: "
+body:
+  - type: input
+    id: language
+    attributes:
+      label: Language and locale
+      placeholder: Polish (pl-PL)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Source version
+      description: A translation remains tied to this version after the manifesto moves.
+      placeholder: v1.1
+    validations:
+      required: true
+  - type: dropdown
+    id: state
+    attributes:
+      label: State
+      options:
+        - Planning or coordinating
+        - Draft in progress
+        - Published
+    validations:
+      required: true
+  - type: input
+    id: address
+    attributes:
+      label: Public address
+      description: Optional until the translation is published.
+      placeholder: https://example.org/proof-of-done
+  - type: textarea
+    id: attribution
+    attributes:
+      label: Attribution and notes
+      description: Name the translator and any terminology choices or review limits.
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Translation contract
+      options:
+        - label: The translation follows the canonical sentences rather than a summary.
+          required: true
+        - label: The translation will retain CC BY 4.0 attribution and link to the source.
+          required: true
